@@ -83,6 +83,16 @@ install_init_script()
   [[ -s "${init_scripts_path}/redis" && ! -x "${init_scripts_path}/redis" ]] &&
     chmod +x "${init_scripts_path}/redis"
 
+
+  # Add to system startup
+  if [[ $UID -eq 0 ]] ; then
+    if command -v rc-update >/dev/null 2>&1 ; then
+      rc-update add redis default
+    elif command -v chkconfig >/dev/null 2>&1 ; then
+      chkconfig redis on
+    fi
+  fi
+
   return 0
 }
 
