@@ -14,7 +14,7 @@ if [[ ${trace_flag:-0} -eq 1 ]] ; then
   set -o xtrace
 fi
 
-files=( "/etc/.bdsmrc" "$HOME/.bdsmrc" )
+files=("/etc/.bdsmrc" "$HOME/.bdsmrc")
 for file in "${files[@]}" ; do
   [[ -s "$file" ]] && source "$file"
 done
