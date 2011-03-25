@@ -90,6 +90,9 @@ install_init_script()
       rc-update add redis default
     elif command -v chkconfig >/dev/null 2>&1 ; then
       chkconfig redis on
+    else
+      # Falling back on rc.local to start redis at system startup.
+      echo "${init_scripts_path}/redis start" >> /etc/rc.local
     fi
   fi
 
