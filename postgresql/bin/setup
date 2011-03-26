@@ -8,11 +8,13 @@ if [[ "Linux" = "$(uname)" ]]
   #ln -s /usr/local/postgresql /usr/local/pgsql
   /sbin/ldconfig /usr/local/pgsql/lib
 
-  if [[ "root" = "$(whoami)" ]] ; then
+  if [[ $UID -eq 0 ]] ; then
     user="pgsql"
     group="pgsql"
     useradd $user
     groupadd $group
+  else
+    user=$USER
   fi
 
   cp ./contrib/start-scripts/linux /etc/init.d/pgsql
@@ -28,7 +30,7 @@ if [[ "Linux" = "$(uname)" ]]
   # sysctl -w kernel.shmmax=1610612736
   # sysctl -w kernel.shmall=2097152
 else
-  user="$(whoami)"
+  user="$USER"
   group="$(groups | awk '{print $1}')"
   ## MacOSX
   # sysctl -w kernel.shmmax=134217728
@@ -44,7 +46,8 @@ else
   # sysctl -w kernel.shmall=2097152
 fi
 
-mkdir -p $data_path $log_dir
+ensure_paths_exists "$data_path" "$log_dir"
+
 chown -R $user $data_path
 chmod -R 0700  $data_path
 chown -R $user $log_dir
@@ -55,14 +58,18 @@ if [[ "root" = "$(whoami)" ]] ; then
   su - $user -c "$install_path/bin/createdb test --username $system_user"
   su - $user -c "$install_path/bin/psql test --username $system_user"
 else
-  $install_path/bin/initdb --pgdata=$data_path --encoding=utf8 --username=$system_user --pwprompt
-  $install_path/bin/pg_ctl start -D $data_path -l $log_dir/server.log
-  $install_path/bin/createdb test --username $system_user
-  $install_path/bin/psql test --username $system_user
+  "$install_path/bin/initdb" \
+    --pgdata="$data_path" \
+    --encoding=utf8 \
+    --username="$system_user" \
+    --pwprompt
+  "$install_path/bin/pg_ctl" start -D "$data_path" -l "$log_dir/server.log"
+  "$install_path/bin/createdb" test --username $system_user
+  "$install_path/bin/psql" test --username $system_user
 
   mkdir $HOME/bin
-  cp ./contrib/start-scripts/linux $HOME/bin/pgsql
-  chmod u+x $HOME/bin/pgsql
-  touch $HOME/bin/pgsql
+  cp ./contrib/start-scripts/linux "$HOME/bin/pgsql"
+  chmod u+x "$HOME/bin/pgsql"
+  touch "$HOME/bin/pgsql"
 fi
 

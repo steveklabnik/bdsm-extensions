@@ -192,8 +192,6 @@ install_redis()
   return 0
 }
 
-source "${extension_scripts_path}/initialize"
-
 while [[ $# -gt 0 ]] ; do
   token="$1" ; shift
   case "$token" in

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-echo -e "
+log "
 Usage
   $0 {install,setup,start,stop,help}
 Actions
@@ -10,4 +10,3 @@ Actions
   stop     - Stop postgresql.
   help     - Display this help text.
 "
-exit $?

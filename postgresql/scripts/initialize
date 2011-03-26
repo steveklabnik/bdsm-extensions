@@ -1,15 +1,23 @@
 #!/usr/bin/env bash
 
+set -o errtrace
+export PS4='+${BASH_SOURCE} : ${LINENO} : ${FUNCNAME[0]:+${FUNCNAME[0]}() : }'
+
 if [[ $UID -eq 0 ]] ; then
   prefix_path="${prefix_path:-"/usr/local"}"
   src_path="$prefix_path/src"
   pgsql_path="/data/postgresql-${version}"
   sudo=""
   user="${user:-postgres}"
-  if [[ -f /etc/bash.bashrc ]] ; then
-    profiles=(/etc/bash.bashrc)
+
+  if [[ -d /etc/profile.d ]] ; then
+    profiles=(/etc/profile.d/postgresql.sh)
   else
-    profiles=(/etc/bashrc)
+    if [[ -f /etc/bash.bashrc ]] ; then
+      profiles=(/etc/bash.bashrc)
+    else
+      profiles=(/etc/bashrc)
+    fi
   fi
   install_path="$prefix_path/$package-$version"
 else
@@ -22,7 +30,8 @@ else
   install_path="$prefix_path/.$package-$version"
 fi
 
-if [[ "$user" != "$USER" && "root" = "$USER" ]] ; then
+if [[ $UID -eq 0 ]] ; then
+  # TODO: correct this for multiple OS types.
   if useradd -r "$user" ; then
     echo "User $user added."
   else
@@ -34,22 +43,24 @@ timestamp="$(date +"%Y-%m-%dT%H:%M")"
 color_green="$(tput setaf 2)"
 color_red="$(tput setaf 5)"
 color_none="$(tput sgr0)"
-
-log()   { printf "${color_green}${1}${color_none}\n" ; return 0 ; }
-
-error() { printf "${color_red}${1}${color_none}\n"   ; return 0 ; }
-
 system="postgresql"
 version="${version:-"$($scripts_path/db "$extension_path/config/db" "version")"}"
 
-if [[ "root" = "$(whoami)" ]] ; then
-  prefix="${prefix:-/usr/local}"
-  data_path="${data_path:-}"
+package="postgresql"
+version="9.0.3"
+archive_format="tar.bz2"
+url="http://ftp9.us.postgresql.org/pub/mirrors/postgresql/source/v${version}"
+
+
+if [[ $UID -eq 0 ]] ; then
+  "${prefix:=/usr/local}"
+  true ${data_path:=/var/db/postgresql-${version}}
   log_path="/var/log/postgresql"
 else
   prefix="${prefix:-$HOME/.pkg}"
   data_path="${data_path:-}"
 fi
+
 mkdir -p $log_path $data_path
 
 install_path="$prefix/postgresql-$version"

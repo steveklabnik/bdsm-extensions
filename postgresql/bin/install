@@ -1,31 +1,5 @@
 #!/usr/bin/env bash
 
-set -o errtrace
-export PS4='+${BASH_SOURCE} : ${LINENO} : ${FUNCNAME[0]:+${FUNCNAME[0]}() : }'
-
-package="postgresql"
-version="9.0.3"
-archive_format="tar.bz2"
-url="http://ftp9.us.postgresql.org/pub/mirrors/postgresql/source/v${version}"
-
-while [[ $# -gt 0 ]] ; do
-
-  token="$1" ; shift
-
-  case "$token" in
-    --prefix)  prefix_path="$1" ; shift ;;
-    --src)     src_path="$1"    ; shift ;;
-    --data)    data_path="$1"   ; shift ;;
-    --user)    user="$1"        ; shift ;;
-    --version) version="$1"     ; shift ;;
-    --licence) licence ; exit 0 ;;
-    --help)    usage   ; exit 0 ;;
-    --trace)   set -o xtrace ;;
-    *)         usage   ; exit 1 ;;
-  esac
-
-done
-
 usage() {
   printf "
   Usage:
@@ -88,10 +62,26 @@ Licensed under the MIT Licence, '$0 --licence' for details
 
 "
 
-log "\nDownloading postgresql...\n"
-if [[ ! -d "$src_path" ]] ; then
-  mkdir -p "$src_path"
-fi
+while [[ $# -gt 0 ]] ; do
+
+  token="$1" ; shift
+
+  case "$token" in
+    --prefix)  prefix_path="$1" ; shift ;;
+    --src)     src_path="$1"    ; shift ;;
+    --data)    data_path="$1"   ; shift ;;
+    --user)    user="$1"        ; shift ;;
+    --version) version="$1"     ; shift ;;
+    --licence) licence ; exit 0 ;;
+    --help)    usage   ; exit 0 ;;
+    --trace)   set -o xtrace ;;
+    *)         usage   ; exit 1 ;;
+  esac
+
+done
+
+log "Downloading postgresql..."
+ensure_paths_exist "$src_path"
 
 cd "$src_path"
 
@@ -99,8 +89,7 @@ curl -L $url/$package-$version.${archive_format} -o $package-$version.${archive_
 result=$?
 
 if [[ $result -gt 0 ]] ; then
-  error "Could not download: $url/$package-$version.tar.bz2"
-  exit $result
+  fail "Could not download: $url/$package-$version.tar.bz2.\n curl error code: $result"
 fi
 
 log "\nExtracting postgresql...\n"
@@ -110,11 +99,10 @@ tar jxf $package-$version.${archive_format} > extract.log 2>&1
 result=$?
 
 if [[ $result -gt 0 ]] ; then
-  error "Could not extract $package-$version.tar.bz2"
-  exit $result
+  fail "Could not extract $package-$version.tar.bz2\n tar erro code $result"
 fi
 
-cd $src_path/$package-$version/
+cd "$src_path/$package-$version/"
 
 log "\nBuilding postgresql...\n"
 configure_args="--prefix="$install_path" --datadir="$pgsql_path" --with-openssl --enable-shared"
@@ -133,55 +121,37 @@ if [[ $result -gt 0 ]] ; then
 fi
 
 [[ -f make.log ]] && rm -f make.log
-make -j3 > make.log 2>&1
-if [[ $result -gt 0 ]] ; then
-  echo "Compile Error, check $PWD/make.log"
-  exit $?
+if ! make -j3 > make.log 2>&1 ; then
+  fail "Compile Error, check $PWD/make.log"
 fi
 
 log "\nInstalling postgresql to $install_path, you will be prompted for your password to run 'make install' as root...\n"
-[[ -f install.log ]] && rm -f install.log
-$sudo make install > install.log 2>&1
 
-if [[ $result -gt 0 ]] ; then
-  error "Install failed, check $PWD/install.log"
-  exit $result
+if ! $sudo make install > install.log 2>&1 ; then
+  fail "Install failed, check $PWD/install.log"
 fi
 
 log "\nInitializing postgresql $version data directory in $pgsql_path/$version with superuser set to '$user'...\n"
 
-if [[ ! -d "$pgsql_path/$version" ]] ; then
-  mkdir -p $pgsql_path/$version
-fi
+ensure_paths_exist $pgsql_path/$version
 
 $sudo chown -R $user $pgsql_path
 
-if [[ "root" = "$USER" ]] ; then
-
+if [[ $UID -eq 0 ]] ; then
   su - $user -c "'$install_path/bin/initdb' --pgdata='$pgsql_path/data' --encoding=utf8 --username=$user"
-
 else
-
   "$install_path/bin/initdb" --pgdata="$pgsql_path/data" --encoding=utf8 --username=$user
-
 fi
 
-if [[ ! -d $pgsql_path/data ]] ; then
-
+if [[ ! -d "$pgsql_path/data" ]] ; then
   log "\nSymlinking postgresql $version data directory...\n"
-
   rm -f "$pgsql_path/data"
-
   ln -nfs "$pgsql_path/$version"
-
 fi
 
 if [[ ! -s "$pgsql_path/data/postgresql.conf" ]] ; then
-
   log "\nCopying over sample postgresql.conf to $pgsql_path/data/postgresql.conf...\n"
-
   cp "$pgsql_path/postgresql.conf.sample" "$pgsql_path/data/postgresql.conf"
-
 fi
 
 $sudo chown -R $user "$pgsql_path" # One more for good measure.
@@ -197,33 +167,23 @@ log "\nNow updating $HOME/.bash_profile with the postgres environment...\n"
 for profile in "${profiles[@]}" ; do
 
   if ! grep -q PGUSER $profile ; then
-
     echo "export PGUSER='$user'" >> $profile.postgres
-
   fi
 
   if ! grep -q PGDATA $profile ; then
-
     echo "export PGDATA='$pgsql_path/data'" >> $profile.postgres
-
   fi
 
   if ! grep -q PGLOG $profile ; then
-
     echo "export PGLOG='$pgsql_path/server.log'" >> $profile.postgres
-
   fi
 
   if ! grep -q "$install_path" $profile ; then
-
     echo "export PATH=\"$prefix_path/postgresql/bin:\$PATH\"" >> $profile.postgres
-
   fi
 
   cat $profile >> $profile.postgres
-
   mv $profile $profile.$timestamp
-
   mv $profile.postgres $profile
 
 done
@@ -279,8 +239,4 @@ Installation is now complete.
   * The 'superuser' for postgersql will be '$user', no password.
 
 Then please open a new shell or source your $HOME/.bash_profile and then run 'pg_ctl start' in order to run postgresql.
-
-  w00t,
-
-    ~Wayne
-
+"

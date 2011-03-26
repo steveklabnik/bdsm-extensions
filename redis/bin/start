@@ -1,9 +1,7 @@
 #!/usr/bin/env bash
 
-source "${extension_scripts_path}/initialize"
-
-if [[ -x "${init_scripts_path}/redis" ]] ; then
-  exec "${init_scripts_path}/redis" start
+if [[ -x "${init_scripts_path}/${extension}" ]] ; then
+  exec "${init_scripts_path}/${extension}" "${action}"
 else
-  fail "${init_scripts_path}/redis script is missing or not executable."
+  fail "${init_scripts_path}/${extension} is missing or not executable."
 fi

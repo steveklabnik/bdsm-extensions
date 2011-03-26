@@ -1,0 +1,92 @@
+#!/usr/bin/env bash
+
+if [[ ! -s "$pgsql_path/data/postgresql.conf" ]] ; then
+  log "\nCopying over sample postgresql.conf to $pgsql_path/data/postgresql.conf...\n"
+  cp "$pgsql_path/postgresql.conf.sample" "$pgsql_path/data/postgresql.conf"
+fi
+
+$sudo chown -R $user "$pgsql_path" # One more for good measure.
+
+log "Symlinking $install_path to $prefix_path/postgresql"
+
+$sudo rm -f "$prefix_path/postgresql"
+
+$sudo ln -nfs "$install_path" "$prefix_path/postgresql"
+
+# TODO: Make this a bit more robust.
+log "\nNow updating $HOME/.bash_profile with the postgres environment...\n"
+for profile in "${profiles[@]}" ; do
+
+  if ! grep -q PGUSER $profile ; then
+    echo "export PGUSER='$user'" >> $profile.postgres
+  fi
+
+  if ! grep -q PGDATA $profile ; then
+    echo "export PGDATA='$pgsql_path/data'" >> $profile.postgres
+  fi
+
+  if ! grep -q PGLOG $profile ; then
+    echo "export PGLOG='$pgsql_path/server.log'" >> $profile.postgres
+  fi
+
+  if ! grep -q "$install_path" $profile ; then
+    echo "export PATH=\"$prefix_path/postgresql/bin:\$PATH\"" >> $profile.postgres
+  fi
+
+  cat $profile >> $profile.postgres
+  mv $profile $profile.$timestamp
+  mv $profile.postgres $profile
+
+done
+
+log "\nNOTE: Your original .bash_profile has been backed up as $HOME/.bash_profile.$timestamp"
+
+if [[ "Darwin" = "$(uname)" ]] ; then
+
+  log "Temporarily adjusting your shared memory settings, follow instructions below to make these permanent...\n"
+  $sudo sysctl -w kern.sysv.shmmax=1610612736
+  $sudo sysctl -w kern.sysv.shmall=393216
+  $sudo sysctl -w kern.sysv.shmmin=1
+  $sudo sysctl -w kern.sysv.shmmni=32
+  $sudo sysctl -w kern.sysv.shmseg=8
+  $sudo sysctl -w kern.maxprocperuid=1536
+  $sudo sysctl -w kern.maxproc=2048
+
+elif [[ "Linux" = "$(uname)" ]] ; then
+
+  if [[ ! -s /etc/init.d/postgresql ]] ; then
+    cp contrib/start-scripts/linux /etc/init.d/postgresql
+  fi
+
+  chmod +x /etc/init.d/postgresql
+
+  printf "\nNOTE: You will likely want to tweak the database location and/or config file locations in /etc/init.d/postgresql\n"
+
+fi
+
+printf "
+
+Be sure that your shared memory settings are adjusted properly, the defaults are usually way too low.
+For Example I have 8GB RAM running MacOSX and my /etc/sysctl.conf look like this:
+
+∴ cat /etc/sysctl.conf
+
+kern.sysv.shmmax=1610612736
+kern.sysv.shmall=393216
+kern.sysv.shmmin=1
+kern.sysv.shmmni=32
+kern.sysv.shmseg=8
+kern.maxprocperuid=1536
+kern.maxproc=2048
+
+
+Installation is now complete.
+
+  * postgresql will be installed to $install_path
+  * postgresql configuration and data files will be in $pgsql_path
+  * You can control the postgresql server via 'pg_ctl {start|stop}'
+  * The 'superuser' for postgersql will be '$user', no password.
+
+Then please open a new shell or source your $HOME/.bash_profile and then run 'pg_ctl start' in order to run postgresql.
+"
+
