@@ -1,26 +1,286 @@
 #!/usr/bin/env bash
 
-# TODO:
-#   - bdsm package installation framework
-#   -
+set -o errtrace
+export PS4='+${BASH_SOURCE} : ${LINENO} : ${FUNCNAME[0]:+${FUNCNAME[0]}() : }'
 
-source $extension_scripts_path/initialize
+package="postgresql"
+version="9.0.3"
+archive_format="tar.bz2"
+url="http://ftp9.us.postgresql.org/pub/mirrors/postgresql/source/v${version}"
 
-$scripts_path/fetch "ftp://ftp5.us.postgresql.org/pub/PostgreSQL/v$version/postgresql-$version.tar.bz2"
+while [[ $# -gt 0 ]] ; do
 
-bunzip2 | tar xf - postgresql-$version.tar.bz2
+  token="$1" ; shift
 
-cd postgresql-$version/
+  case "$token" in
+    --prefix)  prefix_path="$1" ; shift ;;
+    --src)     src_path="$1"    ; shift ;;
+    --data)    data_path="$1"   ; shift ;;
+    --user)    user="$1"        ; shift ;;
+    --version) version="$1"     ; shift ;;
+    --licence) licence ; exit 0 ;;
+    --help)    usage   ; exit 0 ;;
+    --trace)   set -o xtrace ;;
+    *)         usage   ; exit 1 ;;
+  esac
 
-if [ "Darwin" = "$(uname)"  ] ; then
-  configure_flags="--with-bonjour CFLAGS='-O2 -pipe'"
+done
+
+usage() {
+  printf "
+  Usage:
+
+    $0 [options]
+
+  options:
+
+    --prefix   - specify prefix path
+    --src)     - specify source directory
+    --data)    - specify data directory
+    --user)    - specify user to install as
+    --version) - specify version to install
+    --licence) - view licence
+    --help)    - view this usage information
+
+"
+  return 0
+}
+
+licence() {
+  printf "
+=============================================================================
+The MIT License
+
+Copyright (c) 2009 Wayne E. Seguin (wayneeseguin@gmail.com)
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+=============================================================================
+"
+  return 0
+}
+
+log "
+
+I would be happy to discuss improving this script, or field questions.
+
+I am wayneeseguin in #rvm on irc.freenode.net
+
+This script will install ${package}-${version} to
+$install_path and configure the install.
+
+Licensed under the MIT Licence, '$0 --licence' for details
+
+"
+
+log "\nDownloading postgresql...\n"
+if [[ ! -d "$src_path" ]] ; then
+  mkdir -p "$src_path"
 fi
 
-./configure --prefix=$path/postgresql/$version --datadir=$data_path $path/data/postgresql/$version --with-openssl $configure_flags
+cd "$src_path"
 
-make "$make_flags"
+curl -L $url/$package-$version.${archive_format} -o $package-$version.${archive_format}
+result=$?
 
-make install
+if [[ $result -gt 0 ]] ; then
+  error "Could not download: $url/$package-$version.tar.bz2"
+  exit $result
+fi
 
-$extension_path/setup
+log "\nExtracting postgresql...\n"
+
+[[ -f extract.log ]] && rm -f extract.log
+tar jxf $package-$version.${archive_format} > extract.log 2>&1
+result=$?
+
+if [[ $result -gt 0 ]] ; then
+  error "Could not extract $package-$version.tar.bz2"
+  exit $result
+fi
+
+cd $src_path/$package-$version/
+
+log "\nBuilding postgresql...\n"
+configure_args="--prefix="$install_path" --datadir="$pgsql_path" --with-openssl --enable-shared"
+if [[ "Darwin" = "$(uname)" ]] ; then
+  configure_args="$configure_args --with-bonjour"
+fi
+
+[[ -f configure.log ]] && rm -f configure.log
+
+CFLAGS='-O2' ./configure $configure_args > configure.log 2>&1
+result=$?
+
+if [[ $result -gt 0 ]] ; then
+  error "Configure Error, check $PWD/configure.log"
+  exit $result
+fi
+
+[[ -f make.log ]] && rm -f make.log
+make -j3 > make.log 2>&1
+if [[ $result -gt 0 ]] ; then
+  echo "Compile Error, check $PWD/make.log"
+  exit $?
+fi
+
+log "\nInstalling postgresql to $install_path, you will be prompted for your password to run 'make install' as root...\n"
+[[ -f install.log ]] && rm -f install.log
+$sudo make install > install.log 2>&1
+
+if [[ $result -gt 0 ]] ; then
+  error "Install failed, check $PWD/install.log"
+  exit $result
+fi
+
+log "\nInitializing postgresql $version data directory in $pgsql_path/$version with superuser set to '$user'...\n"
+
+if [[ ! -d "$pgsql_path/$version" ]] ; then
+  mkdir -p $pgsql_path/$version
+fi
+
+$sudo chown -R $user $pgsql_path
+
+if [[ "root" = "$USER" ]] ; then
+
+  su - $user -c "'$install_path/bin/initdb' --pgdata='$pgsql_path/data' --encoding=utf8 --username=$user"
+
+else
+
+  "$install_path/bin/initdb" --pgdata="$pgsql_path/data" --encoding=utf8 --username=$user
+
+fi
+
+if [[ ! -d $pgsql_path/data ]] ; then
+
+  log "\nSymlinking postgresql $version data directory...\n"
+
+  rm -f "$pgsql_path/data"
+
+  ln -nfs "$pgsql_path/$version"
+
+fi
+
+if [[ ! -s "$pgsql_path/data/postgresql.conf" ]] ; then
+
+  log "\nCopying over sample postgresql.conf to $pgsql_path/data/postgresql.conf...\n"
+
+  cp "$pgsql_path/postgresql.conf.sample" "$pgsql_path/data/postgresql.conf"
+
+fi
+
+$sudo chown -R $user "$pgsql_path" # One more for good measure.
+
+log "\nSymlinking $install_path to $prefix_path/postgresql"
+
+$sudo rm -f "$prefix_path/postgresql"
+
+$sudo ln -nfs "$install_path" "$prefix_path/postgresql"
+
+# TODO: Make this a bit more robust.
+log "\nNow updating $HOME/.bash_profile with the postgres environment...\n"
+for profile in "${profiles[@]}" ; do
+
+  if ! grep -q PGUSER $profile ; then
+
+    echo "export PGUSER='$user'" >> $profile.postgres
+
+  fi
+
+  if ! grep -q PGDATA $profile ; then
+
+    echo "export PGDATA='$pgsql_path/data'" >> $profile.postgres
+
+  fi
+
+  if ! grep -q PGLOG $profile ; then
+
+    echo "export PGLOG='$pgsql_path/server.log'" >> $profile.postgres
+
+  fi
+
+  if ! grep -q "$install_path" $profile ; then
+
+    echo "export PATH=\"$prefix_path/postgresql/bin:\$PATH\"" >> $profile.postgres
+
+  fi
+
+  cat $profile >> $profile.postgres
+
+  mv $profile $profile.$timestamp
+
+  mv $profile.postgres $profile
+
+done
+
+log "\nNOTE: Your original .bash_profile has been backed up as $HOME/.bash_profile.$timestamp"
+
+if [[ "Darwin" = "$(uname)" ]] ; then
+
+  log "Temporarily adjusting your shared memory settings, follow instructions below to make these permanent...\n"
+  $sudo sysctl -w kern.sysv.shmmax=1610612736
+  $sudo sysctl -w kern.sysv.shmall=393216
+  $sudo sysctl -w kern.sysv.shmmin=1
+  $sudo sysctl -w kern.sysv.shmmni=32
+  $sudo sysctl -w kern.sysv.shmseg=8
+  $sudo sysctl -w kern.maxprocperuid=1536
+  $sudo sysctl -w kern.maxproc=2048
+
+elif [[ "Linux" = "$(uname)" ]] ; then
+
+  if [[ ! -s /etc/init.d/postgresql ]] ; then
+
+    cp contrib/start-scripts/linux /etc/init.d/postgresql
+
+  fi
+
+  chmod +x /etc/init.d/postgresql
+
+  printf "\nNOTE: You will likely want to tweak the database location and/or config file locations in /etc/init.d/postgresql\n"
+
+fi
+
+printf "
+
+Be sure that your shared memory settings are adjusted properly, the defaults are usually way too low.
+For Example I have 8GB RAM running MacOSX and my /etc/sysctl.conf look like this:
+
+∴ cat /etc/sysctl.conf
+
+kern.sysv.shmmax=1610612736
+kern.sysv.shmall=393216
+kern.sysv.shmmin=1
+kern.sysv.shmmni=32
+kern.sysv.shmseg=8
+kern.maxprocperuid=1536
+kern.maxproc=2048
+
+
+Installation is now complete.
+
+  * postgresql will be installed to $install_path
+  * postgresql configuration and data files will be in $pgsql_path
+  * You can control the postgresql server via 'pg_ctl {start|stop}'
+  * The 'superuser' for postgersql will be '$user', no password.
+
+Then please open a new shell or source your $HOME/.bash_profile and then run 'pg_ctl start' in order to run postgresql.
+
+  w00t,
+
+    ~Wayne
 

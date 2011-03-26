@@ -1,5 +1,44 @@
 #!/usr/bin/env bash
 
+if [[ $UID -eq 0 ]] ; then
+  prefix_path="${prefix_path:-"/usr/local"}"
+  src_path="$prefix_path/src"
+  pgsql_path="/data/postgresql-${version}"
+  sudo=""
+  user="${user:-postgres}"
+  if [[ -f /etc/bash.bashrc ]] ; then
+    profiles=(/etc/bash.bashrc)
+  else
+    profiles=(/etc/bashrc)
+  fi
+  install_path="$prefix_path/$package-$version"
+else
+  prefix_path="${prefix_path:-"$HOME"}"
+  src_path="${src_path:-"$prefix_path/.src"}"
+  pgsql_path="$prefix_path/.postgresql-${version}"
+  sudo="sudo"
+  user="${user:-$USER}"
+  profiles=("$HOME/.bash_profile" "$HOME/.bashrc")
+  install_path="$prefix_path/.$package-$version"
+fi
+
+if [[ "$user" != "$USER" && "root" = "$USER" ]] ; then
+  if useradd -r "$user" ; then
+    echo "User $user added."
+  else
+    echo "User $user already exists."
+  fi
+fi
+
+timestamp="$(date +"%Y-%m-%dT%H:%M")"
+color_green="$(tput setaf 2)"
+color_red="$(tput setaf 5)"
+color_none="$(tput sgr0)"
+
+log()   { printf "${color_green}${1}${color_none}\n" ; return 0 ; }
+
+error() { printf "${color_red}${1}${color_none}\n"   ; return 0 ; }
+
 system="postgresql"
 version="${version:-"$($scripts_path/db "$extension_path/config/db" "version")"}"
 
