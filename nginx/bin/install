@@ -1,9 +1,7 @@
 #!/usr/bin/env bash
 
-source "$extension_scripts_path/initialize"
-
-printf "\nNote: This will do a standard install.\n"
-printf "Use the 'passenger' BDSM extension for installing passenger Nginx.\n"
+log "\nNote: This will do a standard install."
+log "Use the 'passenger' BDSM extension for installing passenger Nginx."
 
 configure_flags=(--prefix="$nginx_install_path"
   --conf-path="$nginx_config_file"
@@ -26,7 +24,7 @@ true "${source_path:=/usr/local/src}" \
      "${nginx_version:=0.8.54}" \
      "${archive_format:=tar.gz}"
 
-mkdir -p "$source_path"
+ensure_paths_exist "$source_path"
 
 cd "$source_path"
 
@@ -51,9 +49,7 @@ config_directories=(/var/spool/nginx/client_body_temp
 "$nginx_config_path/servers"
 )
 
-for directory in "${config_directories[@]}" ; do
-  mkdir -p "$directory"
-done
+ensure_paths_exist "${config_directories[@]}"
 
 files=( fastcgi.conf fastcgi.conf.default fastcgi_params
  fastcgi_params.default koi-utf koi-win mime.types mime.types.default
@@ -62,12 +58,9 @@ files=( fastcgi.conf fastcgi.conf.default fastcgi_params
 )
 
 for file in "${files[@]}" ; do
-
   if [[ -f "$nginx_path/$file" ]] ; then
-    mv "$nginx_path/$file" \
-       "$nginx_config_path/$file"
+    mv "$nginx_path/$file" "$nginx_config_path/$file"
   fi
-
 done
 
 touch "$nginx_config_path/passenger" # empty file as a placeholder.

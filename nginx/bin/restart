@@ -1,19 +1,10 @@
 #!/usr/bin/env bash
 
-source "$extension_scripts_path/initialize"
-
 if [[ ${master_pid:-0} -gt 0 ]] ; then
-
-  printf "Restarting Nginx ($master_pid)\n"
-
-  kill -USR2 $master_pid
-
+  log "Restarting Nginx ($master_pid)"
+  kill -USR2 ${master_pid}
 else
-
-  printf "WARN: Nginx is not running\n  (using pidfile: $nginx_pid)\n Starting Nginx.\n"
-
-  nginx -t -c "$nginx_config_file" && nginx -c "$nginx_config_file"
-
+  log "WARN: Nginx is not running\n  (using pidfile: $nginx_pid)\n Starting Nginx."
+  nginx -t -c "$nginx_config_file" &&
+    nginx -c "$nginx_config_file"
 fi
-
-exit $?

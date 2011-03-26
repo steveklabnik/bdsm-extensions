@@ -1,18 +1,7 @@
 #!/usr/bin/env bash
 
-source "$extension_scripts_path/initialize"
-
 if [[ -s "$extension_templates_path/nginx.conf.template" ]] ; then
-
-  for directory in "$nginx_config_path" "$nginx_servers_path" ; do
-
-    if [[ ! -d "$directory" ]] ; then
-
-      mkdir -p "$directory"
-
-    fi
-
-  done
+  ensure_paths_exist "$nginx_config_path" "$nginx_servers_path"
 
   # nginx.conf.template => /etc/nginx.conf
   cp "$extension_templates_path/nginx.conf.template" \
@@ -27,14 +16,7 @@ if [[ -s "$extension_templates_path/nginx.conf.template" ]] ; then
     cp "$extension_templates_path/${template}.template" \
       "/etc/nginx/conf/${template}"
   done
-
-  exit $?
-
 else
-
-  printf "ERROR: $extension_templates_path/nginx.conf.template is missing.\n"
-
-  exit 1
-
+  fail "$extension_templates_path/nginx.conf.template is missing."
 fi
 

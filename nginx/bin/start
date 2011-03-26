@@ -1,14 +1,8 @@
 #!/usr/bin/env bash
 
-
-source "$extension_scripts_path/initialize"
-
 if [[ ${master_pid:-0} -gt 0 ]] ; then
-
-  printf "Nginx is already running ($master_pid)\n"
-
+  log "Nginx is already running (master pid: $master_pid)"
 else
-
-  nginx -t -c "$nginx_config_file" && nginx -c "$nginx_config_file"
-
+  nginx -t -c "$nginx_config_file" &&
+    nginx -c "$nginx_config_file"
 fi

@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-source "$extension_scripts_path/initialize"
-
 if [[ "Linux" = "$(uname)" ]] ; then
 
   if command -v pacman ; then
@@ -18,11 +16,11 @@ if [[ "Linux" = "$(uname)" ]] ; then
 
   elif command -v emerge ; then
 
-    printf "TODO: Tell wayne how to install pcre, openssl and zlib dev headers on gentoo."
+    log "TODO: Tell wayne how to install pcre, openssl and zlib dev headers on gentoo."
 
   else
 
-    printf "TODO: Install zlib openssl pcre via curl, complile install."
+    log "TODO: Install zlib openssl pcre via curl, complile install."
 
   fi
 
@@ -30,7 +28,7 @@ elif [[ "Darwin" = "$(uname)"  ]] ; then
 
   release="( $(sw_vers -productName) )"
 
-  printf "
+  log "
   Notes for ${system} $release
     For Snow Leopard be sure to have Xcode Tools Version 3.2.1 (1613) or later
     You should download the latest Xcode tools from developer.apple.com.

@@ -1,20 +1,13 @@
 #!/usr/bin/env bash
 
-source $extension_scripts_path/initialize
-
 project_name="${1:-}"
-if [[ -z "$project_name" ]] ; then
-  printf "project_name must be specified for 'nginx server'\n"
-fi
+[[ -z "$project_name" ]] || fail "project_name must be specified for 'nginx server'"
 
 # TODO: Account for user name being different from project_name name.
 nginx_config_path="${nginx_config_path:-"/etc/nginx/conf"}"
 
 if [[ -s "$extension_templates_path/server.conf.template" ]] ; then
-
-  if [[ ! -d "$nginx_config_path/servers/" ]] ; then
-    mkdir -p "$nginx_config_path/servers/"
-  fi
+  ensure_paths_exist "$nginx_config_path/servers/"
 
   if [[ -d "/home/${project_name}" ]] ; then
     chmod g+rx "/home/${project_name}"
@@ -23,14 +16,6 @@ if [[ -s "$extension_templates_path/server.conf.template" ]] ; then
   sed -e "s#{{project}}#$project_name#g" \
     "$extension_templates_path/server.conf.template" \
     > "$nginx_path/servers/$project_name.conf"
-
-  exit $?
-
 else
-
-  printf "ERROR: $extension_templates_path/server.conf template is missing.\n"
-
-  exit 1
-
+  fail "ERROR: $extension_templates_path/server.conf template is missing."
 fi
-

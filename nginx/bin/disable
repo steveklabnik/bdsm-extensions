@@ -7,23 +7,18 @@
 # and prings an informative message otherwise.
 #
 
-source "$extension_scripts_path/initialize"
-
 project_name="${1:-}"
 if [[ -z "$project_name" ]] ; then
-  printf "project_name must be specified for 'nginx project_name'\n"
+  log "project_name must be specified for 'nginx project_name'"
 fi
 
 if [[ -f "$nginx_project_names_path/$project_name.conf" ]] ; then
   mv "$nginx_project_names_path/$project_name.conf" \
     "$nginx_project_names_path/$project_name.conf.disabled"
-  exit $?
 else
   if [[ -f "$nginx_project_names_path/$project_name.conf.disabled" ]] ; then
-    printf "INFO: $project_name.conf is already disabled.\n"
-    exit 0
+    succeed "$project_name.conf is already disabled."
   else
-    printf "INFO: Cannot disable, $project_name.conf does not exist.\n"
-    exit 1
+    fail "INFO: Cannot disable, $project_name.conf does not exist."
   fi
 fi
