@@ -44,13 +44,8 @@ Actions
 action="usage" # Default
 
 while [[ $# -gt 0 ]] ; do
-
-  token="$1"
-
-  shift
-
+  token="$1" ; shift
   case "$token" in
-
     description)
       action="description"
       ;;
@@ -58,9 +53,7 @@ while [[ $# -gt 0 ]] ; do
     *)
       action="usage"
       ;;
-
   esac
-
 done
 
 "$action"

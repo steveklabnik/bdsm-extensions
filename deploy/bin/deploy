@@ -82,7 +82,7 @@ update_repository()
       git pull
 
       if [[ -f .gitmodules ]] ; then
-        printf "Updating submodules.\n"
+        log "Updating submodules."
         git submodule init 2>/dev/null
         git submodule update
       fi
@@ -109,7 +109,6 @@ update_repository()
       ;;
 
     svn)
-
       # TODO: specific revision / branch handling
       log "Updating repository"
       svn update
@@ -130,11 +129,12 @@ update_repository()
 
 stage_current()
 {
-  printf "Staging new release to $stage_path\n"
+  log "Staging new release to $stage_path"
 
-  rsync -ag --exclude=".${scm}/" "$shared_path/$project/" "$stage_path"
+  rsync -ag --exclude=".${scm}/" \
+    "$shared_path/$project/" "$stage_path"
 
-  mkdir -p "$stage_path/public"
+  ensure_paths_exist "$stage_path/public"
 }
 
 replace_current()
@@ -142,9 +142,7 @@ replace_current()
   log "Replacing $current_path from $stage_path"
   if [[ -d "$current_path" ]] ; then
     log "Moving aside previous release."
-
-    [[ ! -d "$project_path/previous" ]] && mkdir -p "$project_path/previous"
-
+    ensure_paths_exist "$project_path/previous"
     mv "$current_path" "$project_path/previous/$timestamp"
   else
     log "Current directory does not exist, not removing."
@@ -161,7 +159,7 @@ configure()
     log "No shared config path found, skipping."
     return 0
   else
-    mkdir -p "$stage_path/config"
+    ensure_paths_exist "$stage_path/config"
   fi
 
   local item config_item
@@ -172,23 +170,19 @@ configure()
   for config_item in "$shared_path"/config/* ; do
     item=$(basename "$config_item")
     log " - $item"
-
     rm -rf "$stage_path/config/$item"
-
     ln -nfs "$shared_path/config/$item" "$stage_path/config/$item"
   done
 }
 
 symlink()
 {
-  printf "Setting up persistent directories\n"
+  log "Setting up persistent directories"
 
   for dir in tmp log pids files ; do
     if [[ -d "$shared_path/$dir" ]] ; then
       log " - $dir"
-
       rm -rf "$stage_path/$dir"
-
       ln -nfs "$shared_path/$dir" "$stage_path/$dir"
     fi
   done
@@ -196,18 +190,15 @@ symlink()
   for dir in $(ls -A "$shared_path/public/") ; do
     if [[ -n "$dir" ]] ; then
       log " - public/$dir"
-
       rm -rf "$stage_path/public/$dir"
-
       ln -nfs "$shared_path/public/$dir" "$stage_path/public/$dir"
     fi
-
   done
 }
 
 cleanup()
 {
-  [[ ! -d "$project_path/previous" ]] && mkdir -p "$project_path/previous"
+  ensure_paths_exist "$project_path/previous"
 
   if [[ -n "$old_releases" ]] ; then
     (
@@ -257,7 +248,7 @@ detect_scm()
 
 detect_scm
 
-printf "Deploying...\n"
+log "Deploying..."
 (
   hook "before_update_repository"
   update_repository

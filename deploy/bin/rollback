@@ -1,29 +1,19 @@
 #!/usr/bin/env bash
 
-if [[ "$trace_flag" -eq 1 ]] ; then set -x ; fi
-
-mkdir -p "$previous_path" "$discarded_path"
+ensure_paths_exist "$previous_path" "$discarded_path"
 
 previous="$(\ls -t "$previous_path"/ | head -n 1)"
 
 if [[ -d "$previous" ]] ; then
-
-  printf "Discarding current release to $discarded_path/$timestamp ...\n"
+  log "Discarding current release to $discarded_path/$timestamp ..."
 
   mv "$current_path" "$discarded_path/$timestamp"
 
-  printf "Rolling back to previous release $previous ...\n"
+  log "Rolling back to previous release $previous ..."
 
   mv "$previous" "${current_path%/}"
 
-  printf "Rolled back to previous release $previous.\n"
-
+  log "Rolled back to previous release $previous."
 else
-
-  printf "Previous release was not found in $previous_path/\n"
-
+  log "Previous release was not found in $previous_path/"
 fi
-
-result=$?
-
-exit $result

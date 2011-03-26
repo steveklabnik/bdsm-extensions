@@ -3,88 +3,31 @@
 set -o errtrace
 export PS4='+[${BASH_SOURCE}] : ${LINENO} : ${FUNCNAME[0]:+${FUNCNAME[0]}() $ }'
 
-if [[ ${trace_flag:-0} -eq 1 ]] ; then
-  set -o xtrace
-fi
+[[ ${trace_flag:-0} -eq 1 ]] && set -o xtrace
+[[ ${debug_flag:-0} -eq 1 ]] && set -o verbose
 
-if [[ ${debug_flag:-0} -eq 1 ]] ; then
-  set -o verbose
-fi
 
 # Attempt to load RVM
-files=( "$HOME/.rvm/scripts/rvm" "/usr/local/scripts/rvm" )
+source_files first \
+  $(nonempty_files "$HOME/.rvm/scripts/rvm" "/usr/local/scripts/rvm" )
 
-for file in "${files[@]}" ; do
+source_files "$HOME/.bashrc" "/etc/bdsmrc" "$HOME/.bdsmrc"
 
-  if [[ -s "$file" ]] ; then
+[[ -n "$environment" ]] || log "WARNING: 'environment' is not set (bdsmrc)"
+[[ -n "$RAILS_ENV" ]] || "WARNING: 'RAILS_ENV' is not set (bdsmrc)"
+[[ -n "$project" ]] || "WARNING: 'project' is not set (bdsmrc)"
 
-    source "$file"
+# Fetch the pid_file pid.
+pid_file="$shared_path/pids/$project.pid"
 
-    break # stop after loading first one found.
-
-  fi
-
-done
-
-files=( "$HOME/.bashrc" "/etc/bdsmrc" "$HOME/.bdsmrc" )
-
-for file in "${files[@]}" ; do
-
-  if [[ -s "$file" ]] ; then
-
-    source "$file"
-
-  fi
-
-done
-
-files=( "/etc/rvmrc" "$HOME/.rvmrc" )
-
-for file in "${files[@]}" ; do
-
-  if [[ -s "$file" ]] ; then
-
-    source "$file"
-
-  fi
-
-done
-
-if [[ -z "$environment" ]] ; then
-
-  $scripts_path/log "warn" "'environment' is not set (bdsmrc)"
-
-fi
-
-if [[ -z "$RAILS_ENV" ]] ; then
-
-  $scripts_path/log "warn" "'RAILS_ENV' is not set (bdsmrc)"
-
-fi
-
-if [[ -z "$project" ]] ; then
-
-  $scripts_path/log "warn" "'project' is not set (bdsmrc)"
-
-fi
-
-# Fetch the pidfile pid.
-pidfile="$shared_path/pids/$project.pid"
-
-if [[ -d "$shared_path/pids" && -s "$pidfile" ]] ; then
-
-  pidfile_pid=$(cat "$pidfile")
-
+if [[ -d "$shared_path/pids" && -s "$pid_file" ]] ; then
+  pid_file_pid=$(cat "$pid_file")
 else
-
-  pidfile_pid=0
-
+  pid_file_pid=0
 fi
-
 
 # Fetch the running pid.
 if [[ -n "${project:-""}" ]] ; then
-
   running_pid=$(
     ps auxww | grep '[u]nicorn' | grep ' master ' | grep -v '(old)' | \
       awk '/'${project}'/{print $2}'
@@ -94,11 +37,8 @@ if [[ -n "${project:-""}" ]] ; then
     ps auxww | grep '[u]nicorn' | grep ' master ' | grep '(old)' | \
       awk '/'${USER}'/{print $2}'
   )
-
 else
-
   if [[ -z "$running_pid" ]] ; then
-
     running_pid=$(
       ps auxww | grep '[u]nicorn' | grep ' master ' | grep -v '(old)' | \
         awk '/'${USER}'/{print $2}'
@@ -107,39 +47,22 @@ else
       ps auxww | grep '[u]nicorn' | grep ' master ' | grep '(old)' | \
         awk '/'${USER}'/{print $2}'
     )
-
   fi
 
-  "$bdsm_scripts_path/log" "warn" \
-    "'project' should be set in ~/.bdsmrc"
-
+  log "WARNING: 'project' should be set in ~/.bdsmrc"
 fi
 
 if [[ ${running_pid:-0} -gt 0 && -d "/proc/${running_pid}" ]] ; then
+  printf $running_pid > "$pid_file" # Make sure the correct running pid is in the pid_file.
 
-  printf $running_pid > "$pidfile" # Make sure the correct running pid is in the pidfile.
-
-  master_pid=$running_pid # Set to the found running pidfile.
-
-elif [[ ${pidfile_pid:-0} -gt 0 && -d "/proc/${pidfile_pid}" ]] ; then
-
-  master_pid=$pidfile_pid # Running and matches pidfile.
-
+  master_pid=$running_pid # Set to the found running pid_file.
+elif [[ ${pid_file_pid:-0} -gt 0 && -d "/proc/${pid_file_pid}" ]] ; then
+  master_pid=$pid_file_pid # Running and matches pid_file.
 else
-
   master_pid=0 # Not found!
-
 fi
 
-if [[ -d "$current_path" ]] ; then
+[[ -d "$current_path" ]] && builtin cd "$current_path"
 
-  builtin cd "$current_path"
-
-  if [[ -s "$current_path/.rvmrc" ]] ; then
-
-    source "$current_path/.rvmrc"
-
-  fi
-
-fi
+source_files "$current_path/.rvmrc"
 
