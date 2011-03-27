@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-source "$extension_scripts_path/initialize"
-
 # TODO:
 #
 #   * Crank up the verbosity on errors
@@ -139,18 +137,13 @@ stage_current()
 
 replace_current()
 {
-  log "Replacing $release_path from $stage_path"
   if [[ -d "$release_path" ]] ; then
     log "Moving aside previous release."
-    ensure_paths_exist "$project_path/previous"
     mv "$release_path" "$project_path/previous/$timestamp"
-  else
-    log "Current directory does not exist, not removing."
   fi
 
+  log "Replacing $release_path from $stage_path"
   mv "$stage_path" "$release_path"
-
-  return $?
 }
 
 configure()
@@ -158,92 +151,71 @@ configure()
   if [[ ! -d "$shared_path/config" ]] ; then
     log "No shared config path found, skipping."
     return 0
-  else
-    ensure_paths_exist "$stage_path/config"
   fi
 
   local item config_item
 
-  builtin cd "$shared_path/config"
+  ensure_paths_exist "$stage_path/config"
+
+  enter "$shared_path/config"
 
   log "Setting up persistent config files:"
   for config_item in "$shared_path"/config/* ; do
     item=$(basename "$config_item")
-    log " - $item"
-    rm -rf "$stage_path/config/$item"
-    ln -nfs "$shared_path/config/$item" "$stage_path/config/$item"
+    log "  - $item"
+    link "$shared_path/config/$item" "$stage_path/config/$item"
   done
 }
 
 symlink()
 {
-  log "Setting up persistent directories"
+  log "Setting up persistent directories:"
 
   for dir in tmp log pids files ; do
-    if [[ -d "$shared_path/$dir" ]] ; then
-      log " - $dir"
-      rm -rf "$stage_path/$dir"
-      ln -fs "$shared_path/$dir" "$stage_path/$dir"
-    fi
+    log "  - $dir"
+    link "${shared_path}/${dir}" to "${stage_path}/${dir}"
   done
 
   for dir in $(ls -A "$shared_path/public/") ; do
-    if [[ -n "$dir" ]] ; then
-      log " - public/$dir"
-      rm -rf "$stage_path/public/$dir"
-      ln -fs "$shared_path/public/$dir" "$stage_path/public/$dir"
-    fi
+    log "  - public/$dir"
+    link "${shared_path}/public/${dir}" to "${stage_path}/public/${dir}"
   done
 }
 
 cleanup()
 {
-  ensure_paths_exist "$project_path/previous"
-
-  if [[ -n "$old_releases" ]] ; then
-    (
-    log "Removing old releases..."
-
-    builtin cd "$project_path/previous"
-
-    for release in $(echo $old_releases) ; do
-      if [[ -d "$release" ]] ; then
-        log " - $release"
-        rm -rf $release
-      else
-        log "Skipping ~/previous/$release as the directory does not exist."
-      fi
-    done
-    )
-  fi
+  (
+  log "Removing old releases: ${old_releases[@]}"
+  enter "$project_path/previous"
+  remove_directories "${old_releases[@]}"
+  )
 }
 
 record()
 {
-  # TODO: What else could we record that would be useful?
-  cd "$shared_path/$project"
+  (
+  enter "$shared_path/$project"
 
   revision=$(git log --no-color -1 | head -n 1 | cut -c 7-47)
   branch=$(git branch --no-color | awk '/^* /{print $2}')
 
   echo "$revision" >> "$release_path/revision"
   echo "$branch"   >> "$release_path/branch"
-
-  return 0
+  # TODO: What else could we record that would be useful?
+  )
 }
 
 detect_scm()
 {
-  if [[ -z "$scm" ]] ; then
-    if [[ -d "$shared_path/$project/.git" ]] ; then
-      scm="git"
-    elif [[ -d "$shared_path/$project/.svn" ]] ; then
-      scm="svn"
-    elif [[ -d "$shared_path/$project/.hg" ]] ; then
-      scm="hg"
-    fi
+  [[ -z "${scm:-}" ]] || return 0
+
+  if [[ -d "$shared_path/$project/.git" ]] ; then
+    scm="git"
+  elif [[ -d "$shared_path/$project/.svn" ]] ; then
+    scm="svn"
+  elif [[ -d "$shared_path/$project/.hg" ]] ; then
+    scm="hg"
   fi
-  return 0
 }
 
 detect_scm

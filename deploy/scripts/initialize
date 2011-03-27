@@ -13,9 +13,17 @@ true \
   "${previous_path:=${project_path}/previous}" \
   "${stage_path:=${project_path}/stage}"
 
-
 ensure_paths_exist \
   "$previous_path" \
   "$discard_path"
 
-previous="$(\ls -t "$previous_path"/ | head -1)"
+previous_releases=$(
+  find "${previous_path}/" -mindepth 1 -maxdepth 1 -type d | sort
+)
+
+previous="${previous_releases[0]}"
+
+old_releases=($(
+  find "${previous_path}/" -mindepth 1 -maxdepth 1 -type d | sort -r |
+  awk "NR > ${keep_releases:-3} { print \$0 }"
+))
