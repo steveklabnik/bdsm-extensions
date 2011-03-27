@@ -1,9 +1,13 @@
-description() {
-  printf "Extension for managing Backups (http://extensions.beginrescueend.com/backups/)."
+#!/usr/bin/env bash
+
+description()
+{
+  log "Extension for managing Backups (http://extensions.beginrescueend.com/backups/)."
 }
 
-actions() {
-  printf "
+actions()
+{
+  log "
   install  - Install the backup gem.
   setup    - Setup Nginx configuration.
   start    - Startup backup.
@@ -16,8 +20,10 @@ actions() {
   "
 }
 
-usage() {
-printf "
+usage()
+{
+  log "
+
 Description
 
   BDSM $(description)

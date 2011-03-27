@@ -3,6 +3,8 @@
 require "yaml"
 require "fileutils"
 
+# TODO: Load these from the BDSM ruby API
+
 def log(message, file) ; %x{echo "#{@timestamp}:#{@application}:#{@environment}:#{message}" >> #{@log_path}/backup.#{file}.log} ; end
 def fail(message)      ; log(message, :error) ; exit 1 ; end
 def succeed(message)   ; log(message, :backup) ; exit 0 ; end
