@@ -52,34 +52,27 @@ config_directories=(/var/spool/nginx/client_body_temp
 ensure_paths_exist "${config_directories[@]}"
 
 files=( fastcgi.conf fastcgi.conf.default fastcgi_params
- fastcgi_params.default koi-utf koi-win mime.types mime.types.default
- nginx.conf.default scgi_params scgi_params.default uwsgi_params
- uwsgi_params.default win-utf
+fastcgi_params.default koi-utf koi-win mime.types mime.types.default
+nginx.conf.default scgi_params scgi_params.default uwsgi_params
+uwsgi_params.default win-utf
 )
 
-for file in "${files[@]}" ; do
-  if [[ -f "$nginx_path/$file" ]] ; then
-    mv "$nginx_path/$file" "$nginx_config_path/$file"
-  fi
-done
+(
+cd "$nginx_path"
+move_files_to "${nginx_config_path}/${file}" "${files[@]}"
+)
 
-touch "$nginx_config_path/passenger" # empty file as a placeholder.
+touch "${nginx_config_path}/passenger" # empty file as a placeholder.
 
-cp "$extension_templates_path/nginx_ctl.template" \
-   "$init_scripts_path/nginx"
+install_template "nginx" to "${init_scripts_path}"
+chmod +x "${init_scripts_path}/nginx"
+# TODO: Turn up
 
-chmod +x "$init_scripts_path/nginx"
-
-cp "$extension_templates_path/nginx.conf.template" \
-   "$nginx_config_path/nginx.conf"
-
-cp "$extension_templates_path/proxy.conf.template" \
-   "$nginx_config_path/conf/proxy.conf"
+install_template "nginx.conf" to "${nginx_config_path}"
+install_template "proxy.conf" to "${nginx_config_path}/conf"
 
 # TODO: better handling of already exising nginx user here
 groupadd nginx 2>/dev/null
 useradd -G nginx -M nginx 2>/dev/null
 
-for directory in "${config_directories[@]}" ; do
-  chown -R nginx:nginx "$directory"
-done
+chown_paths "nginx:nginx" "${config_directories[@]}"

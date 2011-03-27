@@ -2,12 +2,12 @@
 
 description()
 {
-  printf "Extension for managing Nginx (http://wiki.nginx.org/Main)."
+  log "Extension for managing Nginx (http://wiki.nginx.org/Main)."
 }
 
 actions()
 {
-  printf "
+  log "
   install  - Install nginx on the system.
   setup    - Setup Nginx configuration.
   start    - Startup nginx.
@@ -22,7 +22,7 @@ actions()
 
 usage()
 {
-  printf "
+  log "
 Description
 
   BDSM $(description)
