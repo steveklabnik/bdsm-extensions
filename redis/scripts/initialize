@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
 
-source_files \
-  "$HOME/.bashrc" \
-  $(first_nonempty_file "$HOME/.rvm/scripts/rvm" "/usr/local/scripts/rvm")
+rvm_scripts_file=$(first_nonempty_file "$HOME/.rvm/scripts/rvm" "/usr/local/scripts/rvm")
+
+source_files "$HOME/.bashrc" "$rvm_scripts_file"
 
 bdsmrc
-

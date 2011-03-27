@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-source "${extension_scripts_path}/initialize"
-
 log "redis-server:"
 
 if [[ -s "${redis_pid_file}" ]] ; then

@@ -2,12 +2,12 @@
 
 description()
 {
-  printf "Extension for managing redis (http://wiki.redis.org/Main)."
+  log "Extension for managing redis (http://wiki.redis.org/Main)."
 }
 
 actions()
 {
-  printf "
+  log "
   install  - Install redis on the system.
   setup    - Setup redis configuration.
   start    - Startup redis.
@@ -20,7 +20,7 @@ actions()
 
 usage()
 {
-  printf "
+  log "
 Description
 
   BDSM $(description)
