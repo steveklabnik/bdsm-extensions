@@ -6,16 +6,13 @@ export PS4='+[${BASH_SOURCE}] : ${LINENO} : ${FUNCNAME[0]:+${FUNCNAME[0]}() $ }'
 [[ ${trace_flag:-0} -eq 1 ]] && set -o xtrace
 [[ ${debug_flag:-0} -eq 1 ]] && set -o verbose
 
-
 # Attempt to load RVM
 source_files first \
   $(nonempty_files "$HOME/.rvm/scripts/rvm" "/usr/local/scripts/rvm" )
 
 source_files "$HOME/.bashrc" "/etc/bdsmrc" "$HOME/.bdsmrc"
 
-[[ -n "$environment" ]] || log "WARNING: 'environment' is not set (bdsmrc)"
-[[ -n "$RAILS_ENV" ]] || "WARNING: 'RAILS_ENV' is not set (bdsmrc)"
-[[ -n "$project" ]] || "WARNING: 'project' is not set (bdsmrc)"
+ensure_set "environment" "RAILS_ENV" "project"
 
 # Fetch the pid_file pid.
 pid_file="$shared_path/pids/$project.pid"
@@ -27,42 +24,34 @@ else
 fi
 
 # Fetch the running pid.
-if [[ -n "${project:-""}" ]] ; then
+if [[ -n "${project:-}" ]] ; then
   running_pid=$(
-    ps auxww | grep '[u]nicorn' | grep ' master ' | grep -v '(old)' | \
-      awk '/'${project}'/{print $2}'
+  ps auxww | awk "/[u]nicorn master/ && ! /(old)/ && /${project}/ {print \$2}"
   )
 
   old_pid=$(
-    ps auxww | grep '[u]nicorn' | grep ' master ' | grep '(old)' | \
-      awk '/'${USER}'/{print $2}'
+  ps auxww | awk "/[u]nicorn master/ && /(old)/ && /${project}/ {print \$2}"
   )
 else
-  if [[ -z "$running_pid" ]] ; then
-    running_pid=$(
-      ps auxww | grep '[u]nicorn' | grep ' master ' | grep -v '(old)' | \
-        awk '/'${USER}'/{print $2}'
-    )
-    old_pid=$(
-      ps auxww | grep '[u]nicorn' | grep ' master ' | grep '(old)' | \
-        awk '/'${USER}'/{print $2}'
-    )
-  fi
+  running_pid=$(
+  ps auxww | awk "/[u]nicorn master/ && ! /(old)/ && /${USER}/ {print \$2}"
+  )
+  old_pid=$(
+  ps auxww | awk "/[u]nicorn master/ && /(old)/ && /${USER}/ {print \$2}"
+  )
 
   log "WARNING: 'project' should be set in ~/.bdsmrc"
 fi
 
 if [[ ${running_pid:-0} -gt 0 && -d "/proc/${running_pid}" ]] ; then
-  printf $running_pid > "$pid_file" # Make sure the correct running pid is in the pid_file.
-
-  master_pid=$running_pid # Set to the found running pid_file.
+  printf ${running_pid} > "$pid_file" # Make sure the correct running pid is in the pid_file.
+  master_pid=${running_pid} # Set to the found running pid_file.
 elif [[ ${pid_file_pid:-0} -gt 0 && -d "/proc/${pid_file_pid}" ]] ; then
-  master_pid=$pid_file_pid # Running and matches pid_file.
+  master_pid=${pid_file_pid} # Running and matches pid_file.
 else
   master_pid=0 # Not found!
 fi
 
-[[ -d "$current_path" ]] && builtin cd "$current_path"
-
-source_files "$current_path/.rvmrc"
+enter "$release_path"
+source_files "$release_path/.rvmrc"
 

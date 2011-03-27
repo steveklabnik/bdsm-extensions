@@ -1,7 +1,3 @@
 #!/usr/bin/env bash
 
-if [[ -d "$current_path" ]] ; then
-  builtin cd "$current_path"
-fi
-
 gem install unicorn --no-rdoc --no-ri -q
