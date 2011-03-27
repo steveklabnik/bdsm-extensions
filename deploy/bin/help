@@ -1,18 +1,21 @@
 #!/usr/bin/env bash
 
-description() {
-  printf "Deployment management extension."
+description()
+{
+  log "Deployment management extension."
 }
 
-actions() {
-  printf "
+actions()
+{
+  log "
+  deploy   - Deploy application from ${shared_path}
   rollback - Reset ~/current to the most recent previous release.
   help     - Display this help text.
   "
 }
 
 usage() {
-printf "
+  log "
 Description
 
   BDSM $(description)

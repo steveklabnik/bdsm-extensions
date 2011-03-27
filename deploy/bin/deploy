@@ -50,7 +50,8 @@ update_repository()
 {
   log "Updating local repository in $shared_path/$project."
 
-  pushd "$shared_path/$project" > /dev/null 2>&1
+  (
+  cd "$shared_path/$project"
 
   case "$scm" in
 
@@ -72,7 +73,7 @@ update_repository()
       elif ! git branch | awk "/\* $branch$/" >/dev/null 2>&1 ; then
 
         if ! git checkout $branch 2>/dev/null ; then
-          log "ERROR: Branch $remote/$branch not found. Skipping remainder of update."
+          error "Branch $remote/$branch not found. Skipping remainder of update."
           return 1
         fi
       else
@@ -123,8 +124,7 @@ update_repository()
       ;;
 
   esac
-
-  popd > /dev/null 2>&1
+  )
 }
 
 stage_current()
@@ -183,7 +183,7 @@ symlink()
     if [[ -d "$shared_path/$dir" ]] ; then
       log " - $dir"
       rm -rf "$stage_path/$dir"
-      ln -nfs "$shared_path/$dir" "$stage_path/$dir"
+      ln -fs "$shared_path/$dir" "$stage_path/$dir"
     fi
   done
 
@@ -191,7 +191,7 @@ symlink()
     if [[ -n "$dir" ]] ; then
       log " - public/$dir"
       rm -rf "$stage_path/public/$dir"
-      ln -nfs "$shared_path/public/$dir" "$stage_path/public/$dir"
+      ln -fs "$shared_path/public/$dir" "$stage_path/public/$dir"
     fi
   done
 }

@@ -1,8 +1,10 @@
 #!/usr/bin/env bash
 
-ensure_paths_exist "$previous_path" "$discarded_path"
+ensure_paths_exist \
+  "$previous_path" \
+  "$discarded_path"
 
-previous="$(\ls -t "$previous_path"/ | head -n 1)"
+previous="$(\ls -t "$previous_path"/ | head -1)"
 
 if [[ -d "$previous" ]] ; then
   log "Discarding current release to $discarded_path/$timestamp ..."
