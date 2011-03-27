@@ -1,21 +1,11 @@
 #!/usr/bin/env bash
 
-ensure_paths_exist \
-  "$previous_path" \
-  "$discarded_path"
+[[ -d "$previous" ]] || fail "A previous release was not found in $previous_path/"
 
-previous="$(\ls -t "$previous_path"/ | head -1)"
+log "Discarding current release to $discard_path/$timestamp ..."
+mv "$release_path" "$discard_path/$timestamp"
 
-if [[ -d "$previous" ]] ; then
-  log "Discarding current release to $discarded_path/$timestamp ..."
+log "Rolling back to previous release $previous ..."
+mv "$previous" "${release_path%/}"
 
-  mv "$current_path" "$discarded_path/$timestamp"
-
-  log "Rolling back to previous release $previous ..."
-
-  mv "$previous" "${current_path%/}"
-
-  log "Rolled back to previous release $previous."
-else
-  log "Previous release was not found in $previous_path/"
-fi
+log "Rollback complete."

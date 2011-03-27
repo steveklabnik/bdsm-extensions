@@ -8,3 +8,14 @@ source_files $(first $(nonempty_files "${files[@]}"))
 files=("$HOME/.bashrc" "/etc/bdsmrc" "$HOME/.bdsmrc" )
 source_files "${files[@]}"
 
+true \
+  "${discard_path:="$shared_path/discard"}" \
+  "${previous_path:=${project_path}/previous}" \
+  "${stage_path:=${project_path}/stage}"
+
+
+ensure_paths_exist \
+  "$previous_path" \
+  "$discard_path"
+
+previous="$(\ls -t "$previous_path"/ | head -1)"

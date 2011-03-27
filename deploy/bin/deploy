@@ -139,16 +139,16 @@ stage_current()
 
 replace_current()
 {
-  log "Replacing $current_path from $stage_path"
-  if [[ -d "$current_path" ]] ; then
+  log "Replacing $release_path from $stage_path"
+  if [[ -d "$release_path" ]] ; then
     log "Moving aside previous release."
     ensure_paths_exist "$project_path/previous"
-    mv "$current_path" "$project_path/previous/$timestamp"
+    mv "$release_path" "$project_path/previous/$timestamp"
   else
     log "Current directory does not exist, not removing."
   fi
 
-  mv "$stage_path" "$current_path"
+  mv "$stage_path" "$release_path"
 
   return $?
 }
@@ -226,8 +226,8 @@ record()
   revision=$(git log --no-color -1 | head -n 1 | cut -c 7-47)
   branch=$(git branch --no-color | awk '/^* /{print $2}')
 
-  echo "$revision" >> "$current_path/revision"
-  echo "$branch"   >> "$current_path/branch"
+  echo "$revision" >> "$release_path/revision"
+  echo "$branch"   >> "$release_path/branch"
 
   return 0
 }
