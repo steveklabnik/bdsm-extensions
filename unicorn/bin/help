@@ -27,7 +27,7 @@ actions()
 
 usage()
 {
-printf "
+log "
 Description
 
   BDSM $(description)

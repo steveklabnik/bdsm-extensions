@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# modules build fetch extract
+
 log "\nNote: This will do a standard install."
 log "Use the 'passenger' BDSM extension for installing passenger Nginx."
 
@@ -58,21 +60,24 @@ uwsgi_params.default win-utf
 )
 
 (
-cd "$nginx_path"
+enter "$nginx_path"
 move_files_to "${nginx_config_path}/${file}" "${files[@]}"
 )
 
-touch "${nginx_config_path}/passenger" # empty file as a placeholder.
+ensure_files_exist \
+  "${nginx_config_path}/passenger" # empty file as a placeholder.
 
 install_template "nginx" to "${init_scripts_path}"
-chmod +x "${init_scripts_path}/nginx"
-# TODO: Turn up
-
 install_template "nginx.conf" to "${nginx_config_path}"
 install_template "proxy.conf" to "${nginx_config_path}/conf"
+
+ensure_files_are_executable \
+  "${init_scripts_path}/nginx"
 
 # TODO: better handling of already exising nginx user here
 groupadd nginx 2>/dev/null
 useradd -G nginx -M nginx 2>/dev/null
 
-chown_paths "nginx:nginx" "${config_directories[@]}"
+chown_paths "nginx:nginx" \
+  "${config_directories[@]}"
+

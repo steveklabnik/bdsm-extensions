@@ -1,12 +1,6 @@
 #!/usr/bin/env bash
 
-# Load RVM if it is found
-files=( "$rvm_path/scripts/rvm" "$HOME/.rvm/scripts/rvm" "/usr/local/scripts/rvm" )
-source_files $(first $(nonempty_files "${files[@]}"))
-
-# Load environment and bdsmrc files.
-files=("$HOME/.bashrc" "/etc/bdsmrc" "$HOME/.bdsmrc" )
-source_files "${files[@]}"
+modules rvm
 
 true \
   "${discard_path:="$shared_path/discard"}" \

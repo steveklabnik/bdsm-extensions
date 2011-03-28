@@ -4,12 +4,12 @@ if [[ -s "$extension_templates_path/nginx.conf.template" ]] ; then
   ensure_paths_exist "$nginx_config_path" "$nginx_servers_path"
 
   # nginx.conf.template => /etc/nginx.conf
+  install_template "nginx.conf" "/etc/nginx"
   cp "$extension_templates_path/nginx.conf.template" \
     "/etc/nginx/nginx.conf"
 
   # nginx_ctl.template => ${init_scripts_path}/nginx
-  cp "${extension_templates_path}/nginx_ctl.template" \
-    "${init_scripts_path}/nginx"
+  install_template "nginx" "${init_scripts_path}/nginx"
 
   # ${template}.template => /etc/nginx/conf/${template}
   for template in proxy.conf mime.types ; do
