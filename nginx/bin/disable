@@ -1,24 +1,23 @@
 #!/usr/bin/env bash
 
 
-# Disable a project_name
+# Disable a project
 #
-# This renames /etc/nginx/project_names/X.conf to X.conf.disabled if it exists
+# This renames /etc/nginx/projects/X.conf to X.conf.disabled if it exists
 # and prings an informative message otherwise.
 #
 
-project_name="${1:-}"
-if [[ -z "$project_name" ]] ; then
-  log "project_name must be specified for 'nginx project_name'"
-fi
+project="${1:-}"
+[[ -n "$project" ]] || \
+  fail "project must be specified for 'nginx project'"
 
-if [[ -f "$nginx_project_names_path/$project_name.conf" ]] ; then
-  mv "$nginx_project_names_path/$project_name.conf" \
-    "$nginx_project_names_path/$project_name.conf.disabled"
+if [[ -f "$nginx_projects_path/$project.conf" ]] ; then
+  mv "$nginx_projects_path/$project.conf" \
+    "$nginx_projects_path/$project.conf.disabled"
 else
-  if [[ -f "$nginx_project_names_path/$project_name.conf.disabled" ]] ; then
-    succeed "$project_name.conf is already disabled."
+  if [[ -f "$nginx_projects_path/$project.conf.disabled" ]] ; then
+    succeed "$project.conf is already disabled."
   else
-    fail "INFO: Cannot disable, $project_name.conf does not exist."
+    fail "INFO: Cannot disable, $project.conf does not exist."
   fi
 fi
