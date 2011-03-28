@@ -1,8 +1,5 @@
 #!/usr/bin/env bash
 
-set -o errtrace
-export PS4='+${BASH_SOURCE} : ${LINENO} : ${FUNCNAME[0]:+${FUNCNAME[0]}() : }'
-
 if [[ $UID -eq 0 ]] ; then
   prefix_path="${prefix_path:-"/usr/local"}"
   src_path="$prefix_path/src"
@@ -21,21 +18,23 @@ if [[ $UID -eq 0 ]] ; then
   fi
   install_path="$prefix_path/$package-$version"
 else
-  prefix_path="${prefix_path:-"$HOME"}"
-  src_path="${src_path:-"$prefix_path/.src"}"
-  pgsql_path="$prefix_path/.postgresql-${version}"
   sudo="sudo"
-  user="${user:-$USER}"
-  profiles=("$HOME/.bash_profile" "$HOME/.bashrc")
-  install_path="$prefix_path/.$package-$version"
+  true \
+    "${user:=$USER}" \
+    "${prefix_path:="$HOME"}"
+  true \
+    "${src_path:-"$prefix_path/.src"}" \
+    "${pgsql_path:="$prefix_path/.postgresql-${version}"}" \
+    "${profiles:=("$HOME/.bash_profile" "$HOME/.bashrc")}" \
+    "${install_path:="$prefix_path/.$package-$version"}"
 fi
 
 if [[ $UID -eq 0 ]] ; then
   # TODO: correct this for multiple OS types.
   if useradd -r "$user" ; then
-    echo "User $user added."
+    log "User $user added."
   else
-    echo "User $user already exists."
+    log "User $user already exists."
   fi
 fi
 
@@ -43,14 +42,14 @@ timestamp="$(date +"%Y-%m-%dT%H:%M")"
 color_green="$(tput setaf 2)"
 color_red="$(tput setaf 5)"
 color_none="$(tput sgr0)"
-system="postgresql"
-version="${version:-"$($scripts_path/db "$extension_path/config/db" "version")"}"
 
+system="postgresql"
 package="postgresql"
 version="9.0.3"
 archive_format="tar.bz2"
 url="http://ftp9.us.postgresql.org/pub/mirrors/postgresql/source/v${version}"
-
+true \
+  "${version:="$($scripts_path/db "$extension_path/config/db" "version")"}"
 
 if [[ $UID -eq 0 ]] ; then
   "${prefix:=/usr/local}"

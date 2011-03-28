@@ -204,9 +204,7 @@ if [[ "Darwin" = "$(uname)" ]] ; then
 elif [[ "Linux" = "$(uname)" ]] ; then
 
   if [[ ! -s /etc/init.d/postgresql ]] ; then
-
     cp contrib/start-scripts/linux /etc/init.d/postgresql
-
   fi
 
   chmod +x /etc/init.d/postgresql
