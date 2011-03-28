@@ -2,7 +2,7 @@
 
 # modules build fetch extract
 
-log "\nNote: This will do a standard install."
+log "\nNote: This will do a standard Nginx install."
 log "Use the 'passenger' BDSM extension for installing passenger Nginx."
 
 configure_flags=(--prefix="$nginx_install_path"
@@ -22,29 +22,16 @@ configure_flags=(--prefix="$nginx_install_path"
   --with-pcre
 )
 
-true "${source_path:=/usr/local/src}" \
-     "${nginx_version:=0.8.54}" \
-     "${archive_format:=tar.gz}"
+true "${package_version:=0.8.54}"
 
-ensure_paths_exist "$source_path"
-
-cd "$source_path"
+modules
 
 package="nginx"
-packge_url="http://nginx.org/download/${package}-${nginx_version}.${archive_format}"
+packge_url="http://nginx.org/download"
 
-curl -O -L "$packge_url"
+build_src # Install from source
 
-tar zxf "${package}-${nginx_version}.tar.gz"
-
-cd "${package}-${nginx_version}"
-
-./configure ${configure_flags[@]}
-
-make
-
-make install
-
+# Post install configuration
 config_directories=(/var/spool/nginx/client_body_temp
 /var/log/nginx
 "$nginx_config_path/conf"
@@ -78,6 +65,5 @@ ensure_files_are_executable \
 groupadd nginx 2>/dev/null
 useradd -G nginx -M nginx 2>/dev/null
 
-chown_paths "nginx:nginx" \
-  "${config_directories[@]}"
+chown_paths "nginx:nginx" "${config_directories[@]}"
 
