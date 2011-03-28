@@ -1,10 +1,7 @@
 #!/usr/bin/env bash
 
-cp -f \
-  "$extension_templates_path/redis.init.template" \
-  "${init_scripts_path}/redis"
+install_template "redis" "${init_scripts_path}"
 
-[[ -s "${init_scripts_path}/redis" && ! -x "${init_scripts_path}/redis" ]] &&
-  chmod +x "${init_scripts_path}/redis"
+ensure_files_are_executable "${init_scripts_path}/redis"
 
-# TODO: Install redis.conf
+install_redis_conf
