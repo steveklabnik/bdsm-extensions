@@ -1,8 +1,10 @@
 #!/usr/bin/env bash
 
-cd $current_path
+enter "$current_path"
 
 if [[ -s script/console ]] ; then
   ruby script/console
+elif [[ -s script/rails ]] ; then
+  ruby script/rails console
 fi
 

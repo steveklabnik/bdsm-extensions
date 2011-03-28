@@ -1,7 +1,11 @@
 #!/usr/bin/env bash
 
-cd $project_path
+enter "$current_path"
 
-if [[ -s script/console ]] ; then
+if [[ -s script/dbconsole ]] ; then
   ruby script/dbconsole
+elif [[ -s script/rails ]] ; then
+  ruby script/rails db
+else
+  true # TODO: raw psql/mysql/etc... based on database.yml
 fi

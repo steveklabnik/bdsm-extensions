@@ -1,8 +1,6 @@
 #!/usr/bin/env bash
 
-[[ "$trace_flag" -eq 1 ]] && set -x
-
-source "$scripts_path/initialize"
+modules project
 
 while [ $# -gt 0 ] ; do
   token="$1" ; shift
@@ -16,39 +14,30 @@ while [ $# -gt 0 ] ; do
   esac
 done
 
-environment="${environment:-"production"}"
-RAILS_ENV="${RAILS_ENV:-$environment}"
-
 #
 # Sanity checks
 #
-if [[ $UID -eq 0 ]] ; then
-  $scripts_path/log "error" "bdsm extension $extension must be run as the project user and NOT root."
-  exit 1
+[[ $UID -eq 0 ]] &&
+  fail "bdsm extension $extension must be run as the project user and NOT root."
+
+ensure_files_exist "$HOME/.bash_profile" "$HOME/.bashrc" "$HOME/.bdsmrc"
+
+[[ -n "$project" ]] || \
+  fail "project variable must be set for extension $extension."
+
+if ! awk "/^project=/" "$HOME/.bash_profile" ; then
+  printf "\nexport project=\"${project:-$user}\"\n" >> $HOME/.bdsmrc
 fi
 
-touch "$HOME/.bash_profile" "$HOME/.bashrc" "$HOME/.bdsmrc"
+[[ -n "$environment" ]] || \
+  fail "environment variable must be set for extension $extension."
 
-if [[ -z "$project" ]] ; then
-  $scripts_path/log "error" "project variable must be set for extension $extension."
-  exit 1
-else
-  if ! awk "/^project=/" "$HOME/.bash_profile" ; then
-    printf "\nexport project=\"${project:-$user}\"\n" >> $HOME/.bdsmrc
-  fi
+if ! awk "/^environment=/" "$HOME/.bash_profile" ; then
+  printf "\nexport environment=\"$environment\"\n" >> $HOME/.bdsmrc
 fi
 
-if [[ -z "$environment" ]] ; then
-  $scripts_path/log "error" "environment variable must be set for extension $extension."
-  exit 1
-else
-  if ! awk "/^environment=/" "$HOME/.bash_profile" ; then
-    printf "\nexport environment=\"$environment\"\n" >> $HOME/.bdsmrc
-  fi
-
-  if ! awk "/^RAILS_ENV=/" "$HOME/.bash_profile" ; then
-    printf "\nexport RAILS_ENV=\"$environment\"\n" >> $HOME/.bdsmrc
-  fi
+if ! awk "/^RAILS_ENV=/" "$HOME/.bash_profile" ; then
+  printf "\nexport RAILS_ENV=\"$environment\"\n" >> $HOME/.bdsmrc
 fi
 
 if [[ -n "$repository" ]] ; then
@@ -75,15 +64,14 @@ if [[ -n "$repository" ]] ; then
   fi
 fi
 
-for dir in config log pids sockets "public/assets" tmp ; do
-  mkdir -p "$shared_path/$dir"
-done
+(
+enter "$shared_path"
+ensure_paths_exist config log pids sockets "public/assets" tmp
+)
 
 #
 # Ensure the .bdsmrc file and the profiles are setup properly.
 #
-touch "$shared_path/config/database.yml"
-
 if [[ -n "$database" ]] ; then
   if ! awk "/^database/" "$HOME/.bash_profile" ; then
     echo "export database=\"production\"" >> $HOME/.bdsmrc
@@ -102,19 +90,21 @@ if ! awk '/current\/\.rvmrc/' "$HOME/.bash_profile" ; then
   echo '[[ "-d $HOME/current" ]] && [[ -f "$HOME/current/.rvmrc" ]] && . "$HOME/current/.rvmrc"' >> $HOME/.bash_profile
 fi
 
+# TODO: Add this into the rvm module.
 if [[ ! -s "$HOME/.rvm/scripts/rvm" ]] ; then
   mkdir -p $HOME/.rvm/src ; cd $HOME/.rvm/src
   if [[ -d rvm/.git ]] ; then
-    cd rvm &&
-    git reset --hard HEAD &&
-    git pull origin "${rvm_branch:-master}" &&
+    cd rvm
+    git reset --hard HEAD
+    git pull origin "${rvm_branch:-master}"
     ./install
   else
-    git clone git://github.com/wayneeseguin/rvm.git &&
-    cd rvm &&
+    git clone git://github.com/wayneeseguin/rvm.git
+    cd rvm
     ./install
   fi
-  cd $HOME
+
+  enter $HOME
 fi
 
 if [[ ! -s "$project_path/shared/config/database.yml" ]] ; then
@@ -124,7 +114,7 @@ if [[ ! -s "$project_path/shared/config/database.yml" ]] ; then
   fi
 fi
 
-if [[ -d "$shared_path/$project/" ]] && [[ -s "$shared_path/$project/.rvmrc" ]] ; then
+if [[ -d "$shared_path/$project/" && -s "$shared_path/$project/.rvmrc" ]] ; then
   export rvm_install_on_use_flag=1
   . "$shared_path/$project/.rvmrc"
 fi
@@ -147,19 +137,24 @@ if [[ -n "$database" ]] && command -v gem > /dev/null; then
   fi
 fi
 
-if [[ -n "$server" ]] ; then
-
-  if [[ "unicorn" = "$server" ]] ; then
+case "${server:-}" in
+  unicorn)
     # TODO: Extension check
     "$bin_path/bdsm unicorn setup"
-  elif [[ "mongrel" = "$server" ]] ; then
+    ;;
+  mongrel)
     "$bin_path/bdsm mongrel setup"
-  elif [[ "mongrel2" = "$server" ]] ; then
+    ;;
+  mongrel2)
     "$bin_path/bdsm mongrel2 setup"
-  elif [[ "thin" = "$server" ]] ; then
+    ;;
+  thin)
     "$bin_path/bdsm thin setup"
-  fi
-
-fi
+    ;;
+  *)
+    # Defaulting to Unicorn
+    "$bin_path/bdsm unicorn setup"
+    ;;
+esac
 
 exit $?
