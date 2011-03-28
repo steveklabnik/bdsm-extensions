@@ -1,18 +1,19 @@
 #!/usr/bin/env bash
 
-if [[ "$master_pid" -gt 0 ]] ; then
-  log "Unicorn herd master is already running for $project."
-else
-  log "Starting unicorn herd master for $project."
+[[ ${master_pid} -gt 0 ]] && \
+  succeed "Unicorn herd master is already running for $project."
 
-  if [[ -s "$current_path/config/unicorn.rb" ]] ; then
-    if [[ -s "$current_path/config.ru" ]] ; then
-      unicorn -c "$current_path/config/unicorn.rb" -E "$environment" -D
-    else
-      unicorn_rails -c "$current_path/config/unicorn.rb" -E "$environment" -D
-    fi
-  else
-    fail "config/unicorn.rb not found, aborting start."
-  fi
-  log "Unicorn herd master has been launched $project."
+log "Starting unicorn herd master for $project."
+
+[[ -s "$current_path/config/unicorn.rb" ]] || \
+  fail "config/unicorn.rb not found, aborting start."
+
+if [[ -s "$current_path/config.ru" ]] ; then
+  binary="unicorn"
+else
+  binary="unicorn_rails"
 fi
+
+$binary -c "$current_path/config/unicorn.rb" -E "$environment" -D
+
+log "Unicorn herd master has been launched $project."

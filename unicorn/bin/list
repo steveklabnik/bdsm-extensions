@@ -1,29 +1,13 @@
 #!/usr/bin/env bash
 
-source "$extension_scripts_path/initialize"
+[[ ${master_pid} -gt 0 ]] || \
+  succeed "There are no unicorns running for $project."
 
-if [[ "$master_pid" -le 0 ]] ; then
-
-  "$scripts_path/log" "info" \
-    "There are no unicorns running for $project."
-
+if [[ -n "${project:-}" ]] ; then
+  ps auxww | awk "/[u]nicorn/ && /master/ && ${project}"
+  ps auxww | awk "/[u]nicorn/ && /worker/ && ${project}"
 else
-
-  if [[ -n "${project:-""}" ]] ; then
-
-    ps auxww | grep '[u]nicorn' | grep 'master' | awk '/'${project}'/'
-
-    ps auxww | grep '[u]nicorn' | grep 'worker' | awk '/'${project}'/'
-
-  else
-
-    ps auxww | grep '[u]nicorn' | grep 'master' | awk '/'${USER}'/'
-
-    ps auxww | grep '[u]nicorn' | grep 'worker' | awk '/'${USER}'/'
-
-  fi
-
+  ps auxww | awk "/[u]nicorn/ && /master/ && ${USER}"
+  ps auxww | awk "/[u]nicorn/ && /worker/ && ${USER}"
 fi
-
-exit $?
 

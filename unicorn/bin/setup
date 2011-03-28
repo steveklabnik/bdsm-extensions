@@ -1,12 +1,10 @@
 #!/usr/bin/env bash
 
-if [[ -s "$extensions_path/unicorn/templates/unicorn.rb" ]] ; then
-  ensure_paths_exist "$shared_path/config/"
+template_exists "unicorn.rb" || \
+  fail "Template file $extensions_path/unicorn/templates/unicorn.rb.template is missing."
 
-  cp "$extensions_path/unicorn/templates/unicorn.rb" \
-     "$shared_path/config/unicorn.rb"
+ensure_paths_exist "$shared_path/config"
 
-  succeed "Setup complete."
-else
-  fail "$extensions_path/unicorn/templates/unicorn.rb template is missing."
-fi
+install_template "unicorn.rb" "${shared_path}/config"
+
+succeed "Setup complete."

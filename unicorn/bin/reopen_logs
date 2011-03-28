@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 
-if [[ "$master_pid" -le 0 ]] ; then
-  log "unicorn is not running for $project yet."
-else
-  kill -USR1 ${master_pid}
-fi
+[[ "$master_pid" -gt 0 ]] || \
+  succeed "unicorn is not running for $project yet."
+
+kill -USR1 ${master_pid}
