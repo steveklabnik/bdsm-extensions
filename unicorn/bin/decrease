@@ -1,9 +1,7 @@
 #!/usr/bin/env bash
 
-if [[ ${master_pid} -gt 0 ]] ; then
-  kill -TTOU ${master_pid}
-else
-  log "unicorn is not running for $project."
-fi
+[[ ${master_pid} -gt 0 ]] || \
+  fail "unicorn is not running for $project."
 
-exit $?
+kill -TTOU ${master_pid}
+

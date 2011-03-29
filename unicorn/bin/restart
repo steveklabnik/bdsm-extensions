@@ -3,14 +3,13 @@
 if [[ "$master_pid" -le 0 ]] ; then
   log "Unicorn herd master not found running for $project $environment, starting."
 
-  if [[ -s "$current_path/config/unicorn.rb" ]] ; then
-    if [[ -s "$current_path/config.ru" ]] ; then
-      unicorn -c "$current_path/config/unicorn.rb" -E "$environment" -D
-    else
-      unicorn_rails -c "$current_path/config/unicorn.rb" -E "$environment" -D
-    fi
-  else
+  [[ -s "$current_path/config/unicorn.rb" ]] || \
     fail "config/unicorn.rb not found, aborting start."
+
+  if [[ -s "$current_path/config.ru" ]] ; then
+    unicorn -c "$current_path/config/unicorn.rb" -E "$environment" -D
+  else
+    unicorn_rails -c "$current_path/config/unicorn.rb" -E "$environment" -D
   fi
 else
   log "Master pid '$master_pid' found."

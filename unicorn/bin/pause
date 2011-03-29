@@ -2,7 +2,7 @@
 
 enter "$current_path"
 
-[[ "$master_pid" -gt 0 ]] || \
+[[ ${master_pid} -gt 0 ]] || \
   succeed "Unicorn is not running for $project yet."
 
 kill -WINCH "$master_pid"
