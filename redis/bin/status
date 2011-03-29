@@ -14,5 +14,3 @@ log "  port: $(awk '/^port/{print $2}' ${redis_config_file} || printf "6379")"
 log "  pidfile: $(awk '/^pidfile/{print $2}' ${redis_config_file})"
 log "  logfile: $(awk '/^logfile/{print $2}' ${redis_config_file})"
 log "  dbfile: $(awk '/^dbfilename/{print $2}' ${redis_config_file})"
-
-exit 0

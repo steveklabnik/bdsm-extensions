@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-install_template "redis" "${init_scripts_path}"
+install_template "${extension}" "${init_scripts_path}"
 
-ensure_files_are_executable "${init_scripts_path}/redis"
+ensure_files_are_executable "${init_scripts_path}/${extension}"
 
-install_redis_conf
+install_${extension}_conf

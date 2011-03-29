@@ -6,17 +6,19 @@ fail() { log "ERROR: $*" ; exit 1 ; }
 initialize()
 {
   if [[ $UID -eq 0 ]] ; then
-    [[ -s /etc/conf.d/redis ]] && source /etc/conf.d/redis
+    [[ -s /etc/conf.d/redis ]] && \
+      source /etc/conf.d/redis
   else
     redis_user="$USER"
   fi
 
-  true ${redis_user:="redis"}
-  true ${redis_port:="6379"}
-  true ${redis_bin_path:="/usr/local/bin"}
-  true ${redis_server_binary:="${redis_bin_path}/redis-server"}
-  true ${redis_pid_file:="/var/run/redis/redis.pid"}
-  true ${redis_config_file:="/etc/redis/redis.conf"}
+  true \
+    ${redis_user:="redis"} \
+    ${redis_port:="6379"} \
+    ${redis_bin_path:="/usr/local/bin"} \
+    ${redis_server_binary:="${redis_bin_path}/redis-server"} \
+    ${redis_pid_file:="/var/run/redis/redis.pid"} \
+    ${redis_config_file:="/etc/redis/redis.conf"}
 
   if [[ -s "$redis_pid_file" ]] ; then
     pid=$(cat "$redis_pid_file")
@@ -58,37 +60,36 @@ Description:
 
 redis_start()
 {
-  if [[ -s "$redis_pid_file" ]] ; then
+  [[ -s "$redis_pid_file" ]] &&
     fail "$redis_pid_file exists, redis-server is either already running or crashed.\n"
-  else
-    log "#starting Redis as $redis_user using $redis_config_file..."
 
-    if [[ "$redis_user" != "$USER" ]] ; then
-      su "$redis_user" -c "\"$redis_server_binary\" \"$redis_config_file\""
-    else
-      "$redis_server_binary" "$redis_config_file"
-    fi
+  log "#starting Redis as $redis_user using $redis_config_file..."
+
+  if [[ "$redis_user" != "$USER" ]] ; then
+    su "$redis_user" -c "\"$redis_server_binary\" \"$redis_config_file\""
+  else
+    "$redis_server_binary" "$redis_config_file"
   fi
+
   return $?
 }
 
 redis_stop()
 {
-  if [[ -s "$redis_pid_file" ]] ; then
-    log "#stopping Redis as $redis_user using $redis_config_file..."
-
-    "${redis_server_binary/%server/cli}" shutdown
-
-    while [[ -x /proc/${pid} ]] ; do
-      echo "Waiting for the redis server to shutdown ..."
-      sleep 1
-    done
-    rm -f $redis_pid_file
-    log "redis server stopped."
-    sleep 1
-  else
+  [[ -s "$redis_pid_file" ]] || \
     fail "$redis_pid_file does not exist, Redis is not running"
-  fi
+
+  log "#stopping Redis as $redis_user using $redis_config_file..."
+
+  "${redis_server_binary/%server/cli}" shutdown
+
+  while [[ -x /proc/${pid} ]] ; do
+    log "Waiting for the redis server to shutdown ..."
+    sleep 1
+  done
+
+  rm -f $redis_pid_file
+  log "redis server stopped."
 }
 
 redis_restart()
@@ -106,12 +107,11 @@ redis_restart()
 
 redis_info()
 {
-  if [[ -s "$redis_pid_file" ]] ; then
-    "${redis_server_binary/%server/cli}" INFO
-  else
+  [[ -s "$redis_pid_file" ]] || \
     fail "$redis_pid_file does not exist, Redis is not running"
-    exit 1
-  fi
+
+  "${redis_server_binary/%server/cli}" INFO
+
   return $?
 }
 

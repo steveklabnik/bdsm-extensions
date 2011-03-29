@@ -27,6 +27,4 @@ install_init_script
 
 install_redis_conf
 
-log "Installation Complete."
-
-exit 0
+succeed "Installation Complete."
