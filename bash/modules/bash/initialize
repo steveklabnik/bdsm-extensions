@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+modules package
+
+define_package \
+  name "bash" \
+  version "4.2" \
+  url "ftp://ftp.gnu.org/gnu/bash"
+
+define_package \
+  patches_url "ftp://ftp.gnu.org/gnu/bash/bash-${version}-patches"
+

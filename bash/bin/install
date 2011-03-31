@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+
+while [[ $# -gt 0 ]] ; do
+
+  token="$1" ; shift
+
+  case "$token" in
+    --trace)
+      trace_flag=1
+      enable_trace
+      ;;
+
+    --version)
+      version="$1"
+      shift
+      ;;
+
+    --url)
+      package_url="$1"
+      shift
+      ;;
+
+    *)
+      fail "Unknown command line argument for bdsm ${extension} ${action}: '$token'"
+      ;;
+  esac
+done
+
+install_package
+
+upgrade_bash
+
+succeed "Installation Complete."
