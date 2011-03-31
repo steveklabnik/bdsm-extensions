@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+# TODO: Make version configurable from ~/.bdsm/${extension}/config
+
+define_package \
+  name "${extension}" \
+  version "2.7.8" \
+  url "ftp://xmlsoft.org/libxml2/"
+
+install_package
+
+succeed "Installed ${package_name} ${package_version}."
