@@ -3,9 +3,11 @@
 modules package
 
 define_package \
-  name "bash" \
-  version "4.2" \
-  url "ftp://ftp.gnu.org/gnu/bash"
+  version "4.3.10" \
+  archive_format "tar.bz2"
+
+define_package \
+  base_url "http://cdnetworks-us-1.dl.sourceforge.net/project/zsh/zsh-dev"
 
 define_package \
   patches_url "ftp://ftp.gnu.org/gnu/bash/bash-${version}-patches"

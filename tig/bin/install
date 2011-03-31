@@ -1,13 +1,4 @@
 #!/usr/bin/env bash
 
-# TODO: Make version configurable from ~/.bdsm/${extension}/config
-
-define_package \
-  name "${extension}" \
-  version "0.17" \
-  url "http://jonas.nitro.dk/tig/releases" \
-  md5_url "http://jonas.nitro.dk/tig/releases"
-
 install_package
 
-succeed "Installed ${package_name} ${package_version}."

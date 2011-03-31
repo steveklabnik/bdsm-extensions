@@ -5,11 +5,13 @@ while [[ $# -gt 0 ]] ; do
   token="$1" ; shift
   case "$token" in
     --trace)   set -o xtrace          ;;
-    --version) version="$1"   ; shift ;;
-    --url)     redis_url="$1" ; shift ;;
+    --version) packge_version="$1"   ; shift ;;
+    --url)     package_url="$1" ; shift ;;
     *)         fail "Unknown command line argument for bdsm redis: '$token'" ;;
   esac
 done
+
+# TODO: Use package DSL module pieces instead of defining our own here..
 
 download_redis
 

@@ -4,4 +4,3 @@ install_package
 
 upgrade_binary
 
-succeed "Installation Complete."

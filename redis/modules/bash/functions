@@ -59,30 +59,28 @@ create_redis_directories()
 {
   local directory redis_path
 
-  log "#creating paths for ${package} ${version}...\n"
   # TODO: can likely merge directory creation into path creation.
-  for directory in "${directories[@]}" ; do
-    [[ ! -d "$directory" ]] && mkdir -p "$directory"
-    chown -R $redis_user "$directory"
-  done
 
-  for redis_path in "${redis_paths[@]}" ; do
-    [[ ! -d "$redis_path" ]] && mkdir -p "$redis_path"
-    chown -R $redis_user "$redis_path"
-  done
-  [[ ! -d "${redis_install_path}" ]] && mkdir -p "${redis_install_path}"
-  return 0
+  log "#creating paths for ${package} ${package_version}..."
+
+  ensure_paths_exist "${directories[@]}"
+
+  chown_paths "$redis_user" "${directories[@]}"
+
+  ensure_paths_exist "${redis_paths[@]}"
+
+  chown_paths "$redis_user" "${redis_paths[@]}"
+
+  ensure_paths_exist "${redis_install_path}"
 }
 
 install_init_script()
 {
   log "#installing init script"
-  cp -f "$extension_templates_path/redis.init.template" \
-    "${init_scripts_path}/redis"
 
-  [[ -s "${init_scripts_path}/redis" && ! -x "${init_scripts_path}/redis" ]] &&
-    chmod +x "${init_scripts_path}/redis"
+  install_template "redis" to "${init_scripts_path}/redis"
 
+  ensure_files_are_executable "${init_scripts_path}/redis"
 
   # Add to system startup
   if [[ $UID -eq 0 ]] ; then
@@ -122,40 +120,34 @@ install_redis_conf()
 
 cleanup()
 {
-  log "#cleaning install files for ${package} ${version}...\n"
-  if ! cd "$src_path" ; then
-    fail "Failed changing into the $src_path source path."
-  fi
+  log "#cleaning install files for ${package} ${package_version}...\n"
+  enter "${src_path}"
 
-  for entity in $(find "$src_path/" -mindepth 1 -maxdepth 1 -iname "${package}-${version}*") ; do
-    rm -rf "$entity"
-  done
-  return 0
+  local files=($(
+  find "$src_path/" -mindepth 1 -maxdepth 1 -iname "${package}-${package_version}*"
+  ))
+
+  remove_files "${files[@]}"
 }
 
 download_redis()
 {
   ensure_paths_exist "${src_path}"
 
-  if ! cd $src_path ; then
-    fail " Failed changing to $src_path"
-  fi
+  enter "${src_path}"
 
   log "#downloading ${package_file}...\n"
 
-  if ! curl -O -L "${redis_url}" ; then
-    fail "${package_file} failed to download from '${redis_url}'."
+  if ! curl -O -L "${package_url}" ; then
+    fail "${package_file} failed to download from '${package_url}'."
   fi
-  return $?
 }
 
 extract_redis()
 {
-  if ! cd "$src_path" ; then
-    fail "Failed changeing to $src_path"
-  fi
+  enter "${src_path}"
 
-  log "#extracting ${package} ${version}...\n"
+  log "#extracting ${package} ${package_version}...\n"
 
   if ! tar zxf "${package_file}" ; then
     fail "${package_file} failed to extract."
@@ -166,29 +158,25 @@ extract_redis()
 
 build_redis()
 {
-  if ! cd "${redis_src_path}" ; then
-    fail "Failed changing to ${redis_src_path} directory."
-  fi
+  enter "${src_path}"
 
   # Nothing to configure, proceeding straight to make.
 
-  log "#compiling ${package} ${version}...\n"
+  log "#compiling ${package} ${package_version}...\n"
 
   if ! make 2>&1 > "${redis_src_path}/make.log" ; then
-    fail "Compiling ${package}-${version} failed, see ${redis_src_path}/make.log"
+    fail "Compiling ${package}-${package_version} failed, see ${redis_src_path}/make.log"
   fi
-  return $?
 }
 
 install_redis()
 {
-  log "#installing ${package} ${version}...\n"
+  log "#installing ${package} ${package_version}...\n"
 
   for file in redis-server redis-cli ; do
     if ! install -b "${redis_src_path}/src/${file}" "${redis_bin_path}/${file}" ; then
-      fail "${package} ${version} failed to install (specifically ${file}).\n"
+      fail "${package} ${package_version} failed to install (specifically ${file}).\n"
     fi
   done
-  return 0
 }
 

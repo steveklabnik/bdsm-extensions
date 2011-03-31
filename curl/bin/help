@@ -2,5 +2,5 @@
 
 description "${extension} BDSM extension."
 
-actions "install  - Install the $extension gem.
+actions "install  - Install ${package_name} ${package_version}.
   setup   - setup ~/.curlrc."
