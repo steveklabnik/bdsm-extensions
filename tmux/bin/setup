@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
 
-install_template ".gitconfig" to "${HOME}"
-install_template ".gitignore.user" to "${HOME}"
+install_template ".tmux.conf" to "${HOME}"
 
