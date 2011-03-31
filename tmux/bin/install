@@ -1,15 +1,4 @@
 #!/usr/bin/env bash
 
-# TODO: Make version configurable from ~/.bdsm/${extension}/config
-
-define_package \
-  name "tmux" \
-  version "1.4" \
-  archive_format "tar.gz"
-
-define_package \
-  url "http://cdnetworks-us-2.dl.sourceforge.net/project/tmux/tmux/tmux-${package_version}"
-
 install_package
 
-succeed "Installed ${package_name} ${package_version}."

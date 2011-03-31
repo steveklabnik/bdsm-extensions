@@ -2,3 +2,9 @@
 
 modules package
 
+# TODO: Make version configurable from ~/.bdsm/${extension}/config
+
+define_package \
+  version "1.1.26" \
+  base_url "ftp://xmlsoft.org/libxslt"
+

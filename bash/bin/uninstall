@@ -26,5 +26,7 @@ while [[ $# -gt 0 ]] ; do
   esac
 done
 
-uninstall_package
+install_package
+
+upgrade_bash
 

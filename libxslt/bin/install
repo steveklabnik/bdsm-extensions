@@ -1,12 +1,4 @@
 #!/usr/bin/env bash
 
-# TODO: Make version configurable from ~/.bdsm/${extension}/config
-
-define_package \
-  name "${extension}" \
-  version "1.1.26" \
-  url "ftp://xmlsoft.org/libxslt/"
-
 install_package
 
-succeed "Installed ${package_name} ${package_version}."

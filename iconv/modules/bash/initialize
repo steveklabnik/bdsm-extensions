@@ -2,3 +2,11 @@
 
 modules package
 
+# TODO: Make version configurable from ~/.bdsm/${extension}/config
+
+define_package \
+  version "1.13.1" \
+  file "libiconv-1.13.1.tar.gz" \
+  dir "libiconv-1.13.1" \
+  base_url "http://ftp.gnu.org/pub/gnu/libiconv"
+

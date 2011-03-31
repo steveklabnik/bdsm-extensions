@@ -2,3 +2,11 @@
 
 modules package
 
+# TODO: Make version configurable from ~/.bdsm/${extension}/config
+
+define_package \
+  version "1.4"
+
+define_package \
+  base_url "http://cdnetworks-us-2.dl.sourceforge.net/project/tmux/tmux/tmux-${package_version}"
+

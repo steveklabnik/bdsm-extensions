@@ -2,3 +2,9 @@
 
 modules package
 
+# TODO: Make version configurable from ~/.bdsm/${extension}/config
+
+define_package \
+  version "1.2.5" \
+  base_url "http://zlib.net/"
+

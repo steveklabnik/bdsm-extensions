@@ -1,13 +1,4 @@
 #!/usr/bin/env bash
 
-# TODO: Make version configurable from ~/.bdsm/${extension}/config
-
-define_package \
-  name "${extension}" \
-  version "3.0.8" \
-  archive_format "tar.gz" \
-  url "http://rsync.samba.org/ftp/rsync"
-
 install_package
 
-succeed "Installed ${package_name} ${package_version}."
