@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# TODO: Make version configurable from ~/.bdsm/curl/config
+# TODO: Make version configurable from ~/.bdsm/${extension}/config
 
 define_package \
   name "tmux" \
