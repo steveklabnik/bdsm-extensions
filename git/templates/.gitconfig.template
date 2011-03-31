@@ -1,0 +1,17 @@
+[apply]
+  whitespace = nowarn
+[alias]
+  co = checkout
+	undo = reset --soft HEAD^
+[core]
+	excludesfile = ~/.gitignore.user
+[color]
+  status = auto
+  branch = auto
+  diff = auto
+  ui = auto
+  log = auto
+[pack]
+	threads = 0
+[diff]
+	renamelimit = 0

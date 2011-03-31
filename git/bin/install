@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+# TODO: Make version configurable from ~/.bdsm/curl/config
+
+define_package \
+  name "git" \
+  version "1.7.4.2" \
+  archive_format "tar.bz2" \
+  url "http://kernel.org/pub/software/scm/git"
+
+install_package
+
+succeed "Installed ${package_name} ${package_version}."
