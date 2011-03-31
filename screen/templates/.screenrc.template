@@ -1,0 +1,26 @@
+startup_message off
+shell -${SHELL}
+# term screen-256color-bce
+# term xterm-256color
+
+# terminfo and termcap for nice 256 color terminal
+# allow bold colors - necessary for some reason
+attrcolor b ".I"
+# tell screen how to set colors. AB = background, AF=foreground
+termcapinfo xterm 'Co#256:AB=\E[48;5;%dm:AF=\E[38;5;%dm'
+# erase background with current bg color
+defbce "on"
+
+escape ^Bt
+
+# caption always "%?%{+b kw}%-Lw%?%{yK}%n*%f %t%?(%u)%?%?%{wk}%+Lw%? %{gk}%=%c %{yk}%d/%M/%Y"
+hardstatus alwayslastline
+hardstatus string '%{= kG}%-Lw%{= kW}%50> %n*%f %t%{= kG}%+Lw%< %{= kG}%-=%D %m/%d/%y | %3`@%2` %C:%s %A | %1`%{-}'
+
+backtick 2 60 60 hostname
+backtick 3 60 60 whoami
+
+# bind ' ' window list -b
+
+# autodetach on
+defscrollback 5000
