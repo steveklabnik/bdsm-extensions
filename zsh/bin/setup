@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+install_template ".zshenv" to "${HOME}"
+
+install_template ".zshrc" to "${HOME}"
+

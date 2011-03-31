@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+install_package
+
+upgrade_binary
+
+succeed "Installation Complete."
