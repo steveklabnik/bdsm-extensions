@@ -4,4 +4,5 @@
   succeed "Unicorn herd is not running for $project yet."
 
 log "Signaling unicorn master to quit for $project."
+
 kill -QUIT ${master_pid}

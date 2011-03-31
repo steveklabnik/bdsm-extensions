@@ -1,12 +1,7 @@
 #!/usr/bin/env bash
 
-[[ ! -z "$HOME/.bashrc" ]] && . "$HOME/.bashrc"
-
-[[ "$trace_flag" -eq 1 ]] && set -x
-
-if [[ -d "$current_path" ]] ; then
-  cd "$current_path"
-  [[ -s ".rvmrc" ]] && . ".rvmrc"
+if [[ -d "$release_path" ]] ; then
+  cd "$release_path"
 fi
 
 gem install unicorn --no-rdoc --no-ri -q

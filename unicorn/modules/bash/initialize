@@ -1,8 +1,6 @@
 #!/usr/bin/env bash
 
-modules "trace" "project" "rvm" # Load the project module
-
-source_files "$HOME/.bashrc" "/etc/bdsmrc" "$HOME/.bdsmrc"
+modules project rvm
 
 ensure_set "environment" "RAILS_ENV" "project"
 

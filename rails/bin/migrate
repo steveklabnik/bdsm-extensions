@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
 
-enter "$current_path"
+enter "$release_path"
 
 rake db:migrate --trace

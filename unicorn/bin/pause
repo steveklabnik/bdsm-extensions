@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-enter "$current_path"
+enter "$release_path"
 
 [[ ${master_pid} -gt 0 ]] || \
   succeed "Unicorn is not running for $project yet."

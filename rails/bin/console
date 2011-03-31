@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-enter "$current_path"
+enter "$release_path"
 
 if [[ -s script/console ]] ; then
   ruby script/console

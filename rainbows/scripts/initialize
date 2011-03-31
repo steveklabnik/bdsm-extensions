@@ -6,7 +6,7 @@ modules rvm
 [[ -n "$RAILS_ENV" ]] || fail "'RAILS_ENV' is not set (bdsmrc)"
 [[ -n "$project" ]] || fail "'project' is not set (bdsmrc)"
 
-pidfile="$current_path/pids/$project.rainbows.pid"
+pidfile="$release_path/pids/$project.rainbows.pid"
 [[ -s "$pidfile" ]] && pidfile_pid="$(cat "$pidfile")"
 
 if [[ -n "$pidfile_pid" ]] && [[ -d "/proc/${pidfile_pid}" ]] ; then
@@ -26,7 +26,7 @@ else
   unset master_pid # Not found!
 fi
 
-[[ -d $current_path ]] && builtin cd $current_path
+[[ -d $release_path ]] && builtin cd $release_path
 
-[[ -s "$current_path/.rvmrc" ]] && source "$current_path/.rvmrc"
+[[ -s "$release_path/.rvmrc" ]] && source "$release_path/.rvmrc"
 
