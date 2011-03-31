@@ -9,4 +9,5 @@ define_package \
 
 install_package
 
-succeed "Installation Complete."
+succeed "Installed ${package_name} ${package_version}."
+
