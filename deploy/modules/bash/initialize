@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-modules rvm
+modules rvm project
 
 true \
-  "${discard_path:="$shared_path/discard"}" \
+  "${discard_path:="${shared_path}/discard"}" \
   "${previous_path:=${project_path}/previous}" \
   "${stage_path:=${project_path}/stage}"
 
