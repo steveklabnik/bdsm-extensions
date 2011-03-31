@@ -153,7 +153,7 @@ configure()
   for config_item in "$shared_path"/config/* ; do
     item=$(basename "$config_item")
     log "  - $item"
-    link "$shared_path/config/$item" "$stage_path/config/$item"
+    link --force "$shared_path/config/$item" "$stage_path/config/$item"
   done
 }
 
@@ -163,12 +163,12 @@ symlink()
 
   for dir in tmp log pids files ; do
     log "  - $dir"
-    link "${shared_path}/${dir}" to "${stage_path}/${dir}"
+    link --force "${shared_path}/${dir}" to "${stage_path}/${dir}"
   done
 
   for dir in $(ls -A "$shared_path/public/") ; do
     log "  - public/$dir"
-    link "${shared_path}/public/${dir}" to "${stage_path}/public/${dir}"
+    link --force "${shared_path}/public/${dir}" to "${stage_path}/public/${dir}"
   done
 }
 
