@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+enter "${src_path}"
+
+curl  \
+  -B http://rvm.beginrescueend.com/install/rvm \
+  -o rvm-installer
+
+ensure_files_are_executable \
+  "${src_path}/rvm-installer"
+
+if [[ ${trace_flag:-0} -eq 1 ]] ; then
+  "${src_path}/rvm-installer" --trace
+else
+  "${src_path}/rvm-installer"
+fi
+

@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+description "${extension} BDSM extension."
+
+actions "install  - Install the $extension gem.
+  setup    - Setup and Configure $extension."
