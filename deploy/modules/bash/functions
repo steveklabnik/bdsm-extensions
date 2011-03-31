@@ -39,7 +39,7 @@ update_repository()
   log "Updating local repository in $shared_path/$project."
 
   (
-  cd "$shared_path/$project"
+  enter "$shared_path/$project"
 
   case "$scm" in
 
@@ -54,18 +54,16 @@ update_repository()
       git fetch $remote
 
       log "Switching to branch $branch"
-      if ! git branch | awk "/$branch$/" >/dev/null 2>&1 ; then
 
-        git checkout -b $branch --track $remote/$branch 2>/dev/null
+      current_branch=$(git symbolic-ref -q HEAD 2>/dev/null)
 
-      elif ! git branch | awk "/\* $branch$/" >/dev/null 2>&1 ; then
-
-        if ! git checkout $branch 2>/dev/null ; then
-          error "Branch $remote/$branch not found. Skipping remainder of update."
-          return 1
-        fi
-      else
+      if [[ "$current_branch" = "$branch" ]] ; then
         log "Already on branch '$branch'."
+      elif ! git branch | awk "/$branch$/" >/dev/null 2>&1 ; then
+        git checkout -b $branch --track $remote/$branch 2>/dev/null
+      elif ! git checkout $branch 2>/dev/null ; then
+        error "Branch $remote/$branch not found. Skipping remainder of update."
+        return 1
       fi
 
       git pull
