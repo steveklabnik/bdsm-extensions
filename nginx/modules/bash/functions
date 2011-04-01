@@ -4,7 +4,7 @@ export PATH="/sbin:/usr/sbin:/usr/local/sbin:/opt/sbin:/opt/local:sbin:$PATH"
 
 master_pid="$(ps auxww | awk '/[n]ginx: master/{print $2}' | head -1)"
 
-init_scripts_path=$(init_scripts_path)
+init_scripts_path="$(init_scripts_path)"
 
 true ${nginx_path:="/etc/nginx"}
 true \

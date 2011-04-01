@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+modules system package
+
 export PATH="/sbin:/usr/sbin:/usr/local/sbin:/opt/sbin:/opt/local:sbin:$PATH"
 
 master_pid="$(ps auxww | awk '/[n]ginx: master/{print $2}' | head -1)"
@@ -48,8 +50,6 @@ fastcgi_params.default koi-utf koi-win mime.types mime.types.default
 nginx.conf.default scgi_params scgi_params.default uwsgi_params
 uwsgi_params.default win-utf
 )
-
-modules system package
 
 define_package \
   base_url "http://nginx.org/download"
