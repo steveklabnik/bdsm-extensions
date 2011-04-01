@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+modules package
+
+# TODO: Make version configurable from ~/.bdsm/${extension}/config
+define_package \
+  version "1.4.13" \
+  base_url "http://www.monkey.org/~provos"
+
+package_file="${package_name}-${package_version}-stable.${archive_format}"
+package_dir="${package_name}-${package_version}-stable"
+
