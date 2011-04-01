@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-modules system package
+modules system templates package
 
 export PATH="/sbin:/usr/sbin:/usr/local/sbin:/opt/sbin:/opt/local:sbin:$PATH"
 
