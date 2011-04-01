@@ -4,6 +4,9 @@ modules package
 
 # TODO: Make version configurable from ~/.bdsm/${extension}/config
 
+dependencies \
+  libevent
+
 define_package \
   version "1.4"
 
