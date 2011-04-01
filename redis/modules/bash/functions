@@ -38,10 +38,7 @@ setup_redis_user()
         #Create the group
         dscl . -create "/Groups/$redis_user"
         dscl . -create "/Groups/$redis_user" gid "$gid"
-
-        # ????
-        # useradd -g "$redis_user" -s /bin/bash -d /var/lib/redis "$redis_user"
-        # usermod -s /bin/bash
+        dscl . -create "/Users/${redis_user}" PrimaryGroupID "$gid" # UserShell /bin/bash
       ;;
       "SunOS")
         groupadd "$redis_user"
@@ -61,15 +58,15 @@ create_redis_directories()
 
   # TODO: can likely merge directory creation into path creation.
 
-  log "#creating paths for ${package} ${package_version}..."
+  log "#creating paths for ${package_name} ${package_version}..."
 
   ensure_paths_exist "${directories[@]}"
 
-  chown_paths "$redis_user" "${directories[@]}"
+  chown_paths "$redis_user:$redis_user" "${directories[@]}"
 
   ensure_paths_exist "${redis_paths[@]}"
 
-  chown_paths "$redis_user" "${redis_paths[@]}"
+  chown_paths "$redis_user:$redis_user" "${redis_paths[@]}"
 
   ensure_paths_exist "${redis_install_path}"
 }
@@ -97,7 +94,7 @@ install_init_script()
   return 0
 }
 
-install_redis_conf()
+configure_redis()
 {
   if [[ -s "${redis_config_file}" ]] ; then
     log "${redis_config_file} already exists, not overwriting."
@@ -111,71 +108,19 @@ install_redis_conf()
         -e "s#dbfilename .*\$#dbfilename ${redis_db_file}#" \
         -e "s#port .*\$#port ${redis_port}#" \
         -e "s#bind .*\$#bind ${redis_bind_interface}#" \
-      "${redis_src_path}/redis.conf" > "${redis_config_file}"
+      "${source_path}/${package_dir}/redis.conf" > "${redis_config_file}"
 
-    chown -R $redis_user "${redis_config_file}"
+    chown -R $redis_user:$redis_user "${redis_config_file}"
   fi
   return 0
-}
-
-cleanup()
-{
-  log "#cleaning install files for ${package} ${package_version}...\n"
-  enter "${src_path}"
-
-  local files=($(
-  find "$src_path/" -mindepth 1 -maxdepth 1 -iname "${package}-${package_version}*"
-  ))
-
-  remove_files "${files[@]}"
-}
-
-download_redis()
-{
-  ensure_paths_exist "${src_path}"
-
-  enter "${src_path}"
-
-  log "#downloading ${package_file}...\n"
-
-  if ! curl -O -L "${package_url}" ; then
-    fail "${package_file} failed to download from '${package_url}'."
-  fi
-}
-
-extract_redis()
-{
-  enter "${src_path}"
-
-  log "#extracting ${package} ${package_version}...\n"
-
-  if ! tar zxf "${package_file}" ; then
-    fail "${package_file} failed to extract."
-  fi
-
-  return 0
-}
-
-build_redis()
-{
-  enter "${src_path}"
-
-  # Nothing to configure, proceeding straight to make.
-
-  log "#compiling ${package} ${package_version}...\n"
-
-  if ! make 2>&1 > "${redis_src_path}/make.log" ; then
-    fail "Compiling ${package}-${package_version} failed, see ${redis_src_path}/make.log"
-  fi
 }
 
 install_redis()
 {
-  log "#installing ${package} ${package_version}...\n"
-
+  log "#installing ${package_name} ${package_version}...\n"
   for file in redis-server redis-cli ; do
-    if ! install -b "${redis_src_path}/src/${file}" "${redis_bin_path}/${file}" ; then
-      fail "${package} ${package_version} failed to install (specifically ${file}).\n"
+    if ! install -b "src/${file}" "${prefix_path}/bin/${file}"  ; then
+      fail "${package_name} ${package_version} failed to install (specifically ${file}).\n"
     fi
   done
 }

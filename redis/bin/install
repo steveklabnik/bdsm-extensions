@@ -13,20 +13,30 @@ done
 
 # TODO: Use package DSL module pieces instead of defining our own here..
 
-download_redis
+true \
+  "${package_dir:="${package_name}-${package_version}"}"
 
-extract_redis
+ensure_paths_exist "${source_path}"
 
-build_redis
+enter "${source_path}"
+
+fetch_package
+
+extract_package
+
+enter "${package_dir}"
+
+make_package
 
 install_redis
 
+# Post install configuration
 setup_redis_user
 
 create_redis_directories
 
 install_init_script
 
-install_redis_conf
+configure_redis
 
-succeed "Installation Complete."
+log "Installation of ${package_name} ${package_version} is complete."
