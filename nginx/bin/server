@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 project="${1:-}"
+
 [[ -z "$project" ]] || \
   fail "project must be specified for 'nginx server'"
 

@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
 
-if [[ ${master_pid:-0} -gt 0 ]] ; then
-  log "Signaling Nginx ($master_pid) to quit\n(from pidfile: $nginx_pid)"
-  kill -QUIT ${master_pid}
-else
-  log "It appears that Nginx is already not running\n(from pidfile: $nginx_pid)"
-fi
+[[ -x "${init_scripts_path}/${extension}" ]] || \
+  fail "${init_scripts_path}/${extension} is missing or not executable."
+
+exec "${init_scripts_path}/${extension}" "${action}"
+

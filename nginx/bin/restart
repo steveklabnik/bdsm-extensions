@@ -1,10 +1,7 @@
 #!/usr/bin/env bash
 
-if [[ ${master_pid:-0} -gt 0 ]] ; then
-  log "Restarting Nginx ($master_pid)"
-  kill -USR2 ${master_pid}
-else
-  log "WARN: Nginx is not running\n  (using pidfile: $nginx_pid)\n Starting Nginx."
-  nginx -t -c "$nginx_config_file" &&
-    nginx -c "$nginx_config_file"
-fi
+[[ -x "${init_scripts_path}/${extension}" ]] || \
+  fail "${init_scripts_path}/${extension} is missing or not executable."
+
+exec "${init_scripts_path}/${extension}" "${action}"
+

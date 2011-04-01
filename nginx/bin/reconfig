@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 
-nginx_path="${nginx_path:-/etc/nginx}"
+install_template "nginx.conf" \
+  to "${nginx_config_path}"
 
-install_template "nginx.conf" "${nginx_path}"
-install_template "proxy.conf" "${nginx_path}/conf"
+install_template "proxy.conf" \
+  to "${nginx_config_path}/conf"
 

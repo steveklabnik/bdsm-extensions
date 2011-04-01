@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
 
-if [[ ${master_pid:-0} -gt 0 ]] ; then
-  log "Nginx is already running (master pid: $master_pid)"
-else
-  nginx -t -c "$nginx_config_file" &&
-    nginx -c "$nginx_config_file"
-fi
+[[ -x "${init_scripts_path}/${extension}" ]] || \
+  fail "${init_scripts_path}/${extension} is missing or not executable."
+
+exec "${init_scripts_path}/${extension}" "${action}"
+
