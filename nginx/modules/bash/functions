@@ -1,20 +1,2 @@
 #!/usr/bin/env bash
 
-export PATH="/sbin:/usr/sbin:/usr/local/sbin:/opt/sbin:/opt/local:sbin:$PATH"
-
-master_pid="$(ps auxww | awk '/[n]ginx: master/{print $2}' | head -1)"
-
-init_scripts_path="$(init_scripts_path)"
-
-true ${nginx_path:="/etc/nginx"}
-true \
-  ${nginx_config_file:="${nginx_path}/nginx.conf"} \
-  ${nginx_config_path:="${nginx_path}/conf"} \
-  ${nginx_servers_path:="${nginx_path}/servers"} \
-  ${nginx_install_path:="/usr/local/nginx"} \
-  ${nginx_binary:="/usr/sbin/nginx"} \
-  ${nginx_pid_file:="/var/run/nginx.pid"} \
-  ${nginx_lock_file:="/var/lock/nginx.lock"} \
-  ${nginx_spool_path:="/var/spool/nginx"} \
-  ${nginx_log_path:="/var/log/nginx"}
-
