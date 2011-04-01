@@ -5,7 +5,7 @@ modules project
 while [ $# -gt 0 ] ; do
   token="$1" ; shift
   case "$token" in
-    --repo|--repository) repository="$1"  ; shift ;;
+    --repo|--repository) repository_url="$1"  ; shift ;;
     --environment)       environment="$1" ; shift ;;
     --project)           project="$1"     ; shift ;;
     --database)          database="$1"    ; shift ;;
@@ -14,128 +14,17 @@ while [ $# -gt 0 ] ; do
   esac
 done
 
-#
-# Sanity checks
-#
-[[ $UID -eq 0 ]] &&
-  fail "bdsm extension $extension must be run as the project user and NOT root."
+[[ -s "$HOME/.bdsmrc" ]] || bdsm bdsmrc
 
-ensure_files_exist "$HOME/.bash_profile" "$HOME/.bashrc" "$HOME/.bdsmrc"
+configure_bdsmrc
 
-[[ -n "$project" ]] || \
-  fail "project variable must be set for extension $extension."
+ensure_paths_exist "$shared_path"
 
-if ! awk "/^project=/" "$HOME/.bash_profile" ; then
-  printf "\nexport project=\"${project:-$user}\"\n" >> $HOME/.bdsmrc
-fi
-
-[[ -n "$environment" ]] || \
-  fail "environment variable must be set for extension $extension."
-
-if ! awk "/^environment=/" "$HOME/.bash_profile" ; then
-  printf "\nexport environment=\"$environment\"\n" >> $HOME/.bdsmrc
-fi
-
-if ! awk "/^RAILS_ENV=/" "$HOME/.bash_profile" ; then
-  printf "\nexport RAILS_ENV=\"$environment\"\n" >> $HOME/.bdsmrc
-fi
-
-if [[ -n "$repository" ]] ; then
-  if ! awk "/^repository=/" "$HOME/.bash_profile" ; then
-    printf "\nexport repository=\"$repository\"\n" >> $HOME/.bdsmrc
-  fi
-
-  mkdir -p "$shared_path" && cd "$shared_path"
-
-  if [[ "$scm" = "git" ]] || (echo $repository | awk "/git/") ; then
-    if [[ ! -d "$shared_path/$project/.git" ]] ; then
-      git clone $repository $project
-    fi
-  elif [[ "$scm" = "svn" ]] || (echo $repository | awk "/svn/") ; then
-    if [[ ! -d "$shared_path/$project/.svn" ]] ; then
-      svn checkout $repository $project
-    fi
-  elif [[ "$scm" = "hg" ]] || (echo $repository | awk "/hg/") ; then
-    if [[ ! -d "$shared_path/$project/.hg" ]] ; then
-      hg clone $repository $project
-    fi
-  else
-    echo -e "ERROR: repository type not known, expecting {git,svn,hg} in the repository url."
-  fi
-fi
-
-(
 enter "$shared_path"
-ensure_paths_exist config log pids sockets "public/assets" tmp
-)
 
-#
-# Ensure the .bdsmrc file and the profiles are setup properly.
-#
-if [[ -n "$database" ]] ; then
-  if ! awk "/^database/" "$HOME/.bash_profile" ; then
-    echo "export database=\"production\"" >> $HOME/.bdsmrc
-  fi
-fi
+fetch_repository
 
-if ! awk '/current\/\.bdsmrc/' "$HOME/.bashrc" ; then
-  echo '[[ -s "$HOME/.bdsmrc" ]] && . "$HOME/current/.bdsmrc"' >> $HOME/.bash_profile
-fi
-
-if ! awk '/current\/\.bashrc/' "$HOME/.bash_profile" ; then
-  echo '[[ "-s $HOME/.bashrc" ]] && . "$HOME/current/.bashrc"' >> $HOME/.bash_profile
-fi
-
-if ! awk '/current\/\.rvmrc/' "$HOME/.bash_profile" ; then
-  echo '[[ "-d $HOME/current" ]] && [[ -f "$HOME/current/.rvmrc" ]] && . "$HOME/current/.rvmrc"' >> $HOME/.bash_profile
-fi
-
-# TODO: Add this into the rvm module.
-if [[ ! -s "$HOME/.rvm/scripts/rvm" ]] ; then
-  mkdir -p $HOME/.rvm/src ; cd $HOME/.rvm/src
-  if [[ -d rvm/.git ]] ; then
-    cd rvm
-    git reset --hard HEAD
-    git pull origin "${rvm_branch:-master}"
-    ./install
-  else
-    git clone git://github.com/wayneeseguin/rvm.git
-    cd rvm
-    ./install
-  fi
-
-  enter $HOME
-fi
-
-if [[ ! -s "$project_path/shared/config/database.yml" ]] ; then
-  printf "\n${environment}: &defaults\n  adapter: ${database:-postgresql}\n  username: $project\n  password: '$project'\n  database: ${project}_${environment}\n  pool: 5\n  timeout: 5000\n" > "$shared_path/config/database.yml"
-  if [[ "$database" = "mysql" ]] ; then
-    printf "\n  socket: ${socket:-/tmp/mysql.sock}\n  encoding: utf8\n" >> "$shared_path/config/database.yml"
-  fi
-fi
-
-if [[ -d "$shared_path/$project/" && -s "$shared_path/$project/.rvmrc" ]] ; then
-  export rvm_install_on_use_flag=1
-  . "$shared_path/$project/.rvmrc"
-fi
-
-if [[ -n "$database" ]] && command -v gem > /dev/null; then
-  if [[ "postgresql" = "$database" ]] ; then
-    gem install pg --no-rdoc --no-ri
-    if [[ "$?" -ne 0 ]] ; then
-      pg_config=$(command -v pg_config)
-      gem install pg --no-rdoc --no-ri -- --with-pg-config=${pg_config:-/usr/local/postgresql/bin/pg_config}
-    fi
-  elif [[ "mysql" = "$database" ]] ; then
-    gem install mysql --no-rdoc --no-ri
-    if [[ "$?" -ne 0 ]] ; then
-      mysql_config=$(command -v mysql_config)
-      gem install mysql --no-rdoc --no-ri -- --with-mysql-config=${mysql_config:-/usr/local/mysql/bin/mysql_config}
-    fi
-  else
-    gem install sqlite --no-rdoc --no-ri
-  fi
-fi
+setup_shared_path
 
 case "${server:-}" in
   unicorn)

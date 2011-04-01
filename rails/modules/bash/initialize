@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+# Sanity check
+[[ $UID -eq 0 ]] &&
+  fail "bdsm $extension $action must be run as the project user and NOT root."
