@@ -6,12 +6,12 @@ hook()
   true ${hooks_flag:=1}
   [[ ${hooks_flag:-1} -eq 0 ]] && return 0 # Return if hooks flag is set to false
 
-  # Server
+  # System
   if [[ -s "$shared_path/deploy/$hook" ]] ; then
     ( source "$shared_path/deploy/$hook" )
   fi
 
-  # Server, Environment specific
+  # System, Environment specific
   if [[ -n "${environment:-""}" && -x "$shared_path/deploy/#{$environment}/$hook" ]] ; then
     ( source "$shared_path/deploy/#{$environment}/$hook" )
   fi
