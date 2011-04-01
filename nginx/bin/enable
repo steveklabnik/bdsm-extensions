@@ -9,8 +9,9 @@ project="${1:-}"
   fail "project must be specified for 'nginx project'"
 
 if [[ -f "$nginx_projects_path/$project.conf.disbled" ]] ; then
-  mv "$nginx_projects_path/$project.conf.disbled" \
-    "$nginx_projects_path/$project.conf"
+  rename \
+    "$nginx_projects_path/$project.conf.disbled" \
+    to "$nginx_projects_path/$project.conf"
 else
   if [[ -f "$nginx_projects_path/$project.conf" ]] ; then
     succeed "$project.conf is already enabled."

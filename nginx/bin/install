@@ -1,69 +1,38 @@
 #!/usr/bin/env bash
 
-# modules build fetch extract
+log "
+Note: This will do a standard Nginx install.
 
-log "\nNote: This will do a standard Nginx install."
-log "Use the 'passenger' BDSM extension for installing passenger Nginx."
+Use the 'passenger' BDSM extension for installing Nginx with Passenger.
+"
 
-configure_flags=(--prefix="$nginx_install_path"
-  --conf-path="$nginx_config_file"
-  --sbin-path="$nginx_binary"
-  --pid-path="$nginx_pid_file"
-  --lock-path="$nginx_lock_file"
-  --http-client-body-temp-path="$nginx_spool_path/client_body_temp"
-  --http-proxy-temp-path="$nginx_spool_path/proxy_temp"
-  --http-fastcgi-temp-path="$nginx_spool_path/fastcgi_temp"
-  --http-log-path="$nginx_log_path/access.log"
-  --error-log-path="$nginx_log_path/error.log"
-  --with-imap
-  --with-imap_ssl_module
-  --with-http_ssl_module
-  --with-http_stub_status_module
-  --with-pcre
-)
-
-true "${package_version:=0.8.54}"
-
-modules
-
-package="nginx"
-packge_url="http://nginx.org/download"
-
-build_src # Install from source
+install_package
 
 # Post install configuration
-config_directories=(/var/spool/nginx/client_body_temp
-/var/log/nginx
-"$nginx_config_path/conf"
-"$nginx_config_path/servers"
-)
-
 ensure_paths_exist "${config_directories[@]}"
-
-files=( fastcgi.conf fastcgi.conf.default fastcgi_params
-fastcgi_params.default koi-utf koi-win mime.types mime.types.default
-nginx.conf.default scgi_params scgi_params.default uwsgi_params
-uwsgi_params.default win-utf
-)
 
 (
 enter "$nginx_path"
-move_files_to "${nginx_config_path}/${file}" "${files[@]}"
+move_files_to "${nginx_config_path}/${file}" "${nginx_files[@]}"
 )
 
 ensure_files_exist \
   "${nginx_config_path}/passenger" # empty file as a placeholder.
 
-install_template "nginx" to "${init_scripts_path}"
-install_template "nginx.conf" to "${nginx_config_path}"
-install_template "proxy.conf" to "${nginx_config_path}/conf"
+install_template "nginx" \
+  to "${init_scripts_path}"
+
+install_template "nginx.conf" \
+  to "${nginx_config_path}"
+
+install_template "proxy.conf" \
+  to "${nginx_config_path}/conf"
 
 ensure_files_are_executable \
   "${init_scripts_path}/nginx"
 
-# TODO: better handling of already exising nginx user here
-groupadd nginx 2>/dev/null
-useradd -G nginx -M nginx 2>/dev/null
+ensure_user_exists nginx \
+  with group nginx
 
 chown_paths "nginx:nginx" "${config_directories[@]}"
 

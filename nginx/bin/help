@@ -1,13 +1,10 @@
 #!/usr/bin/env bash
 
-description()
-{
-  log "Extension for managing Nginx (http://wiki.nginx.org/Main)."
-}
+modules help
 
-actions()
-{
-  log "
+description "Extension for managing Nginx (http://wiki.nginx.org/Main)."
+
+actions "
   install  - Install nginx on the system.
   setup    - Setup Nginx configuration.
   start    - Startup nginx.
@@ -15,39 +12,6 @@ actions()
   restart  - Restart nginx.
   server  <project_name>  - Add and enable a new server(s)
   enable  <project_name>  - Enable project server config.
-  disable <project_name>  - Disable project server config.
-  help     - Display this help text.
-  "
-}
+  disable <project_name>  - Disable project server config."
 
-usage()
-{
-  log "
-Description
-
-  BDSM $(description)
-
-Usage
-
-  bdsm nginx [action]
-
-Actions
-  $(actions)
-"
-}
-
-command="usage" # Default
-while [[ $# -gt 0 ]] ; do
-  token="$1" ; shift
-  case "$token" in
-    description) command="description" ;;
-    actions)     command="actions"     ;;
-    *)           command="usage"       ;;
-  esac
-done
-
-$command
-
-exit $?
-
-
+show_help
