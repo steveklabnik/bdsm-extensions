@@ -12,6 +12,6 @@ define_package \
 # We specify the package_file/url here since it is different than the
 # standard name-version.tar.gz
 define_package \
-  file "${package_name}-autoconf-${package_version}.${archive_format}"
+  file "${package_name}-autoconf-${package_version}.${archive_format}" \
   dir "${package_name}-autoconf-${package_version}"
 
