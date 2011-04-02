@@ -1,21 +1,24 @@
 #!/usr/bin/env bash
 
-# TODO: Move this to an extension action.
 postgresql_initdb()
 {
   ensure_paths_exist "$pgsql_path/$version"
 
-  chown_paths "$user" "$pgsql_path"
+  chown_paths "$postgresql_user" "$pgsql_path"
 
   log "
 Initializing postgresql $version data directory in $pgsql_path/$version
-with superuser set to '$user'.
+with superuser set to '$postgresql_user'.
 "
-  command="'$install_path/bin/initdb' --pgdata='$pgsql_path/data' --encoding=utf8 --username=$user"
-  if [[ $UID -eq 0 ]] ; then
-    run_as_user "${user}" "${command}"
+  command="'$install_path/bin/initdb' --pgdata='$pgsql_path/data' --encoding=utf8 --username=$postgresql_user"
+  create_test="$install_path/bin/createdb test --username ${postgresql_user}"
+
+  if running_as_root ; then
+    run_as_user "${postgresql_user}" "${command}"
+    run_as_user "${postgresql_user}" "$create_test"
   else
     "${command}"
+    "${create_test}"
   fi
 
   postgresql_configure
@@ -25,7 +28,9 @@ postgresql_configure()
 {
   if [[ ! -d "$pgsql_path/data" ]] ; then
     log "Symlinking postgresql data directory.\n"
+
     remove_files "$pgsql_path/data"
+
     link "$pgsql_path/$version"\
       to "$pgsql_path/data"
   fi
@@ -37,13 +42,19 @@ postgresql_configure()
       to "$pgsql_path/data/postgresql.conf"
   fi
 
-  chown_paths "$user" "$pgsql_path" # One more for good measure.
+  chown_paths "$postgresql_user" "$pgsql_path" # One more for good measure.
 
   log "\nSymlinking $install_path to $prefix_path/postgresql"
 
   remove_paths "$prefix_path/postgresql"
 
   link "$install_path" to "$prefix_path/postgresql"
+
+  ensure_paths_exists "$data_path" "$log_dir"
+
+  chown_paths "$postgresql_user" "$data_path" "$log_dir"
+
+  chmod_paths 0700 "$data_path"
 }
 
 configure_postgresql_for_users()
@@ -52,7 +63,7 @@ configure_postgresql_for_users()
   log "\nNow updating $HOME/.bash_profile with the postgres environment...\n"
   for profile in "${profiles[@]}" ; do
     if ! grep -q "PGUSER" $profile ; then
-      echo "export PGUSER='$user'" \
+      echo "export PGUSER='$postgresql_user'" \
         >> "$profile.postgres"
     fi
 
@@ -79,4 +90,15 @@ configure_postgresql_for_users()
   done
 
   log "NOTE: Your original .bash_profile has been backed up as $HOME/.bash_profile.$timestamp"
+}
+
+
+postgresql_ldconfig()
+{
+  if running_as_root && os_is_linux ; then
+    echo "${install_path}/lib" \
+      > /etc/ld.so.conf.d/postgresql.conf
+
+    /sbin/ldconfig
+  fi
 }

@@ -1,12 +1,13 @@
 #!/usr/bin/env bash
 
-log "
-Usage
-  $0 {install,setup,start,stop,help}
-Actions
-  install  - Install the postgresql gem.
-  setup    - Place the config.postgresql template in $release_path/config/config.postgresql
-  start    - Startup postgresql.
-  stop     - Stop postgresql.
-  help     - Display this help text.
+modules help
+
+actions "
+  install    - Install postgresql server
+  configure  - Ensure that postgresql.conf is in place
+  initialize - initdb for the postgresql data directory
+  start      - Start postgresql server
+  stop       - Stop postgresql server
+  restart    - Restart postgresql server
 "
+show_help
