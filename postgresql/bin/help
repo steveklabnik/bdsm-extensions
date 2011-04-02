@@ -11,3 +11,4 @@ actions "
   restart    - Restart postgresql server
 "
 show_help
+
