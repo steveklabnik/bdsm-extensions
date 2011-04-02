@@ -1,6 +1,9 @@
 #!/bin/bash
 
 #
+# PostgreSQL System Init script
+#
+
 # Author:  Wayne E. Seguin <wayneeseguin@gmail.com>
 #===============================================================================
 # /etc/conf.d/postgresql default contents:

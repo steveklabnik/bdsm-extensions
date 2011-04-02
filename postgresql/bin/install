@@ -20,35 +20,6 @@ usage() {
   return 0
 }
 
-licence() {
-  printf "
-=============================================================================
-The MIT License
-
-Copyright (c) 2009 Wayne E. Seguin (wayneeseguin@gmail.com)
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
-=============================================================================
-"
-  return 0
-}
-
 log "
 
 I would be happy to discuss improving this script, or field questions.
@@ -80,161 +51,38 @@ while [[ $# -gt 0 ]] ; do
 
 done
 
-log "Downloading postgresql..."
-ensure_paths_exist "$src_path"
+configure_flags=(
+  --prefix="$install_path"
+  --datadir="$pgsql_path"
+  --with-openssl
+  --enable-shared
+)
 
-cd "$src_path"
+[[ "$MACHTYPE" = *darwin* ]] && \
+  configure_flags[${#configure_flags[@]}]="--with-bonjour"
 
-curl -L $url/$package-$version.${archive_format} -o $package-$version.${archive_format}
-result=$?
+export CFLAGS='-O2'
 
-if [[ $result -gt 0 ]] ; then
-  fail "Could not download: $url/$package-$version.tar.bz2.\n curl error code: $result"
-fi
-
-log "\nExtracting postgresql...\n"
-
-[[ -f extract.log ]] && rm -f extract.log
-tar jxf $package-$version.${archive_format} > extract.log 2>&1
-result=$?
-
-if [[ $result -gt 0 ]] ; then
-  fail "Could not extract $package-$version.tar.bz2\n tar erro code $result"
-fi
-
-cd "$src_path/$package-$version/"
-
-log "\nBuilding postgresql...\n"
-configure_args="--prefix="$install_path" --datadir="$pgsql_path" --with-openssl --enable-shared"
-if [[ "Darwin" = "$(uname)" ]] ; then
-  configure_args="$configure_args --with-bonjour"
-fi
-
-[[ -f configure.log ]] && rm -f configure.log
-
-CFLAGS='-O2' ./configure $configure_args > configure.log 2>&1
-result=$?
-
-if [[ $result -gt 0 ]] ; then
-  error "Configure Error, check $PWD/configure.log"
-  exit $result
-fi
-
-[[ -f make.log ]] && rm -f make.log
-if ! make -j3 > make.log 2>&1 ; then
-  fail "Compile Error, check $PWD/make.log"
-fi
-
-log "\nInstalling postgresql to $install_path, you will be prompted for your password to run 'make install' as root...\n"
-
-if ! $sudo make install > install.log 2>&1 ; then
-  fail "Install failed, check $PWD/install.log"
-fi
-
-log "\nInitializing postgresql $version data directory in $pgsql_path/$version with superuser set to '$user'...\n"
-
-ensure_paths_exist $pgsql_path/$version
-
-$sudo chown -R $user $pgsql_path
-
-if [[ $UID -eq 0 ]] ; then
-  su - $user -c "'$install_path/bin/initdb' --pgdata='$pgsql_path/data' --encoding=utf8 --username=$user"
-else
-  "$install_path/bin/initdb" --pgdata="$pgsql_path/data" --encoding=utf8 --username=$user
-fi
-
-if [[ ! -d "$pgsql_path/data" ]] ; then
-  log "\nSymlinking postgresql $version data directory...\n"
-  rm -f "$pgsql_path/data"
-  ln -nfs "$pgsql_path/$version"
-fi
-
-if [[ ! -s "$pgsql_path/data/postgresql.conf" ]] ; then
-  log "\nCopying over sample postgresql.conf to $pgsql_path/data/postgresql.conf...\n"
-  cp "$pgsql_path/postgresql.conf.sample" "$pgsql_path/data/postgresql.conf"
-fi
-
-$sudo chown -R $user "$pgsql_path" # One more for good measure.
-
-log "\nSymlinking $install_path to $prefix_path/postgresql"
-
-$sudo rm -f "$prefix_path/postgresql"
-
-$sudo ln -nfs "$install_path" "$prefix_path/postgresql"
-
-# TODO: Make this a bit more robust.
-log "\nNow updating $HOME/.bash_profile with the postgres environment...\n"
-for profile in "${profiles[@]}" ; do
-
-  if ! grep -q PGUSER $profile ; then
-    echo "export PGUSER='$user'" >> $profile.postgres
-  fi
-
-  if ! grep -q PGDATA $profile ; then
-    echo "export PGDATA='$pgsql_path/data'" >> $profile.postgres
-  fi
-
-  if ! grep -q PGLOG $profile ; then
-    echo "export PGLOG='$pgsql_path/server.log'" >> $profile.postgres
-  fi
-
-  if ! grep -q "$install_path" $profile ; then
-    echo "export PATH=\"$prefix_path/postgresql/bin:\$PATH\"" >> $profile.postgres
-  fi
-
-  cat $profile >> $profile.postgres
-  mv $profile $profile.$timestamp
-  mv $profile.postgres $profile
-
-done
-
-log "\nNOTE: Your original .bash_profile has been backed up as $HOME/.bash_profile.$timestamp"
-
-if [[ "Darwin" = "$(uname)" ]] ; then
-
-  log "Temporarily adjusting your shared memory settings, follow instructions below to make these permanent...\n"
-  $sudo sysctl -w kern.sysv.shmmax=1610612736
-  $sudo sysctl -w kern.sysv.shmall=393216
-  $sudo sysctl -w kern.sysv.shmmin=1
-  $sudo sysctl -w kern.sysv.shmmni=32
-  $sudo sysctl -w kern.sysv.shmseg=8
-  $sudo sysctl -w kern.maxprocperuid=1536
-  $sudo sysctl -w kern.maxproc=2048
-
-elif [[ "Linux" = "$(uname)" ]] ; then
-
-  if [[ ! -s /etc/init.d/postgresql ]] ; then
-    cp contrib/start-scripts/linux /etc/init.d/postgresql
-  fi
-
-  chmod +x /etc/init.d/postgresql
-
-  printf "\nNOTE: You will likely want to tweak the database location and/or config file locations in /etc/init.d/postgresql\n"
-
-fi
-
-printf "
-
-Be sure that your shared memory settings are adjusted properly, the defaults are usually way too low.
-For Example I have 8GB RAM running MacOSX and my /etc/sysctl.conf look like this:
-
-∴ cat /etc/sysctl.conf
-
-kern.sysv.shmmax=1610612736
-kern.sysv.shmall=393216
-kern.sysv.shmmin=1
-kern.sysv.shmmni=32
-kern.sysv.shmseg=8
-kern.maxprocperuid=1536
-kern.maxproc=2048
+install_package
 
 
-Installation is now complete.
+# Post installation tasks.
+ensure_paths_exist "$pgsql_path/$version"
 
-  * postgresql will be installed to $install_path
-  * postgresql configuration and data files will be in $pgsql_path
-  * You can control the postgresql server via 'pg_ctl {start|stop}'
-  * The 'superuser' for postgersql will be '$user', no password.
+chown_paths "$user" "$pgsql_path"
 
-Then please open a new shell or source your $HOME/.bash_profile and then run 'pg_ctl start' in order to run postgresql.
+initialize_databases
+
+configure_postgresql
+
+configure_kernel_parameters
+
+log "
+
+Installation and configuration of postgresql is now complete.
+
+  * postgresql has been installed to $install_path
+  * postgresql configuration and data files will are in $pgsql_path
+  * You can control the postgresql server via the bdsm postgresql extension'
+  * The postgersql superuser is '$user', no password.
 "

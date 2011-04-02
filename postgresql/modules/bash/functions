@@ -1,0 +1,93 @@
+#!/usr/bin/env bash
+
+licence() {
+  printf "
+=============================================================================
+Copyright (c) 2009-2011 Wayne E. Seguin
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+=============================================================================
+"
+  return 0
+}
+
+# TODO: Move this to an extension action.
+initialize_databases()
+{
+  command="'$install_path/bin/initdb' --pgdata='$pgsql_path/data' --encoding=utf8 --username=$user"
+  if [[ $UID -eq 0 ]] ; then
+    run_as_user "${user}" "${command}"
+  else
+    "${command}"
+  fi
+}
+
+configure_postgresql()
+{
+  if [[ ! -d "$pgsql_path/data" ]] ; then
+    log "Symlinking postgresql data directory.\n"
+    remove_files "$pgsql_path/data"
+    link "$pgsql_path/$version"\
+      to "$pgsql_path/data"
+  fi
+
+  if [[ ! -s "$pgsql_path/data/postgresql.conf" ]] ; then
+    log "Installing postgresql.conf."
+
+    copy "$pgsql_path/postgresql.conf.sample" \
+      to "$pgsql_path/data/postgresql.conf"
+  fi
+
+  chown_paths "$user" "$pgsql_path" # One more for good measure.
+
+  log "\nSymlinking $install_path to $prefix_path/postgresql"
+
+  remove_paths "$prefix_path/postgresql"
+
+  link "$install_path" to "$prefix_path/postgresql"
+}
+
+configure_postgresql_for_users()
+{
+  # TODO: Make this a bit more robust.
+  log "\nNow updating $HOME/.bash_profile with the postgres environment...\n"
+  for profile in "${profiles[@]}" ; do
+    if ! grep -q "PGUSER" $profile ; then
+      echo "export PGUSER='$user'" \
+        >> "$profile.postgres"
+    fi
+
+    if ! grep -q "PGDATA" $profile ; then
+      echo "export PGDATA='$pgsql_path/data'" \
+        >> "$profile.postgres"
+    fi
+
+    if ! grep -q "PGLOG" $profile ; then
+      echo "export PGLOG='$pgsql_path/server.log'" \
+        >> "$profile.postgres"
+    fi
+
+    if ! grep -q "$install_path" $profile ; then
+      echo "export PATH=\"$prefix_path/postgresql/bin:\$PATH\"" \
+        >> "$profile.postgres"
+    fi
+
+    move "${profile}" \
+      to "${profile}.${timestamp}"
+
+    move "${profile}.postgres" \
+      to "${profile}"
+  done
+
+  log "NOTE: Your original .bash_profile has been backed up as $HOME/.bash_profile.$timestamp"
+}
