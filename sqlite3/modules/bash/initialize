@@ -13,4 +13,5 @@ define_package \
 # standard name-version.tar.gz
 define_package \
   file "${package_name}-autoconf-${package_version}.${archive_format}"
+  dir "${package_name}-autoconf-${package_version}"
 
