@@ -3,12 +3,12 @@
 modules system package templates
 
 define_package \
-  version="$(hash_file "$extension_config_path/defaults" "version")" \
-  archive_format="tar.bz2"
+  version "$(hash_file "$extension_config_path/defaults" "version")" \
+  archive_format "tar.bz2"
 
 define_package \
-  base_url="http://ftp9.us.postgresql.org/pub/mirrors/postgresql/source/v${package_version}" \
-  target_path="${prefix_path}/${package_name}-${package_version}"
+  base_url "http://ftp9.us.postgresql.org/pub/mirrors/postgresql/source/v${package_version}" \
+  target_path "${prefix_path}/${package_name}-${package_version}"
 
 if running_as_root ; then
   pgsql_path="/data/postgresql-${version}"
