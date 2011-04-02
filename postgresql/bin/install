@@ -22,14 +22,18 @@ usage() {
 
 log "
 
-I would be happy to discuss improving this script, or field questions.
+License:
+
+$(cat -v ${extension_path}/LICENCE)
+
+Message:
+
+I am happy to discuss improving this script, or field questions.
 
 I am wayneeseguin in #rvm on irc.freenode.net
 
 This script will install ${package}-${version} to
 $install_path and configure the install.
-
-Licensed under the MIT Licence, '$0 --licence' for details
 
 "
 
@@ -43,7 +47,10 @@ while [[ $# -gt 0 ]] ; do
     --data)    data_path="$1"   ; shift ;;
     --user)    user="$1"        ; shift ;;
     --version) version="$1"     ; shift ;;
-    --licence) licence ; exit 0 ;;
+    --licence)
+      cat -v ${extension_path}/LICENCE
+      exit 0
+      ;;
     --help)    usage   ; exit 0 ;;
     --trace)   set -o xtrace ;;
     *)         usage   ; exit 1 ;;
@@ -71,9 +78,7 @@ ensure_paths_exist "$pgsql_path/$version"
 
 chown_paths "$user" "$pgsql_path"
 
-initialize_databases
-
-configure_postgresql
+postgresql_initdb
 
 configure_kernel_parameters
 

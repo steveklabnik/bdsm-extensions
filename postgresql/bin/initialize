@@ -1,26 +1,4 @@
 #!/usr/bin/env bash
 
-log "
-Initializing postgresql $version data directory in $pgsql_path/$version
-with superuser set to '$user'.
-"
+postgresql_initdb
 
-ensure_paths_exist "$pgsql_path/$version"
-
-chown_paths "$user" "$pgsql_path"
-
-if [[ $UID -eq 0 ]] ; then
-  su - $user -c "'$install_path/bin/initdb' --pgdata='$pgsql_path/data' --encoding=utf8 --username=$user"
-else
-  "$install_path/bin/initdb" \
-    --pgdata="$pgsql_path/data" \
-    --encoding=utf8 \
-    --username="$user"
-fi
-
-if [[ ! -d $pgsql_path/data ]] ; then
-  log "\nSymlinking postgresql $version data directory...\n"
-  remove_files "$pgsql_path/data"
-  #TODO: this is wrong...
-  link "$pgsql_path/$version" to "${pgsql_path}/postgresql"
-fi
