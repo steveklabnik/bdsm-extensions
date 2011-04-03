@@ -39,24 +39,32 @@ postgresql_initdb()
 postgresql_configure()
 {
   log "Configuring postgresql server."
-  if [[ ! -s "$data_path/postgresql.conf" ]] ; then
-    log "Installing postgresql.conf."
 
-    cp -f "$data_path/postgresql.conf.sample" "$data_path/postgresql.conf"
-  fi
+  local file
+  for file in postgresql pg_hba pg_ident recovery ; do
+    if [[ ! -s "$data_path/${file}.conf" ]] ; then
+      log "Installing ${file}.conf to ${data_path}"
+      cp -f "$data_path/${file}.conf.sample" "$data_path/${file}.conf"
+    fi
+  done
 
   log "\nSymlinking $install_path to $prefix_path/postgresql"
 
-  remove_paths "$prefix_path/postgresql"
+  remove_paths \
+    "$prefix_path/postgresql"
 
   link "$install_path" \
     to "$prefix_path/postgresql"
 
-  ensure_paths_exist "$data_path" "$log_path"
+  ensure_paths_exist \
+    "$data_path" \
+    "$log_path"
 
-  chown_paths "$package_user" "$data_path"
+  chown_paths "$package_user" \
+    "$data_path"
 
-  chmod_paths 0700 "$data_path"
+  chmod_paths 0700 \
+    "$data_path"
 }
 
 configure_postgresql_for_users()
