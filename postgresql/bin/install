@@ -70,8 +70,7 @@ for ((index=0 ; index < $number_of_args ; index++)) ; do
       set -o xtrace
       ;;
     *)
-      usage
-      exit 1
+      true # Ignore?
       ;;
   esac
 
