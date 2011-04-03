@@ -37,45 +37,69 @@ $install_path and configure the install.
 
 "
 
-while [[ $# -gt 0 ]] ; do
+number_of_args=${#extension_args[@]}
+for ((index=0 ; index < $number_of_args ; index++)) ; do
 
-  token="$1" ; shift
+  token="${extension_args[$index]}"
 
   case "$token" in
-    --prefix)  prefix_path="$1" ; shift ;;
-    --src)     src_path="$1"    ; shift ;;
-    --data)    data_path="$1"   ; shift ;;
-    --user)    user="$1"        ; shift ;;
-    --version) version="$1"     ; shift ;;
+    --prefix)
+      prefix_path="${extension_args[$((++index))]}"
+      ;;
+    --src)
+      src_path="${extension_args[$((++index))]}"
+      ;;
+    --data)
+      data_path="${extension_args[$((++index))]}"
+      ;;
+    --user)
+      package_user="${extension_args[$((++index))]}"
+      ;;
+    --version)
+      package_version="${extension_args[$((++index))]}"
+      ;;
     --licence)
-      cat -v ${extension_path}/LICENCE
+      cat -v "${extension_path}/LICENCE"
       exit 0
       ;;
-    --help)    usage   ; exit 0 ;;
-    --trace)   set -o xtrace ;;
-    *)         usage   ; exit 1 ;;
+    --help)
+      usage
+      exit 0
+      ;;
+    --trace)
+      set -o xtrace
+      ;;
+    *)
+      usage
+      exit 1
+      ;;
   esac
 
 done
 
+ensure_user_exists "$package_user"
+
+color_green="$(tput setaf 2)"
+color_red="$(tput setaf 5)"
+color_none="$(tput sgr0)"
+
 configure_flags=(
   --prefix="$install_path"
-  --datadir="$pgsql_path"
+  --datadir="$data_path"
   --with-openssl
   --enable-shared
 )
 
-[[ "$MACHTYPE" = *darwin* ]] && \
+if os_is_darwin ; then
   configure_flags[${#configure_flags[@]}]="--with-bonjour"
-
-export CFLAGS='-O2'
+fi
 
 install_package
 
 # Post installation tasks.
-ensure_paths_exist "$pgsql_path/$version"
+ensure_paths_exist "$data_path/$version"
 
-chown_paths "$user" "$pgsql_path"
+chown_paths "$user" "$data_path"
 
 postgresql_initdb
 
@@ -86,7 +110,7 @@ log "
 Installation and configuration of postgresql is now complete.
 
   * postgresql has been installed to $install_path
-  * postgresql configuration and data files will are in $pgsql_path
+  * postgresql configuration and data files will are in $data_path
   * You can control the postgresql server via the bdsm postgresql extension'
   * The postgersql superuser is '$user', no password.
 "
