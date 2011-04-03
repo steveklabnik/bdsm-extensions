@@ -59,42 +59,6 @@ postgresql_configure()
     "$data_path"
 }
 
-configure_postgresql_for_users()
-{
-  # TODO: Make this a bit more robust.
-  log "\nNow updating $HOME/.bash_profile with the postgres environment...\n"
-  for profile in "${profiles[@]}" ; do
-    if ! grep -q "PGUSER" $profile ; then
-      echo "export PGUSER='$package_user'" \
-        >> "$profile.postgres"
-    fi
-
-    if ! grep -q "PGDATA" $profile ; then
-      echo "export PGDATA='$data_path/data'" \
-        >> "$profile.postgres"
-    fi
-
-    if ! grep -q "PGLOG" $profile ; then
-      echo "export PGLOG='$data_path/server.log'" \
-        >> "$profile.postgres"
-    fi
-
-    if ! grep -q "$install_path" $profile ; then
-      echo "export PATH=\"$prefix_path/postgresql/bin:\$PATH\"" \
-        >> "$profile.postgres"
-    fi
-
-    move "${profile}" \
-      to "${profile}.${timestamp}"
-
-    move "${profile}.postgres" \
-      to "${profile}"
-  done
-
-  log "NOTE: Your original .bash_profile has been backed up as $HOME/.bash_profile.$timestamp"
-}
-
-
 postgresql_ldconfig()
 {
   log "Adding Postgresql libraries to system ld path."
