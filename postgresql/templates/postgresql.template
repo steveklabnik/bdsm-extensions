@@ -116,12 +116,11 @@ export PGDATA="${data_path}"
 #
 # Main Logic
 #
-
 [[ -x "$daemon" ]] ||
   fail "Could not find postmaster or postmaster is not executable."
 
 [[ -x "$control" ]] ||
-  fail "Could not find pg_ctl script."
+  fail "Could not find pg_ctl or pg_ctl is not executable."
 
 #
 # Parse CLI arguments.
