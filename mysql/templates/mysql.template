@@ -99,15 +99,15 @@ true \
   "${log_file:="${data_path}/server.log"}" \
   "${user:="mysql"}"
 
-# What to use to shut down the postmaster
-daemon="${prefix_path}/bin/mysqld"
+# What to use to shut down the mysqld
+daemon="${prefix_path}/bin/mysqld_safe"
 control="${prefix_path}/bin/mysqld_safe"
 
 #
 # Main Logic
 #
 [[ -x "$daemon" ]] ||
-  fail "Could not find postmaster or postmaster is not executable."
+  fail "Could not find mysqld or mysqld is not executable."
 
 [[ -x "$control" ]] ||
   fail "Could not find mysqld_safe or mysqld_safe is not executable."

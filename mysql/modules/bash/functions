@@ -9,7 +9,7 @@ mysql_initdb()
   chown_paths "$package_user" \
     "${data_path%\/*}"
 
-  command="scripts/mysql_install_db --user=${package_user} --basedir=${data_path%\/*} --datadir=${data_path}"
+  command="${install_path}/bin/mysql_install_db --user=${package_user} --basedir=${data_path%\/*} --datadir=${data_path}"
 
   if running_as_root ; then
     run_as_user "${package_user}" "${command}"
@@ -46,7 +46,8 @@ mysql_configure()
 
   ensure_paths_exist \
     "$data_path" \
-    "$log_path"
+    "$log_path" \
+    "/etc/mysql/"
 
   chown_paths "$package_user" \
     "$data_path"
