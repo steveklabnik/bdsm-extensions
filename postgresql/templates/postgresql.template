@@ -106,7 +106,7 @@ true \
   "${prefix_path:="/usr/local/postgresql"}" \
   "${data_path:="/var/db/postgresql/data"}" \
   "${log_file:="${data_path}/server.log"}" \
-  "${user:="postgres"}"
+  "${user:="postgresql"}"
 
 # What to use to shut down the postmaster
 daemon="${prefix_path}/bin/postmaster"
