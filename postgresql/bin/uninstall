@@ -2,10 +2,11 @@
 
 source "${extension_modules_path}/cli"
 
-remove_directories --force \
-  "${prefix_path}/${package_name}"
+remove_directories \
+  "${prefix_path}/${package_name}" \
+  "${prefix_path}/${package_name}-${package_version}"
 
-remove_files --force \
+remove_files \
   /etc/profile.d/postgresql.sh \
   /etc/ld.so.conf.d/postgresql.conf \
   "${init_scripts_path}/postgresql"
