@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-modules system package templates
+modules package
 
 define_package \
   version "$(hash_file "$extension_config_path/defaults" "version")" \
