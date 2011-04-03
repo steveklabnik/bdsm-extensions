@@ -18,15 +18,12 @@ postgresql_initdb()
 {
   log "Initializing postgresql data directory in $data_path"
 
-  ensure_paths_exist "$data_path"
+  chown_paths "$package_user" \
+    "${data_path%\/*}/data"
 
-  chown_paths "$package_user" "$data_path"
+  remove_paths "$data_path"
 
   command="'$install_path/bin/initdb' --pgdata='$data_path' --encoding=utf8 --username=$package_user"
-
-  link --force "${data_path}" \
-    to "${data_path%\/*}/data"
-
 
   if running_as_root ; then
     run_as_user "${package_user}" "${command}"
@@ -40,6 +37,9 @@ postgresql_initdb()
 postgresql_configure()
 {
   log "Configuring postgresql server."
+
+  link --force "${data_path}" \
+    to "${data_path%\/*}/data"
 
   local file
   for file in postgresql pg_hba pg_ident recovery ; do
