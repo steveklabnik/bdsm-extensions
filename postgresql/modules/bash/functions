@@ -9,8 +9,10 @@ postgresql_initdb()
 {
   log "Initializing postgresql data directory in $data_path"
 
+  ensure_paths_exist "${data_path%\/*}"
+
   chown_paths "$package_user" \
-    "${data_path%\/*}/data"
+    "${data_path%\/*}"
 
   command="'$install_path/bin/initdb' --pgdata='$data_path/data' --encoding=utf8 --username=$package_user"
 
