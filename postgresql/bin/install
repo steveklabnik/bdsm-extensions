@@ -27,9 +27,9 @@ install_package
 
 postgresql_postinstall
 
-postgresql_init_script
-
 postgresql_initdb
+
+postgresql_init_script
 
 postgresql_ldconfig
 
