@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-source "${extension_modules_path}/bash/cli"
+load cli
 
 remove_paths \
   "${prefix_path}/${package_name}" \

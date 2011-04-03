@@ -1,5 +1,25 @@
 #!/usr/bin/env bash
 
+usage() {
+  printf "
+  Usage:
+
+    $0 [options]
+
+  options:
+
+    --prefix   - specify prefix path
+    --src)     - specify source directory
+    --data)    - specify data directory
+    --user)    - specify user to install as
+    --version) - specify version to install
+    --licence) - view licence
+    --help)    - view this usage information
+
+"
+  return 0
+}
+
 number_of_args=${#extension_args[@]}
 
 for ((index=0 ; index < $number_of_args ; index++)) ; do

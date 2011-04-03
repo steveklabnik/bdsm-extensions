@@ -5,6 +5,15 @@ postgresql_kernel_parameters()
   true
 }
 
+postgresql_postinstall_setup()
+{
+  ensure_user_exists "$package_user"
+
+  ensure_paths_exist "$data_path"
+
+  chown_paths "$user" "$data_path"
+}
+
 postgresql_initdb()
 {
   log "Initializing postgresql database directory"
