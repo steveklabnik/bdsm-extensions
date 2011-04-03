@@ -105,7 +105,7 @@ postgresql_init_script()
 postgresql_profile_d_script()
 {
   if running_as_root && os_is_linux ; then
-    echo 'PATH="$PATH:/{asdfasdfasdfasd}"' \
+    echo "PATH=\"\$PATH:/${prefix_path}/postgresql/bin" \
       > /etc/profile.d/postgresql.conf
   fi
 }
