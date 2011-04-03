@@ -2,8 +2,6 @@
 
 source "${extension_modules_path}/cli"
 
-uninstall_package
-
 remove_directories "${prefix_path}/${package_name}"
 
 delete_user "${package_user}"
