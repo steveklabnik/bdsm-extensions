@@ -31,8 +31,6 @@ postgresql_configure()
 {
   log "Configuring postgresql server."
 
-  ensure_user_exists "$package_user"
-
   link --force "${data_path}" \
     to "${data_path%\/*}/data"
 
