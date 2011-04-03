@@ -16,14 +16,15 @@ Initializing postgresql $version data directory in $data_path
 with superuser set to '$package_user'.
 "
   command="'$install_path/bin/initdb' --pgdata='$data_path' --encoding=utf8 --username=$package_user"
-  create_test="$install_path/bin/createdb test --username ${package_user}"
+  # In order to use create_test have to start the server first.
+  #create_test="$install_path/bin/createdb test --username ${package_user}"
 
   if running_as_root ; then
     run_as_user "${package_user}" "${command}"
-    run_as_user "${package_user}" "$create_test"
+  #  run_as_user "${package_user}" "$create_test"
   else
     "${command}"
-    "${create_test}"
+  #  "${create_test}"
   fi
 
   postgresql_configure
