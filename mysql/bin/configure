@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+configure_mysql
+
+configure_mysql_for_users
+

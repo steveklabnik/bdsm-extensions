@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+load cli
+
+remove_paths \
+  "${prefix_path}/${package_name}" \
+  "${prefix_path}/${package_name}-${package_version}"
+
+remove_files \
+  /etc/profile.d/mysql.sh \
+  /etc/ld.so.conf.d/mysql.conf \
+  "${init_scripts_path}/mysql"
+
+delete_user "${package_user}"
+
+log "Removal of ${package_name} complete."
+

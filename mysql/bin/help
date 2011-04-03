@@ -1,13 +1,14 @@
 #!/usr/bin/env bash
 
-echo -e "
-Usage
-  $0 {install,setup,start,stop,help}
-Actions
-  install  - Install the mysql gem.
-  setup    - Place the config.mysql template in $release_path/config/config.mysql
-  start    - Startup mysql.
-  stop     - Stop mysql.
-  help     - Display this help text.
+modules help
+
+actions "
+  install    - Install mysql server
+  configure  - Ensure that mysql.conf is in place
+  initialize - initdb for the mysql data directory
+  start      - Start mysql server
+  stop       - Stop mysql server
+  restart    - Restart mysql server
 "
-exit $?
+show_help
+

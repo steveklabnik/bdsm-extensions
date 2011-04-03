@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+source "${extension_modules_path}/cli"
+
+#  First do an install
+extension_action "mysql" "install"
+
+# Then do the upgrade parts
+# TODO: Upgrade code
+# move and symlink to preserve the old mysql.conf, pg_hba.conf files
+# upgrade / move databases from old system.
+

@@ -1,0 +1,59 @@
+#!/usr/bin/env bash
+
+modules package
+
+define_package \
+  version "$(hash_file "$extension_config_path/defaults" "version")"
+
+true "${version:="5.5.10"}" # Just in case defaults file is missing.
+
+define_package \
+  base_url "http://mysql.mirrors.pair.com/Downloads/MySQL-${package_version%.*}" \
+  target_path "${prefix_path}/${package_name}-${package_version}"
+
+if running_as_root ; then
+
+  data_path="/var/db/${package_name}/${package_version}"
+
+  sudo=""
+
+  if [[ -d /etc/profile.d ]] ; then
+    profiles=(/etc/profile.d/mysql.sh)
+  else
+    if [[ -f /etc/bash.bashrc ]] ; then
+      profiles=(/etc/bash.bashrc)
+    else
+      profiles=(/etc/bashrc)
+    fi
+  fi
+
+  install_path="${prefix_path}/${package_name}-${package_version}"
+else
+  sudo="sudo"
+
+  true \
+    "${package_user:=$USER}" \
+    "${prefix_path:="$HOME"}"
+
+  true \
+    "${data_path:="$prefix_path/.${package_name}-${package_version}"}" \
+    "${profiles:=("$HOME/.bash_profile" "$HOME/.bashrc")}" \
+    "${install_path:="$prefix_path/.${package_name}-${package_version}"}"
+fi
+
+log_path="$data_path/log"
+
+if [[ "$action" = *install ]] ; then
+  # TODO: configure flags per OS.
+  configure_flags=(
+    --prefix="$install_path"
+    #--datadir="$data_path"
+    #--with-openssl
+    --enable-shared
+  )
+
+  export CFLAGS='-O2'
+fi
+
+timestamp="$(date +"%Y-%m-%dT%H:%M")"
+
