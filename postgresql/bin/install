@@ -1,10 +1,8 @@
 #!/usr/bin/env bash
 
+extension_licence
+
 log "
-
-License:
-
-$(cat -v ${extension_path}/LICENCE)
 
 Message:
 
@@ -27,7 +25,7 @@ load cli
 
 install_package
 
-postgresql_postinstall_setup
+postgresql_postinstall
 
 postgresql_init_script
 
@@ -49,4 +47,5 @@ Installation and configuration of postgresql is now complete.
   * You can control the postgresql server via the bdsm postgresql extension'
   * The postgersql superuser is '$package_user', no password.
   * Use /etc/conf.d/postgresql.conf for server startup customization.
+
 "
