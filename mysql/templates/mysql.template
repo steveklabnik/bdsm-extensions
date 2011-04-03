@@ -100,9 +100,8 @@ true \
   "${user:="mysql"}"
 
 # What to use to shut down the postmaster
-daemon="${prefix_path}/bin/postmaster"
+daemon="${prefix_path}/bin/mysqld"
 control="${prefix_path}/bin/mysqld_safe"
-export PGDATA="${data_path}"
 
 #
 # Main Logic
