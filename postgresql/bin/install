@@ -63,7 +63,11 @@ ensure_paths_exist "$data_path"
 
 chown_paths "$user" "$data_path"
 
+postgresql_init_script
+
 postgresql_initdb
+
+postgresql_ldconfig
 
 configure_kernel_parameters
 

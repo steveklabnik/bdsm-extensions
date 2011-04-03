@@ -102,3 +102,12 @@ postgresql_ldconfig()
     /sbin/ldconfig
   fi
 }
+
+postgresql_init_script()
+{
+  install_template "postgresql" \
+    to "${init_scripts_path}/postgresql"
+
+  ensure_files_are_executable \
+    "${init_scripts_path}/postgresql"
+}
