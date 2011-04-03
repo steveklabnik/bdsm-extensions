@@ -79,7 +79,7 @@ postgresql_profile_d
 
 postgresql_conf_d
 
-configure_kernel_parameters
+postgresql_kernel_parameters
 
 log "
 Installation and configuration of postgresql is now complete.

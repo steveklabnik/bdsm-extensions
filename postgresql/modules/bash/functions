@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
 
+postgresql_kernel_parameters()
+{
+  true
+}
+
 postgresql_initdb()
 {
   ensure_paths_exist "$data_path/$version"
@@ -29,8 +34,7 @@ postgresql_configure()
   if [[ ! -s "$data_path/postgresql.conf" ]] ; then
     log "Installing postgresql.conf."
 
-    copy "$data_path/postgresql.conf.sample" \
-      to "$data_path/postgresql.conf"
+    cp -f "$data_path/postgresql.conf.sample" "$data_path/postgresql.conf"
   fi
 
   log "\nSymlinking $install_path to $prefix_path/postgresql"
@@ -40,7 +44,7 @@ postgresql_configure()
   link "$install_path" \
     to "$prefix_path/postgresql"
 
-  ensure_paths_exists "$data_path" "$log_path"
+  ensure_paths_exist "$data_path" "$log_path"
 
   chown_paths "$package_user" "$data_path"
 
