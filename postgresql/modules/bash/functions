@@ -100,6 +100,9 @@ postgresql_ldconfig()
     echo "${prefix_path}/postgresql/lib" \
       > /etc/ld.so.conf.d/postgresql.conf
 
+    chmod_paths 0644 \
+      "/etc/ld.so.conf.d/postgresql.conf"
+
     /sbin/ldconfig
   fi
 }
@@ -111,6 +114,9 @@ postgresql_init_script()
     to "${init_scripts_path}/postgresql"
 
   ensure_files_are_executable \
+    "${init_scripts_path}/postgresql"
+
+  chmod_paths 0755 \
     "${init_scripts_path}/postgresql"
 }
 
