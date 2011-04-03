@@ -7,6 +7,7 @@ postgresql_kernel_parameters()
 
 postgresql_initdb()
 {
+  log "Initializing postgresql database directory"
   ensure_paths_exist "$data_path/$version"
 
   chown_paths "$package_user" "$data_path"
@@ -32,6 +33,7 @@ with superuser set to '$package_user'.
 
 postgresql_configure()
 {
+  log "Configuring postgresql server."
   if [[ ! -s "$data_path/postgresql.conf" ]] ; then
     log "Installing postgresql.conf."
 
@@ -90,6 +92,8 @@ configure_postgresql_for_users()
 
 postgresql_ldconfig()
 {
+  log "Adding Postgresql libraries to system ld path."
+
   if running_as_root && os_is_linux ; then
     echo "${prefix_path}/postgresql/lib" \
       > /etc/ld.so.conf.d/postgresql.conf
@@ -100,6 +104,7 @@ postgresql_ldconfig()
 
 postgresql_init_script()
 {
+  log "Installing Postgresql init script"
   install_template "postgresql" \
     to "${init_scripts_path}/postgresql"
 
@@ -110,20 +115,26 @@ postgresql_init_script()
 postgresql_profile_d()
 {
   if running_as_root && os_is_linux ; then
-    echo "PATH=\"\$PATH:${prefix_path}/postgresql/bin\"" \
-      > /etc/profile.d/postgresql.sh
+    log "Installing Postgresql profile.d script"
 
-    chmod_paths 0755 "/etc/profile.d/postgresql.sh"
+    install_template "postgresql.sh" \
+      to "/etc/profile.d/postgresql.sh"
+
+    chmod_paths 0755 \
+      "/etc/profile.d/postgresql.sh"
   fi
 }
 
 postgresql_conf_d()
 {
   if running_as_root && os_is_linux ; then
+    log "Installing Postgresql conf.d script"
+
     install_template "postgresql.conf.d" \
       to "/etc/conf.d/postgresql.conf"
 
-    chmod_paths 0755 "/etc/profile.d/postgresql.sh"
+    chmod_paths 0644 \
+      "/etc/profile.d/postgresql.sh"
   fi
 }
 

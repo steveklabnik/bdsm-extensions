@@ -47,7 +47,22 @@ fi
 
 log_path="$data_path/log"
 
-if [[ "$action" = "install" ]] ; then
+if [[ "$action" = *install ]] ; then
+  color_green="$(tput setaf 2)"
+  color_red="$(tput setaf 5)"
+  color_none="$(tput sgr0)"
+
+  configure_flags=(
+    --prefix="$install_path"
+    --datadir="$data_path"
+    --with-openssl
+    --enable-shared
+  )
+
+  if os_is_darwin ; then
+    configure_flags[${#configure_flags[@]}]="--with-bonjour"
+  fi
+
   export CFLAGS='-O2'
 fi
 
