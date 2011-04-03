@@ -31,8 +31,15 @@ Message:
 I am wayneeseguin in #rvm on irc.freenode.net and I am happy to discuss
 improving this script, or field questions.
 
-This script will install ${package_name}-${package_version} to
-$install_path and configure the install.
+This script will now:
+
+* Install ${package_name}-${package_version} to $install_path
+* Put init script in place
+* Add postgresql to ldconfig (Linux)
+* Create and initialize data directory
+* Setup profile.d script adding postgresql binaries to the path
+* Add conf.d file allowing for server customization
+* Adjust sysctl kernel parameters for postgresql (Linux)
 
 "
 
