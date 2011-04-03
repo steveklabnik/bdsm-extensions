@@ -69,6 +69,8 @@ postgresql_initdb
 
 postgresql_ldconfig
 
+postgresql_profile_d_script
+
 configure_kernel_parameters
 
 log "
