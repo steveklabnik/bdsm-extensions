@@ -42,8 +42,6 @@ postgresql_configure()
       to "$data_path/data/postgresql.conf"
   fi
 
-  chown_paths "$package_user" "$data_path" # One more for good measure.
-
   log "\nSymlinking $install_path to $prefix_path/postgresql"
 
   remove_paths "$prefix_path/postgresql"
@@ -52,7 +50,7 @@ postgresql_configure()
 
   ensure_paths_exists "$data_path" "$log_path"
 
-  chown_paths "$package_user" "$data_path" "$log_path"
+  chown_paths "$package_user" "$data_path"
 
   chmod_paths 0700 "$data_path"
 }

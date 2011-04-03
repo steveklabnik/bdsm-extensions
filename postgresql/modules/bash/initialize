@@ -45,6 +45,8 @@ else
     "${install_path:="$prefix_path/.${package_name}-${package_version}"}"
 fi
 
+log_path="$data_path/log"
+
 if [[ "$action" = "install" ]] ; then
   export CFLAGS='-O2'
 fi
