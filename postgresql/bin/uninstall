@@ -2,15 +2,15 @@
 
 source "${extension_modules_path}/cli"
 
-remove_directories "${prefix_path}/${package_name}"
+remove_directories \
+  "${prefix_path}/${package_name}"
+
+remove_files \
+  /etc/profile.d/postgresql.sh \
+  /etc/ld.so.conf.d/postgresql.conf \
+  "${init_scripts_path}/postgresql"
 
 delete_user "${package_user}"
-
-remove_postgresql_init_script
-
-remove_postgresql_ldconfig
-
-remove_postgresql_profile_d_script
 
 log "Removal of ${package_name} complete."
 
