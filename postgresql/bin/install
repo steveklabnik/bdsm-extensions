@@ -28,11 +28,10 @@ $(cat -v ${extension_path}/LICENCE)
 
 Message:
 
-I am happy to discuss improving this script, or field questions.
+I am wayneeseguin in #rvm on irc.freenode.net and I am happy to discuss
+improving this script, or field questions.
 
-I am wayneeseguin in #rvm on irc.freenode.net
-
-This script will install ${package}-${version} to
+This script will install ${package_name}-${package_version} to
 $install_path and configure the install.
 
 "
@@ -81,6 +80,6 @@ Installation and configuration of postgresql is now complete.
   * postgresql has been installed to $install_path
   * postgresql configuration and data files will are in $data_path
   * You can control the postgresql server via the bdsm postgresql extension'
-  * The postgersql superuser is '$user', no password.
+  * The postgersql superuser is '$package_user', no password.
   * Use /etc/conf.d/postgresql.conf for server startup customization.
 "

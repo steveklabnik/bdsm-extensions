@@ -161,13 +161,13 @@ symlink()
 
   for dir in tmp log pids files ; do
     log "  - $dir"
-    remove_directories "${stage_path}/${dir}"
+    remove_paths "${stage_path}/${dir}"
     link --force "${shared_path}/${dir}" to "${stage_path}/${dir}"
   done
 
   for dir in $(ls -A "$shared_path/public/") ; do
     log "  - public/$dir"
-    remove_directories "${stage_path}/public/${dir}"
+    remove_paths "${stage_path}/public/${dir}"
     link --force "${shared_path}/public/${dir}" to "${stage_path}/public/${dir}"
   done
 }
@@ -177,7 +177,7 @@ cleanup()
   (
   log "Removing old releases: ${old_releases[@]}"
   enter "$project_path/previous"
-  remove_directories "${old_releases[@]}"
+  remove_paths "${old_releases[@]}"
   )
 }
 
