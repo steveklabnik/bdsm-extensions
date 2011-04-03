@@ -37,7 +37,7 @@ $install_path and configure the install.
 
 "
 
-source "${extension_modules_path}/cli"
+source "${extension_modules_path}/bash/cli"
 
 color_green="$(tput setaf 2)"
 color_red="$(tput setaf 5)"
