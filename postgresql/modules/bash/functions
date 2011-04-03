@@ -102,11 +102,21 @@ postgresql_init_script()
     "${init_scripts_path}/postgresql"
 }
 
-postgresql_profile_d_script()
+postgresql_profile_d()
 {
   if running_as_root && os_is_linux ; then
     echo "PATH=\"\$PATH:${prefix_path}/postgresql/bin\"" \
       > /etc/profile.d/postgresql.sh
+
+    chmod_paths 0755 "/etc/profile.d/postgresql.sh"
+  fi
+}
+
+postgresql_conf_d()
+{
+  if running_as_root && os_is_linux ; then
+    install_template "postgresql.conf.d" \
+      to "/etc/conf.d/postgresql.conf"
 
     chmod_paths 0755 "/etc/profile.d/postgresql.sh"
   fi

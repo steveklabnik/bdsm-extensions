@@ -69,7 +69,9 @@ postgresql_initdb
 
 postgresql_ldconfig
 
-postgresql_profile_d_script
+postgresql_profile_d
+
+postgresql_conf_d
 
 configure_kernel_parameters
 

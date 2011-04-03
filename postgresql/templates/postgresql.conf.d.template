@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+
+#===============================================================================
+# /etc/conf.d/postgresql default contents:
+#===============================================================================
+#
+# Installation prefix
+prefix="/usr/local/postgresql"
+
+# Data directory
+PGDATA="/data/postgresql/data"
+
+# Who to run the postmaster as, usually "postgres".  (NOT "root")
+PGUSER="postgres"
+
+# Where to keep a log file
+PGLOG="$PGDATA/server.log"
+
+# The path that is to be used for the script
+PATH="/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin:$PATH"
+
