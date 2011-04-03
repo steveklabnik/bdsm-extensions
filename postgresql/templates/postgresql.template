@@ -104,7 +104,7 @@ PATH="${prefix_path}/bin:/bin:/usr/bin:/usr/local/bin:${PATH}"
 # Ensure defaults are set.
 true \
   "${prefix_path:="/usr/local/postgresql"}" \
-  "${data_path:="/var/db/postgresql/data"}" \
+  "${data_path:="/var/db/postgresql/data/data"}" \
   "${log_file:="${data_path}/server.log"}" \
   "${user:="postgres"}"
 
