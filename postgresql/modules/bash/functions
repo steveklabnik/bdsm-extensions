@@ -50,9 +50,9 @@ postgresql_configure()
 
   link "$install_path" to "$prefix_path/postgresql"
 
-  ensure_paths_exists "$data_path" "$log_dir"
+  ensure_paths_exists "$data_path" "$log_path"
 
-  chown_paths "$package_user" "$data_path" "$log_dir"
+  chown_paths "$package_user" "$data_path" "$log_path"
 
   chmod_paths 0700 "$data_path"
 }
