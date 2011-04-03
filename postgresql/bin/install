@@ -25,6 +25,8 @@ load cli
 
 install_package
 
+ensure_paths_exist "${data_path%\/*}"
+
 ensure_user_exists "$package_user"
 
 postgresql_initdb
