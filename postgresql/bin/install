@@ -77,8 +77,6 @@ for ((index=0 ; index < $number_of_args ; index++)) ; do
 
 done
 
-ensure_user_exists "$package_user"
-
 color_green="$(tput setaf 2)"
 color_red="$(tput setaf 5)"
 color_none="$(tput sgr0)"
@@ -97,6 +95,8 @@ fi
 install_package
 
 # Post installation tasks.
+ensure_user_exists "$package_user"
+
 ensure_paths_exist "$data_path/$version"
 
 chown_paths "$user" "$data_path"
