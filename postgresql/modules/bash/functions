@@ -22,6 +22,9 @@ postgresql_initdb()
 
   chown_paths "$package_user" "$data_path"
 
+  link "${data_path}/${version}" \
+    to "${data_path}/data"
+
   command="'$install_path/bin/initdb' --pgdata='$data_path' --encoding=utf8 --username=$package_user"
 
   if running_as_root ; then
