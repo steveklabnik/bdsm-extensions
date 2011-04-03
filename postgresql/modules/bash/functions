@@ -12,10 +12,7 @@ postgresql_initdb()
   chown_paths "$package_user" \
     "${data_path%\/*}/data"
 
-  if [[ ${force_flag:-0} -eq 1 ]] ; then
-    remove_paths "$data_path"
-  fi
-
+  remove_paths "$data_path"
   command="'$install_path/bin/initdb' --pgdata='$data_path' --encoding=utf8 --username=$package_user"
 
   if running_as_root ; then
