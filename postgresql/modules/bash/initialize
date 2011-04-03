@@ -45,6 +45,10 @@ else
     "${install_path:="$prefix_path/.${package_name}-${package_version}"}"
 fi
 
+if [[ "${package_user}" = "postgresql" ]] ; then
+  package_user="postgres"
+fi
+
 log_path="$data_path/log"
 
 if [[ "$action" = *install ]] ; then

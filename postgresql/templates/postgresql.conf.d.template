@@ -14,5 +14,5 @@ data_path="/var/db/postgresql/data"
 log_file="${data_path}/server.log"
 
 # Who to run the postmaster as, usually "postgres".  (NOT "root")
-user="postgresql"
+user="postgres"
 
