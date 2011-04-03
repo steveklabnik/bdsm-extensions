@@ -136,7 +136,7 @@ postgresql_conf_d()
       to "/etc/conf.d/postgresql.conf"
 
     chmod_paths 0644 \
-      "/etc/profile.d/postgresql.sh"
+      "/etc/conf.d/postgresql.conf"
   fi
 }
 
