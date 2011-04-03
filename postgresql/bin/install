@@ -76,11 +76,11 @@ postgresql_conf_d
 configure_kernel_parameters
 
 log "
-
 Installation and configuration of postgresql is now complete.
 
   * postgresql has been installed to $install_path
   * postgresql configuration and data files will are in $data_path
   * You can control the postgresql server via the bdsm postgresql extension'
   * The postgersql superuser is '$user', no password.
+  * Use /etc/conf.d/postgresql.conf for server startup customization.
 "

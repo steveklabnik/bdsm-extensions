@@ -3,123 +3,161 @@
 #
 # PostgreSQL System Init script
 #
-
-# Author:  Wayne E. Seguin <wayneeseguin@gmail.com>
-#===============================================================================
-# /etc/conf.d/postgresql default contents:
-#===============================================================================
+# Copyright (c) 2009-2011 Wayne E. Seguin <wayneeseguin@gmail.com>
 #
-# Installation prefix
-prefix="/usr/local/postgresql"
-
-# Data directory
-PGDATA="/data/postgresql/data"
-
-# Who to run the postmaster as, usually "postgres".  (NOT "root")
-PGUSER="postgres"
-
-# Where to keep a log file
-PGLOG="$PGDATA/server.log"
-
-# The path that is to be used for the script
-PATH="/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin:$PATH"
-
-# What to use to start up the postmaster (we do NOT use pg_ctl for this,
-# as it adds no value and can cause the postmaster to misrecognize a stale
-# lock file)
-daemon="$prefix/bin/postmaster"
-
-# What to use to shut down the postmaster
-pg_ctl="$prefix/bin/pg_ctl"
-#===============================================================================
-# End of /etc/conf.d/postgresql default contents
-#===============================================================================
+# Licensed under the Apache License, Version 2.0 (the \"License\");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an \"AS IS\" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
 
 #
 # Function Definitions
 #
-log() {
-  printf "$*\n"
-start()
+# Helper functions, for more readable maintainable code
+log() { printf "$*\n" ; }
+
+fail() { log "ERROR: $*" ; exit 1 ; }
+
+run_as_user()
 {
-  printf "Starting PostgreSQL: \n"
-  su - "$PGUSER" -c "$daemon -D '$PGDATA' &" >>$PGLOG 2>&1
+  local _user="$1" ; shift
+  local _command="$*"
+
+  su - "${_user}" -c "${_command}"
 }
 
-stop()
+# Postgresql control functions.
+postgresql_start()
 {
-  log "Stopping PostgreSQL: \n"
-  su - "$PGUSER" -c "$pg_ctl stop -D '$PGDATA' -s -m fast"
-  log "done.\n"
+  log "Starting PostgreSQL Server"
+
+  run_as_user "${user}" \
+    "$daemon -D '$data_path' &" >> "$log_file" 2>&1
 }
 
-restart()
+postgresql_stop()
 {
-  log "Restarting PostgreSQL: "
-  su - "$PGUSER" -c "$pg_ctl stop -D '$PGDATA' -s -m fast -w"
-  su - "$PGUSER" -c "$daemon -D '$PGDATA' &" >>$PGLOG 2>&1
-  log "done."
+  log "Stopping PostgreSQL Server"
+
+  run_as_user "${user}" \
+    "$control stop -D '$data_path' -s -m fast"
 }
 
-reload()
+postgresql_restart()
 {
-  log "Reload PostgreSQL: "
-  su - "$PGUSER" -c "$pg_ctl reload -D '$PGDATA' -s"
-  log "done."
+  log "Restarting PostgreSQL Server"
+
+  run_as_user "${user}" \
+    "$control stop -D '$data_path' -s -m fast -w" # Notice the '-w' wait flag.
+
+  postgresql_start
 }
 
-status()
+postgresql_reload()
 {
-  su - "$PGUSER" -c "$pg_ctl status -D '$PGDATA'"
+  log "Reload PostgreSQL Server configuration"
+
+  run_as_user "${user}" \
+    "$control reload -D '$data_path' -s"
+}
+
+postgresql_status()
+{
+  run_as_user "${user}" \
+    "$control status -D '$data_path'"
 }
 
 usage()
 {
-  echo "Usage: $0 {start|stop|restart|reload|status|help}"
+  log "
+Usage:
+
+  $0 [action]
+
+Actions:
+
+  start   - Start server
+  stop    - Stop server
+  restart - Restart server
+  reload  - Reload configuration file
+  status  - Display server status
+"
 }
 
-[[ -s /etc/conf.d/postgresql ]] && source /etc/conf.d/postgresql
+#
+# Configuration
+#
+
+# The path that is to be used for the script
+PATH="${prefix_path}/bin:/bin:/usr/bin:/usr/local/bin:${PATH}"
+
+# Load settings from postgresql.conf
+[[ -s /etc/conf.d/postgresql.conf ]] && source /etc/conf.d/postgresql.conf
+
+# Ensure defaults are set.
+true \
+  "${prefix_path:="/usr/local/postgresql"}" \
+  "${data_path:="/var/db/postgresql/data"}" \
+  "${log_file:="${data_path}/server.log"}" \
+  "${user:="postgres"}"
+
+# What to use to shut down the postmaster
+daemon="${prefix_path}/bin/postmaster"
+control="${prefix_path}/bin/pg_ctl"
+export PGDATA="${data_path}"
+
+#
+# Main Logic
+#
+
+[[ -x "$daemon" ]] ||
+  fail "Could not find postmaster or postmaster is not executable."
+
+[[ -x "$control" ]] ||
+  fail "Could not find pg_ctl script."
+
+#
+# Parse CLI arguments.
+#
 
 set -e
 
-if [[ ! -x "$daemon" ]] ; then
-  echo "Could not find postmaster or postmaster is not executable"
-  exit 0
-fi
-
-#
-# Parse command line arguments.
-#
 case "$1" in
 
   start)
-    start
+    postgresql_start
     ;;
 
   stop)
-    stop
+    postgresql_stop
     ;;
 
   restart)
-    restart
+    postgresql_restart
     ;;
 
   reload)
-    reload
+    postgresql_reload
     ;;
 
   status)
-    status
+    postgresql_status
     ;;
 
   help)
     usage
-    exit 0
     ;;
 
   *)
     usage
-    exit 1
+    false
     ;;
 
 esac
