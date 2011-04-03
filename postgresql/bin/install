@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-extension_licence
+display_extension_licence
 
 log "
 
