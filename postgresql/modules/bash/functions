@@ -5,15 +5,6 @@ postgresql_kernel_parameters()
   true
 }
 
-postgresql_postinstall()
-{
-  ensure_user_exists "$package_user"
-
-  ensure_paths_exist "$data_path"
-
-  chown_paths "$user" "$data_path"
-}
-
 postgresql_initdb()
 {
   log "Initializing postgresql data directory in $data_path"
@@ -21,7 +12,9 @@ postgresql_initdb()
   chown_paths "$package_user" \
     "${data_path%\/*}/data"
 
-  remove_paths "$data_path"
+  if [[ ${force_flag:-0} -eq 1 ]] ; then
+    remove_paths "$data_path"
+  fi
 
   command="'$install_path/bin/initdb' --pgdata='$data_path' --encoding=utf8 --username=$package_user"
 
@@ -37,6 +30,8 @@ postgresql_initdb()
 postgresql_configure()
 {
   log "Configuring postgresql server."
+
+  ensure_user_exists "$package_user"
 
   link --force "${data_path}" \
     to "${data_path%\/*}/data"
