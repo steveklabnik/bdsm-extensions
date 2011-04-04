@@ -39,7 +39,7 @@ mysql_start()
   log "Starting mysql Server"
 
   run_as_user "${user}" \
-    "$daemon -D '$data_path' --defaults-file=/etc/mysql/my.cnf &" >> "$log_file" 2>&1
+    "$daemon ${control_params[@]} &" >> "$log_file" 2>&1
 }
 
 mysql_stop()
@@ -47,15 +47,15 @@ mysql_stop()
   log "Stopping mysql Server"
 
   run_as_user "${user}" \
-    "$control stop -D '$data_path'"
+    "$control stop ${control_params[@]}"
 }
 
 mysql_restart()
 {
   log "Restarting mysql Server"
 
-  run_as_user "${user}" \
-    "$control stop -D '$data_path'"
+  run_as_user "${user}"
+    "$control stop ${control_params[@]}"
 
   mysql_start
 }
@@ -63,7 +63,7 @@ mysql_restart()
 mysql_status()
 {
   run_as_user "${user}" \
-    "$control status -D '$data_path'"
+    "$control status ${control_params[@]}"
 }
 
 usage()
@@ -86,9 +86,6 @@ Actions:
 # Configuration
 #
 
-# The path that is to be used for the script
-PATH="${prefix_path}/bin:/bin:/usr/bin:/usr/local/bin:${PATH}"
-
 # Load settings from mysql.conf
 [[ -s /etc/conf.d/mysql.conf ]] && source /etc/conf.d/mysql.conf
 
@@ -97,11 +94,16 @@ true \
   "${prefix_path:="/usr/local/mysql"}" \
   "${data_path:="/var/db/mysql/data/data"}" \
   "${log_file:="${data_path}/server.log"}" \
+  "${config_file:="/etc/mysql/my.cnf"}" \
   "${user:="mysql"}"
+
+# The path that is to be used for the script
+PATH="${prefix_path}/bin:/bin:/usr/bin:/usr/local/bin:${PATH}"
 
 # What to use to shut down the mysqld
 daemon="${prefix_path}/bin/mysqld_safe"
 control="${prefix_path}/bin/mysqld_safe"
+control_params=( -D \"$data_path\" --defaults-file=\"${config_file}\" )
 
 #
 # Main Logic
