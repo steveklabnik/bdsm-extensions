@@ -30,8 +30,7 @@ mysql_start()
 {
   log "Starting mysql Server"
 
-  #$control --user="${user}" --datadir="$data_path" start >> "$log_file" 2>&1 &
-  su - "${user}" -c "$control --datadir=\"$data_path\"" start >> "$log_file" 2>&1 &
+  ( su - "${user}" -c "$control --datadir=\"$data_path\"" start >> "$log_file" 2>&1 )&
 }
 
 mysql_stop()
