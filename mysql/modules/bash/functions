@@ -9,7 +9,8 @@ mysql_initdb()
   chown_paths "$package_user" \
     "${data_path%\/*}"
 
-  command="${install_path}/bin/mysql_install_db --user=\"${package_user}\" --basedir=\"${install_path}\" --datadir=${data_path} --srcdir=\"${source_path}/${package_name}-${package_version}\""
+  command="${install_path}/bin/mysql_install_db --user=\"${package_user}\" --basedir=\"${install_path}\" --datadir=${data_path} "
+  # --srcdir=\"${source_path}/${package_name}-${package_version}\"
   export PATH="${install_path}/bin:$PATH"
 
   if running_as_root ; then
