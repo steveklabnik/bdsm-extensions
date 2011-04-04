@@ -13,5 +13,24 @@ remove_files \
 
 delete_user "${package_user}"
 
+if os_is_darwin ; then
+  remove_files \
+    "/usr/local/mysql"
+
+    paths=(
+      /usr/local/mysql* \
+      /Library/StartupItems/MySQLCOM \
+      /Library/PreferencePanes/My* \
+      /Library/Reciepts/mysql* \
+      /Library/Reciepts/MySQL* \
+      /var/db/receipts/com.mysql.mysql* \
+      /usr/local/mysql*
+    )
+
+    remove_paths ${paths[@]}
+
+    sed -i -e 's#^MYSQLCOM.*$##' /etc/hostconfig
+fi
+
 log "Removal of ${package_name} complete."
 
