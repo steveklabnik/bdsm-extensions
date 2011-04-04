@@ -21,7 +21,23 @@ This script will now:
 
 load cli
 
-install_package
+
+ensure_paths_exist "${source_path}"
+
+enter "${source_path}"
+
+log "Downloading ${package_name} ${package_version}"
+fetch_package
+
+log "Extracting ${package_name} ${package_version}"
+extract_package
+
+enter "${package_dir}"
+
+make rel
+
+riak_install
+# Now to install...
 
 ensure_user_exists "$package_user"
 
