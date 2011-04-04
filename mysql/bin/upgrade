@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-source "${extension_modules_path}/cli"
+load cli
 
 #  First do an install
 extension_action "mysql" "install"

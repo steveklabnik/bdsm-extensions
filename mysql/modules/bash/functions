@@ -1,13 +1,52 @@
 #!/usr/bin/env bash
 
+mysql_install_package()
+{
+  # deal with mysql version_greater_than "5.5", eg. cmake etc...
+  # This function must: configure, build, install to ${install_path}
+
+  ensure_paths_exist "${source_path}"
+
+  enter "${source_path}"
+
+  log "Downloading ${package_name} ${package_version}"
+  fetch_package
+
+  log "Extracting ${package_name} ${package_version}"
+  extract_package
+
+  enter "${package_dir}"
+
+  # If the extension has defined a patch_package function, call it.
+  if command -v patch_package 2>/dev/null ; then
+    log "Patching ${package_name} ${package_version}"
+    patch_package
+  fi
+
+  log "Configuring ${package_name} ${package_version}"
+  # TODO: adjust this for new cmake install method.
+  # http://dev.mysql.com/doc/refman/5.5/en/source-configuration-options.html
+  # http://dev.mysql.com/doc/refman/5.5/en/installing-source-distribution.html
+  cmake .
+
+  log "Building ${package_name} ${package_version}"
+  make_package
+
+  log "Installing ${package_name} ${package_version}"
+  if make_install_package ; then
+    log "Installed ${package_name} ${package_version}."
+  else
+    fail "Failed to install ${package_name} ${package_version} to ${prefix_path}."
+  fi
+}
+
 mysql_initdb()
 {
   log "Initializing mysql data directory in $data_path"
 
   ensure_paths_exist "${data_path%\/*}"
 
-  chown_paths "$package_user" \
-    "${data_path%\/*}"
+  chown_paths "$package_user" "${data_path%\/*}"
 
   command="${install_path}/bin/mysql_install_db --user=\"${package_user}\" --basedir=\"${install_path}\" --datadir=${data_path} "
   # --srcdir=\"${source_path}/${package_name}-${package_version}\"
@@ -28,36 +67,32 @@ mysql_configure()
 
   log "Configuring mysql server."
 
-  link --force "${data_path}" \
-    to "${data_path%\/*}/data"
+  link --force "${data_path}" to "${data_path%\/*}/data"
 
-  # TODO: Determine which .cnf file to grab based on system resources.
-  file="${source_path}/${package_dir}/support-files/my-medium.cnf"
-  if [[ -s "${file}" ]] ; then
-    log "Installing my.cnf to /etc/mysql"
-    cp -f "${file}" "/etc/mysql/my.cnf"
+  if [[ -s "/etc/mysql/my.cnf" ]] ; then
+    log "Skipping /etc/mysql/my.cnf as it already exists, use bdsm mysql configure to override later."
   else
-    log "ERROR: ${file} missing, not setting up /etc/mysql/my.cnf"
+    # TODO: Determine which .cnf file to grab based on system resources.
+    file="${source_path}/${package_dir}/support-files/my-medium.cnf"
+    if [[ -s "${file}" ]] ; then
+      log "Installing my.cnf to /etc/mysql"
+      cp -f "${file}" "/etc/mysql/my.cnf"
+    else
+      log "ERROR: ${file} missing, not setting up /etc/mysql/my.cnf"
+    fi
   fi
 
   log "\nSymlinking $install_path to $prefix_path/mysql"
 
-  remove_paths \
-    "$prefix_path/mysql"
+  remove_paths "$prefix_path/mysql"
 
-  link "$install_path" \
-    to "$prefix_path/mysql"
+  link "$install_path" to "$prefix_path/mysql"
 
-  ensure_paths_exist \
-    "$data_path" \
-    "$log_path" \
-    "/etc/mysql/"
+  ensure_paths_exist "$data_path" "$log_path" "/etc/mysql/"
 
-  chown_paths "$package_user" \
-    "$data_path"
+  chown_paths "$package_user" "$data_path"
 
-  chmod_paths 0700 \
-    "$data_path"
+  chmod_paths 0700 "$data_path"
 }
 
 mysql_ldconfig()
@@ -65,11 +100,9 @@ mysql_ldconfig()
   log "Adding mysql libraries to system ld path."
 
   if running_as_root && os_is_linux ; then
-    echo "${prefix_path}/mysql/lib" \
-      > /etc/ld.so.conf.d/mysql.conf
+    echo "${prefix_path}/mysql/lib" > /etc/ld.so.conf.d/mysql.conf
 
-    chmod_paths 0644 \
-      "/etc/ld.so.conf.d/mysql.conf"
+    chmod_paths 0644 "/etc/ld.so.conf.d/mysql.conf"
 
     /sbin/ldconfig
   fi
@@ -78,14 +111,12 @@ mysql_ldconfig()
 mysql_init_script()
 {
   log "Installing mysql init script"
-  install_template "mysql" \
-    to "${init_scripts_path}/mysql"
 
-  ensure_files_are_executable \
-    "${init_scripts_path}/mysql"
+  install_template "mysql" to "${init_scripts_path}/mysql"
 
-  chmod_paths 0755 \
-    "${init_scripts_path}/mysql"
+  ensure_files_are_executable "${init_scripts_path}/mysql"
+
+  chmod_paths 0755 "${init_scripts_path}/mysql"
 }
 
 mysql_profile_d()
@@ -93,11 +124,9 @@ mysql_profile_d()
   if running_as_root && os_is_linux ; then
     log "Installing mysql profile.d script"
 
-    install_template "mysql.sh" \
-      to "/etc/profile.d/mysql.sh"
+    install_template "mysql.sh" to "/etc/profile.d/mysql.sh"
 
-    chmod_paths 0755 \
-      "/etc/profile.d/mysql.sh"
+    chmod_paths 0755 "/etc/profile.d/mysql.sh"
   fi
 }
 
@@ -106,11 +135,9 @@ mysql_conf_d()
   if running_as_root && os_is_linux ; then
     log "Installing mysql conf.d script"
 
-    install_template "mysql.conf.d" \
-      to "/etc/conf.d/mysql.conf"
+    install_template "mysql.conf.d" to "/etc/conf.d/mysql.conf"
 
-    chmod_paths 0644 \
-      "/etc/conf.d/mysql.conf"
+    chmod_paths 0644 "/etc/conf.d/mysql.conf"
   fi
 }
 

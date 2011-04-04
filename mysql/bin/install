@@ -22,9 +22,13 @@ This script will now:
 
 load cli
 
-install_package
+if version_greater_than "5.5" ; do
+  mysql_install_package
+else
+  install_package
+fi
 
-ensure_user_exists "$package_user"
+ensure_user_exists "${package_user}"
 
 mysql_initdb
 
