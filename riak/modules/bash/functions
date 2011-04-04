@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+# override make_package
+make_package()
+{
+  log "Building ${package_name}"
+  make rel
+}
+

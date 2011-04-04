@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+
+modules package
+
+# TODO: Make version configurable from ~/.bdsm/${extension}/config
+package_version "0.14.0-1"
+
+define_package \
+  dir "${package_name}-${package_version/%-*}" \
+  base_url "http://downloads.basho.com/riak/${package_name}-${package_version}" \
+  file "${package_name}-${package_version/%-*}.${archive_format}"
+
+dependencies=( ncurses openssl )
+
+configure_flags=(
+  --enable-hipe
+  --enable-smp-support
+  --enable-threads
+  --enable-kernel-poll
+)
+
+export LANG="C"
+
+if os_is_darwin ; then
+  configure_flags[${#configure_flags[@]}]="--enable-darwin-64bit"
+fi
+
