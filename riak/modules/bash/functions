@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 
-
 configure_package()
 {
   true # noop for riak.
