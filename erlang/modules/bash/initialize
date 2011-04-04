@@ -1,14 +1,10 @@
 #!/usr/bin/env bash
 
-modules package
+modules defaults package
 
-# TODO: Make version configurable from ~/.bdsm/${extension}/config
+read_default version into package_version
 
-define_package \
-  version "$(hash_file "$extension_config_path/defaults" "version")" \
-  base_url "http://erlang.org/download"
-
-true ${package_version:="R13B04"}
+read_default base_url into package_base_url
 
 define_package \
   file "otp_src_${package_version}.${archive_format}" \
