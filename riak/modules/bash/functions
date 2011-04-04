@@ -1,5 +1,18 @@
 #!/usr/bin/env bash
 
+
+configure_package()
+{
+  true # noop for riak.
+}
+
+# override make_package
+make_package()
+{
+  log "Building ${package_name}"
+  make rel
+}
+
 riak_initdb()
 {
   log "Initializing riak data directory in $data_path"
@@ -98,11 +111,3 @@ riak_conf_d()
       "/etc/conf.d/${package_name}.conf"
   fi
 }
-
-# override make_package
-make_package()
-{
-  log "Building ${package_name}"
-  make rel
-}
-
