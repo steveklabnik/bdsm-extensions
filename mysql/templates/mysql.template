@@ -25,45 +25,48 @@ log() { printf "$*\n" ; }
 
 fail() { log "ERROR: $*" ; exit 1 ; }
 
-run_as_user()
-{
-  local _user="$1" ; shift
-  local _command="$*"
-
-  su - "${_user}" -c "${_command}"
-}
-
 # mysql control functions.
 mysql_start()
 {
   log "Starting mysql Server"
 
-  run_as_user "${user}" \
-    "$daemon ${control_params[@]} &" >> "$log_file" 2>&1
+  #$control --user="${user}" --datadir="$data_path" start >> "$log_file" 2>&1 &
+  su - "${user}" -c "$control --datadir=\"$data_path\"" start >> "$log_file" 2>&1 &
 }
 
 mysql_stop()
 {
   log "Stopping mysql Server"
 
-  run_as_user "${user}" \
-    "$control stop ${control_params[@]}"
+  if [[ -s "${pid_file}" ]] ; then
+    kill -QUIT $(cat "${pid_file}")
+  fi
 }
 
 mysql_restart()
 {
   log "Restarting mysql Server"
 
-  run_as_user "${user}"
-    "$control stop ${control_params[@]}"
+  mysql_stop
 
+  # TODO: wait for stop
   mysql_start
 }
 
 mysql_status()
 {
-  run_as_user "${user}" \
-    "$control status ${control_params[@]}"
+  # TODO: look closer at this.
+  if [[ -s "${pid_file}" ]] ; then
+    read pid < "$pid_file"
+
+    if kill -0 $pid 2>/dev/null ; then
+      log_success_msg "MySQL running ($pid)"
+      exit 0
+    else
+      log_failure_msg "MySQL is not running, but PID file exists"
+      exit 1
+    fi
+  fi
 }
 
 usage()
@@ -95,22 +98,18 @@ true \
   "${data_path:="/var/db/mysql/data/data"}" \
   "${log_file:="${data_path}/server.log"}" \
   "${config_file:="/etc/mysql/my.cnf"}" \
-  "${user:="mysql"}"
+  "${user:="mysql"}" \
+  "${pid_file:="/var/db/mysql/data/$HOSTNAME.pid"}"
 
 # The path that is to be used for the script
 PATH="${prefix_path}/bin:/bin:/usr/bin:/usr/local/bin:${PATH}"
 
 # What to use to shut down the mysqld
-daemon="${prefix_path}/bin/mysqld_safe"
 control="${prefix_path}/bin/mysqld_safe"
-control_params=( -D \"$data_path\" --defaults-file=\"${config_file}\" )
 
 #
 # Main Logic
 #
-[[ -x "$daemon" ]] ||
-  fail "Could not find mysqld or mysqld is not executable."
-
 [[ -x "$control" ]] ||
   fail "Could not find mysqld_safe or mysqld_safe is not executable."
 
