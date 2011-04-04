@@ -32,10 +32,12 @@ mysql_configure()
     to "${data_path%\/*}/data"
 
   # TODO: Determine which .cnf file to grab based on system resources.
-  file="${source_path}/${package_dir}support-files/my-medium.cnf"
+  file="${source_path}/${package_dir}/support-files/my-medium.cnf"
   if [[ -s "${file}" ]] ; then
     log "Installing my.cnf to /etc/mysql"
     cp -f "${file}" "/etc/mysql/my.cnf"
+  else
+    log "ERROR: ${file} missing, not setting up /etc/mysql/my.cnf"
   fi
 
   log "\nSymlinking $install_path to $prefix_path/mysql"
