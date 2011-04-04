@@ -4,7 +4,7 @@ modules package
 
 # TODO: Make version configurable from ~/.bdsm/${extension}/config
 define_package \
-  version="$(hash_file "$extension_config_path/defaults" "version")"
+  version "$(hash_file "$extension_config_path/defaults" "version")"
 
 define_package \
   base_url "http://downloads.basho.com/riak/${package_name}-${package_version}" \
