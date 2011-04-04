@@ -11,15 +11,19 @@ mysql_initdb()
 
   command="${install_path}/bin/mysql_install_db --user=${package_user} --basedir=${data_path%\/*} --datadir=${data_path}"
 
-  export PATH="${install_path}/bin:$PATH"
+  (
+    enter "${install_path}" # Combat poorly written mysql_install_db script.
 
-  if running_as_root ; then
-    run_as_user "${package_user}" "${command}"
-  else
-    "${command}"
-  fi
+    export PATH="${install_path}/bin:$PATH"
 
-  mysql_configure
+    if running_as_root ; then
+      run_as_user "${package_user}" "${command}"
+    else
+      "${command}"
+    fi
+
+    mysql_configure
+  )
 }
 
 mysql_configure()
