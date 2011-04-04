@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+# Redefine make_install_package to a no-op
+unset make_install_package
+make_install_package() { true ; }
+
 riak_initdb()
 {
   log "Initializing riak data directory in $data_path"
