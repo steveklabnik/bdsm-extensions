@@ -22,11 +22,11 @@ This script will now:
 
 load cli
 
-if version_greater_than "5.5" ; do
-  mysql_install_package
-else
+# if version_greater_than "5.5" ; do
+#   mysql_install_package
+# else
   install_package
-fi
+#fi
 
 ensure_user_exists "${package_user}"
 
