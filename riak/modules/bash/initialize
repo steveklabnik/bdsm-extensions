@@ -47,8 +47,14 @@ fi
 log_path="$data_path/log"
 
 if [[ "$action" = *install ]] ; then
+  # TODO: configure flags per OS.
+  # http://dev.mysql.com/doc/refman/5.1/en/source-configuration-options.html
   export LANG="C"
 fi
+
+make_flags=( )
+
+make_install_flags=( rel )
 
 timestamp="$(date +"%Y-%m-%dT%H:%M")"
 
