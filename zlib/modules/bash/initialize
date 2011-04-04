@@ -1,10 +1,8 @@
 #!/usr/bin/env bash
 
-modules package
+modules defaults package
 
-# TODO: Make version configurable from ~/.bdsm/${extension}/config
+read_default version into package_version
 
-define_package \
-  version "1.2.5" \
-  base_url "http://zlib.net/"
+read_default base_url into package_base_url
 
