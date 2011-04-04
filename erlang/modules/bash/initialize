@@ -5,8 +5,10 @@ modules package
 # TODO: Make version configurable from ~/.bdsm/${extension}/config
 
 define_package \
-  version "R13B04" \
+  version "$(hash_file "$extension_config_path/defaults" "version")" \
   base_url "http://erlang.org/download"
+
+true ${package_version:="R13B04"}
 
 define_package \
   file "otp_src_${package_version}.${archive_format}" \
