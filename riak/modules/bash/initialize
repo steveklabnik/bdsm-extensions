@@ -7,10 +7,9 @@ define_package \
   version "$(hash_file "$extension_config_path/defaults" "version")"
 
 define_package \
-  base_url "http://downloads.basho.com/riak/${package_name}-${package_version}" \
-  url "http://downloads.basho.com/riak/${package_name}-${package_version}.${archive_format}" \
+  url "http://downloads.basho.com/riak/riak-${package_version/%.*}/${package_name}-${package_version}.${archive_format}" \
+  file "${package_name}-${package_version}.${archive_format}" \
   dir "${package_name}-${package_version/%-*}" \
-  file "${package_name}-${package_version/%-*}.${archive_format}" \
   target_path "${prefix_path}/${package_name}-${package_version/%-*}"
 
 dependencies=( ncurses openssl )
