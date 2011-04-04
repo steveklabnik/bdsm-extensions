@@ -39,7 +39,7 @@ mysql_start()
   log "Starting mysql Server"
 
   run_as_user "${user}" \
-    "$daemon -D '$data_path' &" >> "$log_file" 2>&1
+    "$daemon -D '$data_path' --defaults-file=/etc/mysql/my.cnf &" >> "$log_file" 2>&1
 }
 
 mysql_stop()
