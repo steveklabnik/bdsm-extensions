@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+make_package()
+{
+  log "Building ${package_name}"
+  make rel
+}
+

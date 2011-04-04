@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+
+modules package
+
+# TODO: Make version configurable from ~/.bdsm/${extension}/config
+
+define_package \
+  version "R13B04" \
+  base_url "http://erlang.org/download"
+
+define_package \
+  file "otp_src_${package_version}.${archive_format}" \
+  dir "otp_src_${package_version}"
+
+dependencies=( ncurses openssl )
+
+if os_is_darwin ; then
+  configure_flags=(
+    --enable-hipe
+    --enable-smp-support
+    --enable-threads
+    --enable-kernel-poll
+    --enable-darwin-64bit
+  )
+elif os_is_linux ; then
+  configure_flags=(
+  )
+else
+  fail "Only darwin and linux are currently implemented."
+fi
