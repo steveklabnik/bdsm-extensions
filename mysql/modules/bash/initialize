@@ -1,9 +1,8 @@
 #!/usr/bin/env bash
 
-modules package
+modules defaults package
 
-define_package \
-  version "$(hash_file "$extension_config_path/defaults" "version")"
+read_defaults version into package_version
 
 true "${version:="5.1.56"}" # Just in case defaults file is missing.
 
