@@ -1,6 +1,14 @@
 #!/usr/bin/env bash
 
-description "${extension} BDSM extension."
+modules help
 
-actions "install  - Install ${package_name} ${package_version}."
+actions "
+  install    - Install mysql server
+  configure  - Ensure that mysql.conf is in place
+  initialize - initdb for the mysql data directory
+  start      - Start mysql server
+  stop       - Stop mysql server
+  restart    - Restart mysql server
+"
+show_help
 

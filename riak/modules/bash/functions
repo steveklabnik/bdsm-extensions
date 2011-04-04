@@ -1,5 +1,104 @@
 #!/usr/bin/env bash
 
+riak_initdb()
+{
+  log "Initializing riak data directory in $data_path"
+
+  ensure_paths_exist "${data_path%\/*}"
+
+  chown_paths "$package_user" \
+    "${data_path%\/*}"
+
+  command="${install_path}/bin/riak_install_db --user=\"${package_user}\" --basedir=\"${install_path}\" --datadir=${data_path} "
+  # --srcdir=\"${source_path}/${package_name}-${package_version}\"
+  export PATH="${install_path}/bin:$PATH"
+
+  if running_as_root ; then
+    run_as_user "${package_user}" "${command}"
+  else
+    "${command}"
+  fi
+
+  riak_configure
+}
+
+riak_configure()
+{
+  local file
+
+  log "Configuring ${package_name} server."
+
+  link --force "${data_path}" \
+    to "${data_path%\/*}/data"
+
+  # TODO: Determine which .cnf file to grab based on system resources.
+  file="${source_path}/${package_dir}/rel/riak/etc/app.config"
+  if [[ -s "${file}" ]] ; then
+    log "Installing app.config to /etc/${package_name}"
+    cp -f "${file}" "/etc/${package_name}/app.config"
+  else
+    log "ERROR: ${file} missing, not setting up /etc/${package_name}/app.config"
+  fi
+
+  log "\nSymlinking $install_path to $prefix_path/${package_name}"
+
+  remove_paths \
+    "$prefix_path/${package_name}"
+
+  link "$install_path" \
+    to "$prefix_path/${package_name}"
+
+  ensure_paths_exist \
+    "$data_path" \
+    "$log_path" \
+    "/etc/${package_name}/"
+
+  chown_paths "$package_user" \
+    "$data_path"
+
+  chmod_paths 0700 \
+    "$data_path"
+}
+
+riak_init_script()
+{
+  log "Installing ${package_name} init script"
+  install_template "${package_name}" \
+    to "${init_scripts_path}/${package_name}"
+
+  ensure_files_are_executable \
+    "${init_scripts_path}/${package_name}"
+
+  chmod_paths 0755 \
+    "${init_scripts_path}/${package_name}"
+}
+
+riak_profile_d()
+{
+  if running_as_root && os_is_linux ; then
+    log "Installing ${package_name} profile.d script"
+
+    install_template "${package_name}.sh" \
+      to "/etc/profile.d/${package_name}.sh"
+
+    chmod_paths 0755 \
+      "/etc/profile.d/${package_name}.sh"
+  fi
+}
+
+riak_conf_d()
+{
+  if running_as_root && os_is_linux ; then
+    log "Installing ${package_name} conf.d script"
+
+    install_template "${package_name}.conf.d" \
+      to "/etc/conf.d/${package_name}.conf"
+
+    chmod_paths 0644 \
+      "/etc/conf.d/${package_name}.conf"
+  fi
+}
+
 # override make_package
 make_package()
 {

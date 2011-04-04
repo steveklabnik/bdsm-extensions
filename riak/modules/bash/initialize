@@ -3,25 +3,66 @@
 modules package
 
 # TODO: Make version configurable from ~/.bdsm/${extension}/config
-package_version "0.14.0-1"
+package_version="$(hash_file "$extension_config_path/defaults" "version")"
 
 define_package \
-  dir "${package_name}-${package_version/%-*}" \
   base_url "http://downloads.basho.com/riak/${package_name}-${package_version}" \
-  file "${package_name}-${package_version/%-*}.${archive_format}"
+  dir "${package_name}-${package_version/%-*}" \
+  file "${package_name}-${package_version/%-*}.${archive_format}" \
+  target_path "${prefix_path}/${package_name}-${package_version/%-*}"
 
 dependencies=( ncurses openssl )
 
-configure_flags=(
-  --enable-hipe
-  --enable-smp-support
-  --enable-threads
-  --enable-kernel-poll
-)
+if running_as_root ; then
 
-export LANG="C"
+  data_path="/var/db/${package_name}/${package_version}"
 
-if os_is_darwin ; then
-  configure_flags[${#configure_flags[@]}]="--enable-darwin-64bit"
+  sudo=""
+
+  if [[ -d /etc/profile.d ]] ; then
+    profiles=(/etc/profile.d/mysql.sh)
+  else
+    if [[ -f /etc/bash.bashrc ]] ; then
+      profiles=(/etc/bash.bashrc)
+    else
+      profiles=(/etc/bashrc)
+    fi
+  fi
+
+  install_path="${prefix_path}/${package_name}-${package_version}"
+else
+  sudo="sudo"
+
+  true \
+    "${package_user:=$USER}" \
+    "${prefix_path:="$HOME"}"
+
+  true \
+    "${data_path:="$prefix_path/.${package_name}-${package_version}"}" \
+    "${profiles:=("$HOME/.bash_profile" "$HOME/.bashrc")}" \
+    "${install_path:="$prefix_path/.${package_name}-${package_version}"}"
 fi
+
+log_path="$data_path/log"
+
+if [[ "$action" = *install ]] ; then
+  # TODO: configure flags per OS.
+  # http://dev.mysql.com/doc/refman/5.1/en/source-configuration-options.html
+
+  configure_flags=(
+    --enable-hipe
+    --enable-smp-support
+    --enable-threads
+    --enable-kernel-poll
+  )
+
+  export LANG="C"
+
+  if os_is_darwin ; then
+    configure_flags[${#configure_flags[@]}]="--enable-darwin-64bit"
+  fi
+
+fi
+
+timestamp="$(date +"%Y-%m-%dT%H:%M")"
 

@@ -1,4 +1,45 @@
 #!/usr/bin/env bash
 
+display_extension_licence
+
+log "
+
+Message:
+
+I am wayneeseguin in #rvm on irc.freenode.net and I am happy to discuss
+improving this script, or field questions.
+
+This script will now:
+
+* Install ${package_name}-${package_version} to $install_path
+* Put init script in place
+* Create and initialize data directory
+* Setup profile.d script adding riak binaries to the path
+* Add conf.d file allowing for server customization
+
+"
+
+load cli
+
 install_package
 
+ensure_user_exists "$package_user"
+
+riak_initdb
+
+riak_init_script
+
+riak_profile_d
+
+riak_conf_d
+
+log "
+Installation and configuration of riak is now complete.
+
+  * riak has been installed to $install_path
+  * riak configuration and data files will are in $data_path
+  * You can control the riak server via the bdsm riak extension'
+  * The riak superuser is '$package_user', no password.
+  * Use /etc/conf.d/riak.conf for server startup customization.
+
+"
