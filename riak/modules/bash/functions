@@ -34,10 +34,18 @@ riak_configure()
   # TODO: Determine which .cnf file to grab based on system resources.
   file="${source_path}/${package_dir}/rel/riak/etc/app.config"
   if [[ -s "${file}" ]] ; then
-    log "Installing app.config to /etc/${package_name}"
-    cp -f "${file}" "/etc/${package_name}/app.config"
+    log "Installing ${file//*\/} to /etc/${package_name}"
+    cp -f "${file}" "/etc/${package_name}/${file//*\/}"
   else
-    log "ERROR: ${file} missing, not setting up /etc/${package_name}/app.config"
+    log "ERROR: ${file} missing, not setting up /etc/${package_name}/${file//*\/}"
+  fi
+
+  file="${source_path}/${package_dir}/rel/riak/etc/vm.args"
+  if [[ -s "${file}" ]] ; then
+    log "Installing ${file//*\/} to /etc/${package_name}"
+    cp -f "${file}" "/etc/${package_name}/${file//*\/}"
+  else
+    log "ERROR: ${file} missing, not setting up /etc/${package_name}/${file//*\/}"
   fi
 
   log "\nSymlinking $install_path to $prefix_path/${package_name}"
