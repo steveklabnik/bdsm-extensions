@@ -1,3 +1,4 @@
 name=sqlite
 version=3070500
 base_url=http://www.sqlite.org
+archive_format=tar.gz
