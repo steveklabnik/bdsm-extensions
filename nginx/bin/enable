@@ -8,14 +8,13 @@ project="${1:-}"
 [[ -n "$project" ]] || \
   fail "project must be specified for 'nginx project'"
 
-if [[ -f "$nginx_projects_path/$project.conf.disbled" ]] ; then
+if file_exists "$nginx_projects_path/$project.conf.disbled" ; then
   rename \
     "$nginx_projects_path/$project.conf.disbled" \
     to "$nginx_projects_path/$project.conf"
 else
-  if [[ -f "$nginx_projects_path/$project.conf" ]] ; then
+  [[ -f "$nginx_projects_path/$project.conf" ]] &&
     succeed "$project.conf is already enabled."
-  else
-    fail "Cannot disable, $project.conf, $project.conf.disabled does not exist."
-  fi
+
+  fail "Cannot disable, $project.conf, $project.conf.disabled does not exist."
 fi

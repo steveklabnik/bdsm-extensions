@@ -1,2 +1,28 @@
 #!/usr/bin/env bash
 
+configure_nginx()
+{
+  ensure_paths_exist "${config_directories[@]}"
+
+  (
+  # Cleanup default nginx install messy directory.
+  enter "$nginx_path"
+  move_files_to "${nginx_config_path}/${file}" "${nginx_files[@]}"
+  )
+
+  ensure_paths_exist "$nginx_config_path" "$nginx_servers_path"
+
+  install_template "nginx.conf" to "${nginx_path}/nginx.conf"
+
+  install_template "nginx" to "${init_scripts_path}/nginx"
+
+  chmod_files 0755 "${init_scripts_path}/nginx"
+
+  install_template "mime.types" to "${nginx_config_path}/mime.types"
+
+  install_template "proxy.conf" to "${nginx_config_path}/mime.types"
+
+  ensure_user_exists nginx with group nginx
+
+  chown_paths "nginx:nginx" "${config_directories[@]}"
+}

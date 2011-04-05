@@ -15,7 +15,6 @@ http {
 
   access_log /var/log/nginx/access.log main;
 
-  include /etc/nginx/conf/passenger;
   include /etc/nginx/conf/mime.types;
 
   server_names_hash_bucket_size 128;

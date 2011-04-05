@@ -4,4 +4,3 @@
   fail "${init_scripts_path}/${extension} is missing or not executable."
 
 exec "${init_scripts_path}/${extension}" "${action}"
-
