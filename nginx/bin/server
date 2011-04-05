@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-project="${extension_action}:-}"
+project="${extension_action:-}"
 
 [[ -n "$project" ]] || \
   fail "project must be specified for 'nginx server'"
