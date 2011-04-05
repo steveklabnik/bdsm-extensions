@@ -2,10 +2,7 @@
 
 modules defaults package
 
-# TODO: Make version configurable from ~/.bdsm/${extension}/config
-
-dependencies \
-  libevent
+dependencies=( libevent )
 
 read_default version prefix package
 
