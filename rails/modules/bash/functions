@@ -1,13 +1,5 @@
 #!/usr/bin/env bash
 
-install_gems() {
-  local _gem
-
-  for _gem in "$*" ; do
-    gem install ${_gem} --no-rdoc --no-ri
-  done
-}
-
 configure_database_yml()
 {
   if [[ ! -s "$shared_path/config/database.yml" ]] ; then
