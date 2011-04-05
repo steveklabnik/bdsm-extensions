@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+
+load cli
+
+ensure_paths_exist "${source_path}"
+
+enter "${source_path}"
+
+log "Downloading ${package_name} ${package_version}"
+fetch_package
+
+log "Extracting ${package_name} ${package_version}"
+extract_package
+
+enter "${package_dir}"
+
+log "Installing ${package_name} ${package_version}"
+mongodb_install
+
+log "Post Install configuration for ${package_name} ${package_version}"
+mongodb_configure

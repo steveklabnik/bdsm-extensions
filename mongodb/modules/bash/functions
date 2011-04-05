@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+mongodb_install()
+{
+  files=$(find "bin/" -type f)
+  copy_files_to "${install_path}" "${files[@]}"
+}
+
+mongodb_configure()
+{
+  # copy_files_to "" file1 file2
+  # mkdir -p /data/db # TODO /var/db/mongo/${package_version}
+  true
+}
