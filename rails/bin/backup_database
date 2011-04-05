@@ -57,9 +57,9 @@ if @adapter == "mysql"
 
   fail("mysqldump command not found") if @dump.empty?
 
-  @flags = "--add-drop-table --complete-insert --default-character-set=utf8 --quote-names --extended-insert"
+  @flags    = "--add-drop-table --complete-insert --default-character-set=utf8 --quote-names --extended-insert"
   @filename = "#{@database}%#{@timestamp}.mysql"
-  @command = "#{@dump} #{@flags} --user=#{@username} -p#{@password} --quick #{@database} | bzip2 -c > #{@target_path}/#{@filename}.bz2"
+  @command  = "#{@dump} #{@flags} --user=#{@username} -p#{@password} --quick #{@database} | bzip2 -c > #{@target_path}/#{@filename}.bz2"
 
 elsif @adapter == "postgresql"
 
@@ -67,8 +67,8 @@ elsif @adapter == "postgresql"
 
   fail("pg_dump command not found") if @dump.empty?
 
-  @flags = "-b -c -E UTF8 -O -x --no-password"
-  @filename = "#{@database}%#{@timestamp}.psql"
+  @flags      = "-b -c -E UTF8 -O -x --no-password"
+  @filename   = "#{@database}%#{@timestamp}.psql"
   credentials = "#{@hostname}:#{@port}:#{@database}:#{@username}:#{@password}"
 
   # Only write credentials if they are not already in the file.
@@ -86,11 +86,13 @@ elsif @adapter == "postgresql"
 else
 
   fail("unknown adapter, should be either mysql or postgresql")
+
   %x{rm -f ~/.pgpass}
 
 end
 
 puts "Executing: '#{@command}'" if @trace
+
 system(@command)
 
 $? == 0 ? succeed("backup successful") : fail("backup failed, command: #{@command}")
