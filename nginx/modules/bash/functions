@@ -20,7 +20,7 @@ configure_nginx()
 
   install_template "mime.types" to "${nginx_config_path}/mime.types"
 
-  install_template "proxy.conf" to "${nginx_config_path}/mime.types"
+  install_template "proxy.conf" to "${nginx_config_path}/proxy.conf"
 
   ensure_user_exists nginx with group nginx
 
