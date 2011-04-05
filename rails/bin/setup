@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+bdsmrc
+
 load cli
 
 display_extension_license
