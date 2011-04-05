@@ -118,6 +118,8 @@ configure_rvm()
     file_contains "$HOME/.rvmrc" 'rvm_install_on_use_flag' ||
       echo 'export rvm_install_on_use_flag=1' >> "$HOME/.rvmrc"
 
+    . "$HOME/.rvmrc"
+
     rvm_install
   fi
 
