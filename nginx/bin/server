@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-project="${1:-}"
+project="${extension_action}:-}"
 
-[[ -z "$project" ]] || \
+[[ -n "$project" ]] || \
   fail "project must be specified for 'nginx server'"
 
 # TODO: Account for user name being different from project name.
