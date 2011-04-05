@@ -7,5 +7,5 @@ dependencies=( libevent )
 read_default version prefix package
 
 package_definition \
-  base_url "http://cdnetworks-us-2.dl.sourceforge.net/project/tmux/tmux/tmux-${package_version}"
+  url "http://downloads.sourceforge.net/project/tmux/tmux/tmux-${package_version}/tmux-${package_version}.tar.gz" #?r=&ts=1302031904&use_mirror=surfnet"
 
