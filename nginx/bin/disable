@@ -13,10 +13,10 @@ project="${extension_args[0]:-$1}"
   fail "project must be specified for 'nginx server'"
 
 if file_exists "$nginx_projects_path/$project.conf" ; then
-  rename "$nginx_projects_path/$project.conf" \
-    to "$nginx_projects_path/$project.conf.disabled"
+  rename "$nginx_servers_path/$project.conf" \
+    to "$nginx_servers_path/$project.conf.disabled"
 else
-  if file_exists "$nginx_projects_path/$project.conf.disabled" ; then
+  if file_exists "$nginx_servers_path/$project.conf.disabled" ; then
     succeed "$project.conf is already disabled."
   else
     fail "INFO: Cannot disable, $project.conf does not exist."

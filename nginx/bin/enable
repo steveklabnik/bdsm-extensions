@@ -10,10 +10,10 @@ project="${1:-}"
 
 if file_exists "$nginx_projects_path/$project.conf.disbled" ; then
   rename \
-    "$nginx_projects_path/$project.conf.disbled" \
-    to "$nginx_projects_path/$project.conf"
+    "$nginx_servers_path/$project.conf.disbled" \
+    to "$nginx_servers_path/$project.conf"
 else
-  [[ -f "$nginx_projects_path/$project.conf" ]] &&
+  [[ -f "$nginx_servers_path/$project.conf" ]] &&
     succeed "$project.conf is already enabled."
 
   fail "Cannot disable, $project.conf, $project.conf.disabled does not exist."

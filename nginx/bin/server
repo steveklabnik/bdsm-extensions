@@ -11,10 +11,10 @@ nginx_config_path="${nginx_config_path:-"/etc/nginx/conf"}"
 file_is_nonempty "$extension_templates_path/server.conf.template" ||
   fail "ERROR: $extension_templates_path/server.conf template is missing."
 
-ensure_paths_exist "$nginx_config_path/servers/"
+ensure_paths_exist "$nginx_servers_path/"
 
 chmod_paths 'g+rx' "/home/${project}"
 
 sed -e "s#{{project}}#${project}#g" \
   "$extension_templates_path/server.conf.template" \
-  > "$nginx_path/servers/$project.conf"
+  > "$nginx_servers_path/$project.conf"
