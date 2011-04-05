@@ -2,7 +2,7 @@
 
 modules variables project rvm
 
-ensure_set "environment" "RAILS_ENV" "project"
+ensure_nonempty environment RAILS_ENV project
 
 # Fetch the pid_file pid.
 pid_file="$shared_path/pids/$project.pid"
