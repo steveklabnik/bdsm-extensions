@@ -2,9 +2,18 @@
 
 enter "$release_path"
 
-[[ -s *.gems ]] && rvm gemset import
+file_is_nonempty *.gems && rvm gemset import *.gems
 
-rake gems:install # ...
+if file_is_nonempty "Gemfile" ; then
+  command_exists bundle || install_gems bundler
+elif grep -q 'config.gem' "config/environment.rb" ; then
+  rake gems:install
+else
+  log "No Gemfile or config.gem entries detected, skipping gems."
+fi
+
+command_exists rake || install_gems rake
+
 rake db:create
 rake db:migrate
 

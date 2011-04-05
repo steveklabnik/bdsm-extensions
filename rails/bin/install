@@ -2,5 +2,5 @@
 
 enter "$release_path"
 
-gem install rails --no-rdoc --no-ri
+command_exists rails || install_gems rails
 

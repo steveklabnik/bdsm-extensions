@@ -2,10 +2,12 @@
 
 enter "$release_path"
 
-if [[ -s script/dbconsole ]] ; then
-  ruby script/dbconsole
-elif [[ -s script/rails ]] ; then
-  ruby script/rails db
+if file_is_nonempty "script/${action}" ; then
+  ruby script/${action}
+elif file_is_nonempty "script/rails" ; then
+  ruby script/rails ${action}
+elif command_exists rails
+  rails ${action}
 else
   true # TODO: raw psql/mysql/etc... based on database.yml
 fi

@@ -1,8 +1,16 @@
 #!/usr/bin/env bash
 
+install_gems() {
+  local _gem
+
+  for _gem in "$*" ; do
+    gem install ${_gem} --no-rdoc --no-ri
+  done
+}
+
 configure_database_yml()
 {
-  if [[ ! -s "$project_path/shared/config/database.yml" ]] ; then
+  if [[ ! -s "$shared_path/config/database.yml" ]] ; then
     printf "\n${environment}: &defaults\n  adapter: ${database:-postgresql}\n  username: $project\n  password: '$project'\n  database: ${project}_${environment}\n  pool: 5\n  timeout: 5000\n" > "$shared_path/config/database.yml"
     if [[ "$database" = "mysql" ]] ; then
       printf "\n  socket: ${socket:-/tmp/mysql.sock}\n  encoding: utf8\n" >> "$shared_path/config/database.yml"
@@ -131,4 +139,27 @@ configure_rvm()
     export rvm_install_on_use_flag=1
     . "$shared_path/$project/.rvmrc"
   fi
+}
+
+setup_application_server()
+{
+  case "${server:-}" in
+    unicorn)
+      # TODO: Extension check
+      "$bin_path/bdsm unicorn setup"
+      ;;
+    mongrel)
+      "$bin_path/bdsm mongrel setup"
+      ;;
+    mongrel2)
+      "$bin_path/bdsm mongrel2 setup"
+      ;;
+    thin)
+      "$bin_path/bdsm thin setup"
+      ;;
+    *)
+      # Defaulting to Unicorn
+      "$bin_path/bdsm unicorn setup"
+      ;;
+  esac
 }

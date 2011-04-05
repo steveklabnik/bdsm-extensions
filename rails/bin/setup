@@ -1,49 +1,15 @@
 #!/usr/bin/env bash
 
-modules project
+load cli
 
-while [ $# -gt 0 ] ; do
-  token="$1" ; shift
-  case "$token" in
-    --repo|--repository) repository_url="$1"  ; shift ;;
-    --environment)       environment="$1" ; shift ;;
-    --project)           project="$1"     ; shift ;;
-    --database)          database="$1"    ; shift ;;
-    --server)            server="$1"      ; shift ;;
-    *) echo "rails setup: unrecognized argument(s) $*"
-  esac
-done
-
-[[ -s "$HOME/.bdsmrc" ]] || bdsm bdsmrc
-
-configure_bdsmrc
+display_extension_license
 
 ensure_paths_exist "$shared_path"
 
 enter "$shared_path"
 
-fetch_repository
-
 setup_shared_path
 
-case "${server:-}" in
-  unicorn)
-    # TODO: Extension check
-    "$bin_path/bdsm unicorn setup"
-    ;;
-  mongrel)
-    "$bin_path/bdsm mongrel setup"
-    ;;
-  mongrel2)
-    "$bin_path/bdsm mongrel2 setup"
-    ;;
-  thin)
-    "$bin_path/bdsm thin setup"
-    ;;
-  *)
-    # Defaulting to Unicorn
-    "$bin_path/bdsm unicorn setup"
-    ;;
-esac
+fetch_repository
 
-exit $?
+setup_application_server

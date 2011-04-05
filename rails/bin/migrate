@@ -2,4 +2,6 @@
 
 enter "$release_path"
 
+command_exists rake || install_gems rake
+
 rake db:migrate --trace
