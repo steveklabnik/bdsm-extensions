@@ -111,11 +111,18 @@ setup_shared_path()
 
 configure_rvm()
 {
-  file_is_nonempty "${HOME}/.rvm/scripts/rvm" ||
+  if file_is_empty_or_missing "${HOME}/.rvm/scripts/rvm" ; then
+    file_contains "$HOME/.rvmrc" 'rvm_path=' ||
+      echo "export rvm_path=\"$HOME/.rvm\"" >> "$HOME/.rvmrc"
+
+    file_contains "$HOME/.rvmrc" 'rvm_install_on_use_flag' ||
+      echo 'export rvm_install_on_use_flag=1' >> "$HOME/.rvmrc"
+
     rvm_install
+  fi
 
   if file_is_nonempty "$shared_path/$project/.rvmrc" ; then
-    export rvm_install_on_use_flag=1
+    . "$HOME/.rvmrc"
     . "$shared_path/$project/.rvmrc"
   fi
 }
