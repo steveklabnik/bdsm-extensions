@@ -19,3 +19,5 @@ else # posix...
   make_command="make posix"
 fi
 
+true "${package_dir:="${package_name}-${package_version}"}"
+
