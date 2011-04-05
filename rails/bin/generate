@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+enter "$release_path"
+
+if file_is_nonempty "script/${action}" ; then
+  ruby script/${action}
+elif file_is_nonempty "script/rails" ; then
+  ruby script/rails ${action}
+elif command_exists rails
+  rails ${action}
+fi
+

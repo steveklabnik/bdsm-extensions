@@ -1,0 +1,44 @@
+#!/usr/bin/env bash
+
+usage()
+{
+  log "rails setup: unrecognized argument(s) $*"
+}
+
+number_of_args=${#extension_args[@]}
+
+for ((index=0 ; index < $number_of_args ; index++)) ; do
+  token="${extension_args[$index]}"
+
+  case "$token" in
+    -r|--repo|--repository)
+      repository_url="${extension_args[$((++index))]}"
+      ;;
+    -E|--environment|--env)
+      environment="${extension_args[$((++index))]}"
+      ;;
+    -p|--project)
+      project="${extension_args[$((++index))]}"
+      ;;
+    -D|--database|--db)
+      database="${extension_args[$((++index))]}"
+      ;;
+    -s|--server)
+      server="${extension_args[$((++index))]}"
+      ;;
+    --help)
+      usage
+      exit 0
+      ;;
+    --trace)
+      set -o xtrace
+      ;;
+    --licence)
+      display_extension_licence
+      exit 0
+    *)
+      usage
+      exit 1
+  esac
+done
+
