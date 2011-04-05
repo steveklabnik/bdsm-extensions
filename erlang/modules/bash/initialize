@@ -12,17 +12,13 @@ define_package \
 
 dependencies=( ncurses openssl )
 
+configure_flags=(
+  --enable-hipe
+  --enable-smp-support
+  --enable-threads
+  --enable-kernel-poll
+)
+
 if os_is_darwin ; then
-  configure_flags=(
-    --enable-hipe
-    --enable-smp-support
-    --enable-threads
-    --enable-kernel-poll
-    --enable-darwin-64bit
-  )
-elif os_is_linux ; then
-  configure_flags=(
-  )
-else
-  fail "Only darwin and linux are currently implemented."
+  configure_flags[${#configure_flags[@]}]="--enable-darwin-64bit"
 fi
