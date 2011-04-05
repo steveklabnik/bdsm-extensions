@@ -10,6 +10,14 @@ enter "$shared_path"
 
 setup_shared_path
 
+configure_database_yml
+
+configure_profiles
+
+configure_bdsmrc
+
+configure_rvm
+
 fetch_repository
 
 setup_application_server
