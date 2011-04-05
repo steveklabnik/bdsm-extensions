@@ -147,7 +147,7 @@ setup_application_server()
       ;;
     *)
       # Default to Unicorn
-      "$bin_path/bdsm unicorn setup"
+      extension_action unicorn setup
       ;;
   esac
 }
