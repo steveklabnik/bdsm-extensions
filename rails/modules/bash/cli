@@ -52,9 +52,11 @@ for ((index=0 ; index < $number_of_args ; index++)) ; do
     --licence)
       display_extension_licence
       exit 0
+      ;;
     *)
       usage
       exit 1
+      ;;
   esac
 done
 
