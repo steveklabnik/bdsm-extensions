@@ -2,8 +2,8 @@
 
 mongodb_install()
 {
-  ensure_paths_exist
-  files=$(find "bin/" -type f)
+  ensure_paths_exist "${install_path}"
+  files=$(find "${source_path}/${package_dir}/bin/" -type f)
   copy_files_to "${install_path}" "${files[@]}"
 }
 
