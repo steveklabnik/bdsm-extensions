@@ -1,4 +1,25 @@
 #!/usr/bin/env bash
 
-install_package
+ensure_paths_exist "${source_path}"
+
+enter "${source_path}"
+
+log "Downloading ${package_name} ${package_version}"
+fetch_package
+
+log "Extracting ${package_name} ${package_version}"
+extract_package
+
+enter "${package_dir}"
+
+log "Building ${package_name} ${package_version}"
+$make_command
+
+log "Installing ${package_name} ${package_version}"
+(
+enter "src/"
+copy_files_to "${install_path}/bin" lua luac
+)
+
+# TODO: Do we want any of the library files?
 
