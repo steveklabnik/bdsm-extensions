@@ -17,11 +17,13 @@ puts "Loading BDSM Database Backup Utility." if @trace
 #
 @timestamp = Time.now.strftime("%Y-%m-%dT%H:%M:%S")
 @log_path  = "#{ENV["HOME"]}/shared/backups/log"
+
 FileUtils.mkdir_p(@log_path) unless File.exist?(@log_path)
 
 @user = (ENV["USER"]|| %x{whoami}).strip
 @application = ARGV.shift || ENV["project"]
 @environment = ARGV.shift || ENV["environment"] || ENV["RAILS_ENV"] || ENV["MERB_ENV"] || ENV["RACK_ENV"] || "production"
+
 fail("application must be specified as the first argument.")  if @application.nil? || @application.empty?
 
 @target_path = "#{ENV["HOME"]}/shared/backups/#{@application}/#{@environment}"
@@ -34,10 +36,13 @@ fail("adapter not specified in shared/config/database.yml")  if @adapter.nil? ||
 @username = @user if @username.nil? || @username.empty?
 
 @database    = @config["database"].to_s.strip
+
 fail("database not specified in shared/config/database.yml") if @database.nil? || @database.empty?
 
 @password    = @config["password"].to_s.strip
+
 fail("password: not specified in shared/config/database.yml") if @password.nil? || @password.empty?
+
 @hostname    = @config["host"] || "localhost"
 @port        = @config["port"] || "5432"
 
@@ -49,7 +54,9 @@ FileUtils.mkdir_p(@target_path) unless File.exist?(@target_path)
 if @adapter == "mysql"
 
   @dump = %x{which mysqldump}.strip
+
   fail("mysqldump command not found") if @dump.empty?
+
   @flags = "--add-drop-table --complete-insert --default-character-set=utf8 --quote-names --extended-insert"
   @filename = "#{@database}%#{@timestamp}.mysql"
   @command = "#{@dump} #{@flags} --user=#{@username} -p#{@password} --quick #{@database} | bzip2 -c > #{@target_path}/#{@filename}.bz2"
@@ -57,17 +64,21 @@ if @adapter == "mysql"
 elsif @adapter == "postgresql"
 
   @dump = %x{which pg_dump}.strip
+
   fail("pg_dump command not found") if @dump.empty?
+
   @flags = "-b -c -E UTF8 -O -x --no-password"
   @filename = "#{@database}%#{@timestamp}.psql"
   credentials = "#{@hostname}:#{@port}:#{@database}:#{@username}:#{@password}"
 
   # Only write credentials if they are not already in the file.
   pgpass = File.open("#{ENV["HOME"]}/.pgpass", "w+")
+
   unless pgpass.read.match(credentials)
     pgpass.write credentials
     pgpass.chmod 0600
   end
+
   pgpass.close
 
   @command = "#{@dump} #{@flags} -U#{@username} -h #{@hostname} #{@database} | bzip2 -c - > #{@target_path}/#{@filename}.bz2"
@@ -83,4 +94,3 @@ puts "Executing: '#{@command}'" if @trace
 system(@command)
 
 $? == 0 ? succeed("backup successful") : fail("backup failed, command: #{@command}")
-
