@@ -26,3 +26,5 @@ elif os_is_linux ; then
 else
   fail "Only darwin and linux are currently implemented."
 fi
+
+configure_command="autoconf ; configure ${configure_flags[@]}"
