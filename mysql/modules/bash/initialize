@@ -2,7 +2,7 @@
 
 modules defaults package
 
-read_defaults version into package_version
+read_default version into package_version
 
 define_package \
   base_url "http://mysql.mirrors.pair.com/Downloads/MySQL-${package_version%.*}" \
