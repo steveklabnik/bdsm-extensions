@@ -15,7 +15,8 @@ configure_database_yml()
         install_gems pg
         if [[ "$?" -ne 0 ]] ; then
           pg_config=$(command -v pg_config)
-          gem install pg --no-rdoc --no-ri -- --with-pg-config=${pg_config:-/usr/local/postgresql/bin/pg_config}
+          install_gem pg -- --with-pg-config=${pg_config:-/usr/local/postgresql/bin/pg_config}
+          # gem install pg --no-rdoc --no-ri -- --with-pg-config=${pg_config:-/usr/local/postgresql/bin/pg_config}
         fi
         ;;
 
@@ -23,7 +24,8 @@ configure_database_yml()
         install_gems mysql
         if [[ "$?" -ne 0 ]] ; then
           mysql_config=$(command -v mysql_config)
-          gem install mysql --no-rdoc --no-ri -- --with-mysql-config=${mysql_config:-/usr/local/mysql/bin/mysql_config}
+          install_gem mysql -- --with-mysql-config=${mysql_config:-/usr/local/mysql/bin/mysql_config}
+          #gem install mysql --no-rdoc --no-ri -- --with-mysql-config=${mysql_config:-/usr/local/mysql/bin/mysql_config}
         fi
         ;;
 
