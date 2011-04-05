@@ -6,6 +6,6 @@ read_default version prefix package
 read_default base_url prefix package
 
 package_definition \
-  dir "${package_name}-autoconf-${package_version}" \
-  file "${package_name}-autoconf-${package_version}.tar.gz"
+  dir "sqlite-autoconf-${package_version}" \
+  file "sqlite-autoconf-${package_version}.tar.gz"
 
