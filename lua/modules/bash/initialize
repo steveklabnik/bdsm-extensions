@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+modules defaults package
+
+read_default version into package_version
+
+read_default base_url into package_base_url
+
