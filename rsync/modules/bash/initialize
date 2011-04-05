@@ -4,7 +4,7 @@ modules package
 
 # TODO: Make version configurable from ~/.bdsm/${extension}/config
 
-define_package \
+package_definition \
   version "3.0.8" \
   base_url "http://rsync.samba.org/ftp/rsync"
 

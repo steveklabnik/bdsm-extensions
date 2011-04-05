@@ -2,7 +2,7 @@
 
 # TODO: Make version configurable from ~/.bdsm/${extension}/config
 
-define_package \
+package_definition \
   name "${extension}" \
   version "1.0.0d" \
   url "http://www.openssl.org/source/" \

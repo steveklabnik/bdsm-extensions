@@ -2,7 +2,7 @@
 
 modules defaults package
 
-read_default version into package_version
+read_default version prefix package
 
 archive_format="tgz"
 
@@ -45,7 +45,7 @@ case "$MACHTYPE" in
     ;;
 esac
 
-define_package \
+package_definition \
   base_url="http://fastdl.mongodb.org/${os}" \
   file="mongodb-${os}-${architecture}-${package_version}.${archive_format}" \
   dir="mongodb-${os}-${architecture}-${package_version}"

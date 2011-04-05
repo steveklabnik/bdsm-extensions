@@ -4,7 +4,7 @@ modules package
 
 # TODO: Make version configurable from ~/.bdsm/${extension}/config
 
-define_package \
+package_definition \
   version "4.0.3" \
   archive_format "tar.gz" \
   base_url "http://mirrors.kernel.org/gnu/${package_name}"

@@ -2,5 +2,5 @@
 
 modules defaults package
 
-read_default version into package_version
+read_default version prefix package
 

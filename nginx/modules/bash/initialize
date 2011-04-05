@@ -51,6 +51,6 @@ nginx.conf.default scgi_params scgi_params.default uwsgi_params
 uwsgi_params.default win-utf
 )
 
-define_package \
+package_definition \
   base_url "http://nginx.org/download"
 

@@ -3,10 +3,10 @@
 modules package
 
 # TODO: Make version configurable from ~/.bdsm/${extension}/config
-define_package \
+package_definition \
   version "$(hash_file "$extension_config_path/defaults" "version")"
 
-define_package \
+package_definition \
   url "http://downloads.basho.com/riak/riak-${package_version%.*}/${package_name}-${package_version}.${archive_format}" \
   file "${package_name}-${package_version}.${archive_format}" \
   dir "${package_name}-${package_version%-*}" \

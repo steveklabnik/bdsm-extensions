@@ -2,7 +2,7 @@
 
 # TODO: Make version configurable from ~/.bdsm/curl/config
 
-define_package \
+package_definition \
   archive_format "tar.bz2" \
   base_url "http://kernel.org/pub/software/scm/git"
 

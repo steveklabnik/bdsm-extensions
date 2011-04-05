@@ -4,14 +4,14 @@ modules package
 
 # TODO: Make version configurable from ~/.bdsm/${extension}/config
 
-define_package \
+package_definition \
   name "sqlite" \
   version "3070500" \
   base_url "http://www.sqlite.org"
 
 # We specify the package_file/url here since it is different than the
 # standard name-version.tar.gz
-define_package \
+package_definition \
   file "${package_name}-autoconf-${package_version}.${archive_format}" \
   dir "${package_name}-autoconf-${package_version}"
 

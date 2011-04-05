@@ -7,9 +7,9 @@ modules package
 dependencies \
   libevent
 
-define_package \
+package_definition \
   version "1.4"
 
-define_package \
+package_definition \
   base_url "http://cdnetworks-us-2.dl.sourceforge.net/project/tmux/tmux/tmux-${package_version}"
 

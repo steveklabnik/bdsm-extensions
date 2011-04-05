@@ -5,10 +5,10 @@ modules package
 dependencies \
   iconv
 
-define_package \
+package_definition \
   version "4.3.11" \
   archive_format "tar.bz2"
 
-define_package \
+package_definition \
   base_url "http://cdnetworks-us-1.dl.sourceforge.net/project/zsh/zsh-dev/${package_version}"
 

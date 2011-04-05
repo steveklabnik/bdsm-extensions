@@ -2,11 +2,10 @@
 
 modules defaults package
 
-read_default version into package_version
+read_default version prefix package
+read_default archive_format
 
-define_package archive_format "tar.bz2"
-
-define_package \
+package_definition \
   base_url "http://haskell.org/ghc/dist/${package_version}" \
   file "${package_name}-${package_version}-src.${archive_format}"
 

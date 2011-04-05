@@ -2,9 +2,8 @@
 
 modules defaults rvm package
 
-define_package base_url "http://redis.googlecode.com/files"
-
-read_default version into package_version
+read_default version prefix package
+read_default base_url prefix package
 
 # Redis Configuration.
 true ${redis_user:=redis}

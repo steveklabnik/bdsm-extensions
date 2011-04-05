@@ -1,11 +1,10 @@
 #!/usr/bin/env bash
 
-modules package
+modules defaults package
 
-define_package \
-  version "4.2" \
-  base_url "ftp://ftp.gnu.org/gnu/bash"
+read_default version prefix package
+read_default base_url prefix package
 
-define_package \
+package_definition \
   patches_url "ftp://ftp.gnu.org/gnu/bash/bash-${package_version}-patches"
 

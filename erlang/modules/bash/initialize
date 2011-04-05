@@ -2,11 +2,10 @@
 
 modules defaults package
 
-read_default version into package_version
+read_default version prefix package
+read_default base_url prefix package
 
-read_default base_url into package_base_url
-
-define_package \
+package_definition \
   file "otp_src_${package_version}.${archive_format}" \
   dir "otp_src_${package_version}"
 

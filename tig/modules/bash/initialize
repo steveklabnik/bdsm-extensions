@@ -4,7 +4,7 @@ modules package
 
 # TODO: Make version configurable from ~/.bdsm/${extension}/config
 
-define_package \
+package_definition \
   version "0.17" \
   base_url "http://jonas.nitro.dk/tig/releases" \
   md5_url "http://jonas.nitro.dk/tig/releases"

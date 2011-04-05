@@ -4,7 +4,7 @@ modules package
 
 # TODO: Make version configurable from ~/.bdsm/${extension}/config
 
-define_package \
+package_definition \
   version "1.13.1" \
   file "libiconv-1.13.1.tar.gz" \
   dir "libiconv-1.13.1" \

@@ -3,7 +3,7 @@
 modules package
 
 # TODO: Make version configurable from ~/.bdsm/${extension}/config
-define_package \
+package_definition \
   version "1.4.13" \
   base_url "http://www.monkey.org/~provos"
 
