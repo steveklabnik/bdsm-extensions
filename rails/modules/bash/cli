@@ -2,7 +2,23 @@
 
 usage()
 {
-  log "rails setup: unrecognized argument(s) $*"
+  log "
+CLI Arguments:
+
+  -r|--repository  - The URL for the project repository code.
+
+  -E|--environment - The environment (eg. production,staging,etc...)
+
+  -p|--project     - The project name, defaults to current user name
+
+  -D|--database)   - Database name
+
+  -s|--server      - Application server (eg. unicorn, thin, etc...)
+
+  --help           - This help text
+
+  --licence        - Display extension license
+"
 }
 
 number_of_args=${#extension_args[@]}
