@@ -1,14 +1,8 @@
 #!/usr/bin/env bash
 
-description()
-{
-  printf "Extension for managing Unicorn (http://unicorn.bogomips.org/)."
-}
+description "Extension for managing Unicorn (http://unicorn.bogomips.org/)."
 
-actions()
-{
-  printf "
-  install   - Install the unicorn gem.
+actions "  install   - Install the unicorn gem.
   setup     - Setup the unicorn config file with a template in $release_path/config/
   start     - Start.
   stop      - Stop.
@@ -23,39 +17,5 @@ actions()
   unpause   - Unpause all unicorn workers.
   help      - Display this help text.
   "
-}
 
-usage()
-{
-log "
-Description
-
-  BDSM $(description)
-
-Usage
-
-  bdsm unicorn [action]
-
-Actions
-  $(actions)
-"
-}
-
-action="usage" # Default
-
-while [[ $# -gt 0 ]] ; do
-  token="$1" ; shift
-  case "$token" in
-    description)
-      action="description"
-      ;;
-
-    *)
-      action="usage"
-      ;;
-  esac
-done
-
-"$action"
-
-exit $?
+show_help

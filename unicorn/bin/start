@@ -8,12 +8,8 @@ log "Starting unicorn herd master for $project."
 [[ -s "$release_path/config/unicorn.rb" ]] || \
   fail "config/unicorn.rb not found, aborting start."
 
-if [[ -s "$release_path/config.ru" ]] ; then
-  binary="unicorn"
-else
-  binary="unicorn_rails"
-fi
+file_is_nonempty "$release_path/config.ru" || binary="unicorn_rails"
 
-$binary -c "$release_path/config/unicorn.rb" -E "$environment" -D
+${binary:-unicorn} -c "$release_path/config/unicorn.rb" -E "$environment" -D
 
 log "Unicorn herd master has been launched $project."

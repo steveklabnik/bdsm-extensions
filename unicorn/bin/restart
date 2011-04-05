@@ -1,16 +1,15 @@
 #!/usr/bin/env bash
 
-if [[ "$master_pid" -le 0 ]] ; then
+if [[ ${master_pid} -le 0 ]] ; then
   log "Unicorn herd master not found running for $project $environment, starting."
 
   [[ -s "$release_path/config/unicorn.rb" ]] || \
     fail "config/unicorn.rb not found, aborting start."
 
-  if [[ -s "$release_path/config.ru" ]] ; then
-    unicorn -c "$release_path/config/unicorn.rb" -E "$environment" -D
-  else
-    unicorn_rails -c "$release_path/config/unicorn.rb" -E "$environment" -D
-  fi
+  file_is_nonempty "$release_path/config.ru" || binary="unicorn_rails"
+
+  ${binary:-unicorn} -c "$release_path/config/unicorn.rb" -E "$environment" -D
+
 else
   log "Master pid '$master_pid' found."
 
@@ -18,5 +17,5 @@ else
 
   kill -USR2 ${master_pid}
 
-  log "Unicorn master '$master_pid' for $project $environment should restart within a few seconds, as requests finish processing workers will be replaced."
+  log "Signaled unicorn master '$master_pid' for $project $environment, it should restart within a few seconds. As requests finish processing workers will be replaced."
 fi
