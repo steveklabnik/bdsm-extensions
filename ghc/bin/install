@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+install_package
+
+#
+# Before building,
+# echo "EXTRA_CABAL_CONFIGURE_FLAGS = --extra-include-dirs=${prefix_path}/include --extra-lib-dirs=${prefix_path}/lib"  \
+# >> "mk/build.mk"
+#
+
