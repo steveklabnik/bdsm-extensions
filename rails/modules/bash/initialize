@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-modules project
+modules defaults project rvm
 
 # Sanity check
 running_as_root &&
