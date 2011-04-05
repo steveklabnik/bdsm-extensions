@@ -1,16 +1,11 @@
 #!/usr/bin/env bash
 
-modules package
+modules defaults package
 
-# TODO: Make version configurable from ~/.bdsm/${extension}/config
+read_default version prefix package
+read_default base_url prefix package
+read_default archive_format
 
-package_definition \
-  name "sqlite" \
-  version "3070500" \
-  base_url "http://www.sqlite.org"
-
-# We specify the package_file/url here since it is different than the
-# standard name-version.tar.gz
 package_definition \
   file "${package_name}-autoconf-${package_version}.${archive_format}" \
   dir "${package_name}-autoconf-${package_version}"

@@ -1,10 +1,8 @@
 #!/usr/bin/env bash
 
-modules package
+modules defaults package
 
-# TODO: Make version configurable from ~/.bdsm/${extension}/config
+read_default version prefix package
+read_default base_url prefix package
+read_default md5_url prefix package
 
-package_definition \
-  version "0.17" \
-  base_url "http://jonas.nitro.dk/tig/releases" \
-  md5_url "http://jonas.nitro.dk/tig/releases"

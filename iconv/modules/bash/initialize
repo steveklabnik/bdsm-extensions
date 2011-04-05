@@ -1,12 +1,9 @@
 #!/usr/bin/env bash
 
-modules package
+modules defaults package
 
-# TODO: Make version configurable from ~/.bdsm/${extension}/config
-
-package_definition \
-  version "1.13.1" \
-  file "libiconv-1.13.1.tar.gz" \
-  dir "libiconv-1.13.1" \
-  base_url "http://ftp.gnu.org/pub/gnu/libiconv"
+read_default version prefix package
+read_default file prefix package
+read_default dir prefix package
+read_default base_url prefix package
 

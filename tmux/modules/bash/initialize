@@ -1,14 +1,13 @@
 #!/usr/bin/env bash
 
-modules package
+modules defaults package
 
 # TODO: Make version configurable from ~/.bdsm/${extension}/config
 
 dependencies \
   libevent
 
-package_definition \
-  version "1.4"
+read_default version prefix package
 
 package_definition \
   base_url "http://cdnetworks-us-2.dl.sourceforge.net/project/tmux/tmux/tmux-${package_version}"

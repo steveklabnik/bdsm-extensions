@@ -1,11 +1,10 @@
 #!/usr/bin/env bash
 
-modules package
+modules defaults package
 
-# TODO: Make version configurable from ~/.bdsm/${extension}/config
+read_defaults version prefix package
+read_defaults archive_format
 
 package_definition \
-  version "4.0.3" \
-  archive_format "tar.gz" \
   base_url "http://mirrors.kernel.org/gnu/${package_name}"
 

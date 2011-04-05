@@ -1,10 +1,8 @@
 #!/usr/bin/env bash
 
-modules package
+modules defaults package
 
-# TODO: Make version configurable from ~/.bdsm/${extension}/config
-package_definition \
-  version "$(hash_file "$extension_config_path/defaults" "version")"
+read_default version prefix package
 
 package_definition \
   url "http://downloads.basho.com/riak/riak-${package_version%.*}/${package_name}-${package_version}.${archive_format}" \

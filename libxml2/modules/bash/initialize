@@ -1,10 +1,7 @@
 #!/usr/bin/env bash
 
-modules package
+modules defaults package
 
-# TODO: Make version configurable from ~/.bdsm/${extension}/config
-
-package_definition \
-  version "2.7.8" \
-  base_url "ftp://xmlsoft.org/libxml2"
+read_default version prefix package
+read_default base_url prefix package
 

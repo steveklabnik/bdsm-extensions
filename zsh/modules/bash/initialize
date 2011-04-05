@@ -1,13 +1,12 @@
 #!/usr/bin/env bash
 
-modules package
+modules defaults package
 
 dependencies \
   iconv
 
-package_definition \
-  version "4.3.11" \
-  archive_format "tar.bz2"
+read_default version prefix package
+read_default archive_format
 
 package_definition \
   base_url "http://cdnetworks-us-1.dl.sourceforge.net/project/zsh/zsh-dev/${package_version}"
