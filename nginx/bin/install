@@ -12,12 +12,13 @@ install_package
 ensure_paths_exist "${config_directories[@]}"
 
 (
+# Cleanup default nginx install messy directory.
 enter "$nginx_path"
 move_files_to "${nginx_config_path}/${file}" "${nginx_files[@]}"
 )
 
 ensure_files_exist \
-  "${nginx_config_path}/passenger" # empty file as a placeholder.
+  "${nginx_config_path}/passenger" # empty file as a placeholder, not used.
 
 install_template "nginx" \
   to "${init_scripts_path}"
