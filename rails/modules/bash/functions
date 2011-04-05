@@ -17,74 +17,76 @@ configure_database_yml()
     fi
   fi
 
-  if [[ -n "$database" ]] && command -v gem > /dev/null; then
-    if [[ "postgresql" = "$database" ]] ; then
-      gem install pg --no-rdoc --no-ri
-      if [[ "$?" -ne 0 ]] ; then
-        pg_config=$(command -v pg_config)
-        gem install pg --no-rdoc --no-ri -- --with-pg-config=${pg_config:-/usr/local/postgresql/bin/pg_config}
-      fi
-    elif [[ "mysql" = "$database" ]] ; then
-      gem install mysql --no-rdoc --no-ri
-      if [[ "$?" -ne 0 ]] ; then
-        mysql_config=$(command -v mysql_config)
-        gem install mysql --no-rdoc --no-ri -- --with-mysql-config=${mysql_config:-/usr/local/mysql/bin/mysql_config}
-      fi
-    else
-      gem install sqlite --no-rdoc --no-ri
-    fi
+  if variable_is_nonempty database && command_exists gem ; then
+    case "$database" in
+      postgresql)
+        install_gems pg
+        if [[ "$?" -ne 0 ]] ; then
+          pg_config=$(command -v pg_config)
+          gem install pg --no-rdoc --no-ri -- --with-pg-config=${pg_config:-/usr/local/postgresql/bin/pg_config}
+        fi
+        ;;
+
+      mysql)
+        install_gems mysql
+        if [[ "$?" -ne 0 ]] ; then
+          mysql_config=$(command -v mysql_config)
+          gem install mysql --no-rdoc --no-ri -- --with-mysql-config=${mysql_config:-/usr/local/mysql/bin/mysql_config}
+        fi
+        ;;
+
+      mongodb)
+        install_gems mongomapper
+        ;;
+
+      sqlite*|*)
+        install_gems sqlite
+        ;;
+    esac
   fi
 }
 
 configure_profiles()
 {
   # Ensure the .bdsmrc file and the profiles are setup properly.
-  if ! awk '/\.bdsmrc/' "$HOME/.bash_profile" ; then
+  file_contains "$HOME/.bashrc" '\.bdsmrc' ||
     echo '[[ -s "$HOME/.bdsmrc" ]] && . "$HOME/.bdsmrc"' \
-      >> "$HOME/.bash_profile"
-  fi
+      >> "$HOME/.bashrc"
 
-  if ! awk '/\.bashrc/' "$HOME/.bash_profile" ; then
+  file_contains "$HOME/.bash_profile" '\.bashrc' ||
     echo '[[ "-s $HOME/.bashrc" ]] && . "$HOME/.bashrc"' \
       >> "$HOME/.bash_profile"
-  fi
 
-  if ! awk '/current\/\.rvmrc/' "$HOME/.bash_profile" ; then
+  file_contains "$HOME/.bash_profile" '\.rvmrc' ||
     echo '[[ -s "$HOME/current/.rvmrc" ]] && . "$HOME/current/.rvmrc"' \
       >> "$HOME/.bash_profile"
-  fi
 }
 
 configure_bdsmrc()
 {
-  [[ -n "$project" ]] || \
+  variable_is_nonempty project ||
     fail "project variable must be set for extension $extension."
 
-  if ! awk "/project=/" "$HOME/.bdsmrc" ; then
-    printf "\nexport project=\"${project:-$user}\"\n" >> $HOME/.bdsmrc
-  fi
+  file_contains "$HOME/.bdsmrc" 'project=' ||
+    echo "\nexport project=\"${project:-$user}\"" >> $HOME/.bdsmrc
 
-  [[ -n "$environment" ]] || \
+  variable_is_nonempty environment ||
     fail "environment variable must be set for extension $extension."
 
-  if ! awk "/environment=/" "$HOME/.bdsmrc" ; then
-    printf "\nexport environment=\"$environment\"\n" >> $HOME/.bdsmrc
+  file_contains "$HOME/.bdsmrc" 'environment=' ||
+    echo "\nexport environment=\"$environment\"" >> $HOME/.bdsmrc
+
+  file_contains "$HOME/.bdsmrc" 'RAILS_ENV=' ||
+    echo "\nexport RAILS_ENV=\"$environment\"" >> $HOME/.bdsmrc
+
+  if variable_is_nonempty repository_url ; then
+    file_contains "$HOME/.bdsmrc" "repository_url=" ||
+      echo "\nexport repository_url=\"$repository_url\"" >> $HOME/.bdsmrc
   fi
 
-  if ! awk "/RAILS_ENV=/" "$HOME/.bdsmrc" ; then
-    printf "\nexport RAILS_ENV=\"$environment\"\n" >> $HOME/.bdsmrc
-  fi
-
-  if [[ -n "$repository_url" ]] ; then
-    if ! awk "/repository_url=/" "$HOME/.bdsmrc" ; then
-      printf "\nexport repository_url=\"$repository_url\"\n" >> $HOME/.bdsmrc
-    fi
-  fi
-
-  if [[ -n "$database" ]] ; then
-    if ! awk "/database=/" "$HOME/.bdsmrc" ; then
-      echo "export database=\"production\"" >> $HOME/.bdsmrc
-    fi
+  if variable_is_nonempty database ; then
+    file_contains "$HOME/.bdsmrc" 'database=' ||
+      echo "export database=\"${database}\"" >> $HOME/.bdsmrc
   fi
 
 }
@@ -104,7 +106,7 @@ fetch_repository_url()
       hg clone $repository_url $project
     fi
   else
-    echo -e "ERROR: repository_url type not known, expecting {git,svn,hg} in the repository_url url."
+    fail "repository_url type not known, expecting {git,svn,hg} in the repository_url url."
   fi
 }
 
@@ -118,24 +120,10 @@ setup_shared_path()
 
 configure_rvm()
 {
-  # TODO: Add this into the rvm module.
-  if [[ ! -s "$HOME/.rvm/scripts/rvm" ]] ; then
-    mkdir -p $HOME/.rvm/src ; cd $HOME/.rvm/src
-    if [[ -d rvm/.git ]] ; then
-      cd rvm
-      git reset --hard HEAD
-      git pull origin "${rvm_branch:-master}"
-      ./install
-    else
-      git clone git://github.com/wayneeseguin/rvm.git
-      cd rvm
-      ./install
-    fi
+  file_is_nonempty "${HOME}/.rvm/scripts/rvm" ||
+    rvm_install
 
-    enter $HOME
-  fi
-
-  if [[ -d "$shared_path/$project/" && -s "$shared_path/$project/.rvmrc" ]] ; then
+  if file_is_nonempty "$shared_path/$project/.rvmrc" ; then
     export rvm_install_on_use_flag=1
     . "$shared_path/$project/.rvmrc"
   fi
@@ -146,19 +134,19 @@ setup_application_server()
   case "${server:-}" in
     unicorn)
       # TODO: Extension check
-      "$bin_path/bdsm unicorn setup"
-      ;;
-    mongrel)
-      "$bin_path/bdsm mongrel setup"
+      extension_action unicorn setup
       ;;
     mongrel2)
-      "$bin_path/bdsm mongrel2 setup"
+      extension_action mongrel2 setup
       ;;
     thin)
-      "$bin_path/bdsm thin setup"
+      extension_action thin setup
+      ;;
+    passenger) # Standalone
+      extension_action passenger setup
       ;;
     *)
-      # Defaulting to Unicorn
+      # Default to Unicorn
       "$bin_path/bdsm unicorn setup"
       ;;
   esac
