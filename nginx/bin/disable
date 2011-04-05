@@ -3,7 +3,7 @@
 
 # Disable a project
 #
-# This renames /etc/nginx/projects/X.conf to X.conf.disabled if it exists
+# This moves /etc/nginx/projects/X.conf to X.conf.disabled if it exists
 # and prings an informative message otherwise.
 #
 
@@ -13,7 +13,7 @@ project="${extension_args[0]:-$1}"
   fail "project must be specified for 'nginx server'"
 
 if file_exists "$nginx_projects_path/$project.conf" ; then
-  rename "$nginx_servers_path/$project.conf" \
+  move "$nginx_servers_path/$project.conf" \
     to "$nginx_servers_path/$project.conf.disabled"
 else
   if file_exists "$nginx_servers_path/$project.conf.disabled" ; then

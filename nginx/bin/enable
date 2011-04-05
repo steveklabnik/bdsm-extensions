@@ -1,15 +1,14 @@
 #!/usr/bin/env bash
 
-
 # Enable a project (project)
-# This renames /etc/nginx/projects/X.conf.disabled to X.conf
+# This moves /etc/nginx/projects/X.conf.disabled to X.conf
 
 project="${1:-}"
 [[ -n "$project" ]] || \
   fail "project must be specified for 'nginx project'"
 
 if file_exists "$nginx_projects_path/$project.conf.disbled" ; then
-  rename \
+  move \
     "$nginx_servers_path/$project.conf.disbled" \
     to "$nginx_servers_path/$project.conf"
 else
