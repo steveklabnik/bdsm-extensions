@@ -16,7 +16,7 @@ upgrade_bash()
   original_binary="${prefix_path}/bin/bash"
 
   if [[ -x "$original_binary" ]] ; then
-    original_version=$("$original_binary" -c 'printf $BASH_VERSION')
+    original_version=$("$original_binary" -c 'printf ${BASH_VERSION//\(*}')
 
     log "Preserving old binary as '$original_binary-$original_version'..."
 
