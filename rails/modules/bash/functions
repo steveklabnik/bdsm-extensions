@@ -85,7 +85,7 @@ configure_bdsmrc()
 
 }
 
-fetch_repository_url()
+fetch_repository()
 {
   if [[ "$scm" = "git" ]] || (echo "$repository_url" | awk "/git/" 2>/dev/null) ; then
     directory_exists "$shared_path/$project/.git" ||
