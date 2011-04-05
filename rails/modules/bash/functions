@@ -87,18 +87,15 @@ configure_bdsmrc()
 
 fetch_repository_url()
 {
-  if [[ "$scm" = "git" ]] || (echo $repository_url | awk "/git/") ; then
-    if [[ ! -d "$shared_path/$project/.git" ]] ; then
+  if [[ "$scm" = "git" ]] || (echo "$repository_url" | awk "/git/" 2>/dev/null) ; then
+    directory_exists "$shared_path/$project/.git" ||
       git clone $repository_url $project
-    fi
-  elif [[ "$scm" = "svn" ]] || (echo $repository_url | awk "/svn/") ; then
-    if [[ ! -d "$shared_path/$project/.svn" ]] ; then
+  elif [[ "$scm" = "svn" ]] || (echo "$repository_url" | awk "/svn/" 2>/dev/null) ; then
+    directory_exists "$shared_path/$project/.svn" ||
       svn checkout $repository_url $project
-    fi
-  elif [[ "$scm" = "hg" ]] || (echo $repository_url | awk "/hg/") ; then
-    if [[ ! -d "$shared_path/$project/.hg" ]] ; then
+  elif [[ "$scm" = "hg" ]] || (echo "$repository_url" | awk "/hg/" 2>/dev/null) ; then
+    directory_exists "$shared_path/$project/.hg"
       hg clone $repository_url $project
-    fi
   else
     fail "repository_url type not known, expecting {git,svn,hg} in the repository_url url."
   fi
