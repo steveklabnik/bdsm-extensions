@@ -1,6 +1,4 @@
 #!/usr/bin/env bash
 
-modules defaults package
-
-read_default version prefix package
+modules package
 

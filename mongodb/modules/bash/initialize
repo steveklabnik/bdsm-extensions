@@ -1,10 +1,8 @@
 #!/usr/bin/env bash
 
-modules defaults package
+modules package
 
-read_default version prefix package
-
-archive_format="tgz"
+load cli
 
 case "$HOSTTYPE" in
   i386|i686)

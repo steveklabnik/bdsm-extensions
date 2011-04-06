@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-load cli
-
 ensure_paths_exist "${source_path}"
 
 enter "${source_path}"

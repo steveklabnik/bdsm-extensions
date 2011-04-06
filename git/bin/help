@@ -4,3 +4,5 @@ description "${extension} BDSM extension."
 
 actions "install  - Install the $extension gem.
   setup   - setup ~/.gitconfig and ~/.gitignore files"
+
+show_help
