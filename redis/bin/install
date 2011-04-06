@@ -26,7 +26,7 @@ extract_package
 
 enter "${package_dir}"
 
-make_package
+build_package
 
 install_redis
 

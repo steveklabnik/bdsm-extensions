@@ -30,7 +30,7 @@ mysql_install_package()
   cmake .
 
   log "Building ${package_name} ${package_version}"
-  make_package
+  build_package
 
   log "Installing ${package_name} ${package_version}"
   if make_install_package ; then
