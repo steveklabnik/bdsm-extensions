@@ -89,20 +89,26 @@ postgresql_init_script()
 
 postgresql_profile_d()
 {
-  if running_as_root && os_is_linux ; then
+  if running_as_root ; then
     log "Installing Postgresql profile.d script"
 
-    install_template "postgresql.sh" \
-      to "/etc/profile.d/postgresql.sh"
+    if os_is_linux ;  then
+      install_template "postgresql.sh" to "/etc/profile.d/postgresql.sh"
+      chmod_paths 0755 "/etc/profile.d/postgresql.sh"
+    elif os_is_darwin ; then
+      file_contains 'conf.d/postgresql.conf' '/etc/profile' ||
+        sed -e '/^#!.*$/d' "${extension_templates_path}/postgresql.sh.template" >> /etc/profile
+    fi
 
-    chmod_paths 0755 \
-      "/etc/profile.d/postgresql.sh"
   fi
 }
 
 postgresql_conf_d()
 {
-  if running_as_root && os_is_linux ; then
+  if running_as_root ; then
+
+    ensure_paths_exist "/etc/conf.d"
+
     log "Installing Postgresql conf.d script"
 
     install_template "postgresql.conf.d" \
