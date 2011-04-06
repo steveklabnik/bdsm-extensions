@@ -21,6 +21,8 @@ postgresql_initdb()
     "${command}"
   fi
 
+  chown_paths "$package_user:$package_user" "${data_path%\/*}"
+
   chmod_paths 0700 "${data_path%\/*}"
 
   postgresql_configure
