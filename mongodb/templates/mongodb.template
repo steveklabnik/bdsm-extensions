@@ -30,7 +30,7 @@ run_as_user()
   local _user="$1" ; shift
   local _command="$*"
 
-  su - "${_user}" -c "${_command}"
+  su "${_user}" -c "${_command}"
 }
 
 # mongodb control functions.
