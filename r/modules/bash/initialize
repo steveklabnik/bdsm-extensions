@@ -2,8 +2,7 @@
 
 modules defaults package
 
-read_default version into package_version
-
 package_definition \
   base_url "http://cran.stat.ucla.edu/src/base/R-${package_version//-*}"
 
+load cli

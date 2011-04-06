@@ -1,10 +1,8 @@
 #!/usr/bin/env bash
 
-modules defaults package
+modules package
 
 dependencies=( libevent )
-
-read_default version prefix package
 
 package_definition \
   url "http://downloads.sourceforge.net/project/tmux/tmux/tmux-${package_version}/tmux-${package_version}.tar.gz" #?r=&ts=1302031904&use_mirror=surfnet"

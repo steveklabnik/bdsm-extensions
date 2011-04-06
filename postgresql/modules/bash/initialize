@@ -2,10 +2,6 @@
 
 modules defaults package
 
-read_default version prefix package
-
-read_default archive_format
-
 package_definition \
   base_url "http://ftp9.us.postgresql.org/pub/mirrors/postgresql/source/v${package_version}" \
   target_path "${prefix_path}/${package_name}-${package_version}"
@@ -61,6 +57,8 @@ if [[ "$action" = *install ]] ; then
 
   export CFLAGS='-O2'
 fi
+
+load cli
 
 timestamp="$(date +"%Y-%m-%dT%H:%M")"
 

@@ -1,13 +1,4 @@
 #!/usr/bin/env bash
 
-# TODO: Make version configurable from ~/.bdsm/${extension}/config
-
-package_definition \
-  name "${extension}" \
-  version "1.0.0d" \
-  url "http://www.openssl.org/source/" \
-  md5_url "http://www.openssl.org/source/"
-
 package_install
 
-succeed "Installed ${package_name} ${package_version}."

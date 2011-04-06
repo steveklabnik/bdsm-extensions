@@ -20,8 +20,6 @@ This script will now:
 
 "
 
-load cli
-
 # if version_greater_than "5.5" ; do
 #   mysql_install_package
 # else

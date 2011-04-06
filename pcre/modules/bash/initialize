@@ -2,9 +2,3 @@
 
 modules package
 
-# TODO: Make version configurable from ~/.bdsm/${extension}/config
-
-package_definition \
-  version "8.12" \
-  base_url "ftp://ftp.csx.cam.ac.uk/pub/software/programming/pcre"
-

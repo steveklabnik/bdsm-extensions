@@ -21,8 +21,6 @@ This script will now:
 
 "
 
-load cli
-
 package_install
 
 ensure_user_exists "$package_user"

@@ -2,8 +2,6 @@
 
 modules defaults package
 
-read_default version prefix package
-
 package_definition \
   url "http://downloads.basho.com/riak/riak-${package_version%.*}/${package_name}-${package_version}.${archive_format}" \
   file "${package_name}-${package_version}.${archive_format}" \
@@ -49,6 +47,8 @@ if [[ "$action" = *install ]] ; then
   # http://dev.mysql.com/doc/refman/5.1/en/source-configuration-options.html
   export LANG="C"
 fi
+
+load cli
 
 timestamp="$(date +"%Y-%m-%dT%H:%M")"
 

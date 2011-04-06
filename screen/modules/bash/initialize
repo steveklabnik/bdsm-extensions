@@ -1,10 +1,4 @@
 #!/usr/bin/env bash
 
-modules defaults package
-
-read_defaults version prefix package
-read_defaults archive_format
-
-package_definition \
-  base_url "http://mirrors.kernel.org/gnu/${package_name}"
+modules package
 

@@ -2,9 +2,3 @@
 
 modules package
 
-# TODO: Make version configurable from ~/.bdsm/${extension}/config
-
-package_definition \
-  version "6.2" \
-  base_url "http://ftp.gnu.org/pub/gnu/readline"
-
