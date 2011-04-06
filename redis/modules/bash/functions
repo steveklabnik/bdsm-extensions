@@ -115,7 +115,7 @@ configure_redis()
   return 0
 }
 
-install_redis()
+redis_install()
 {
   log "#installing ${package_name} ${package_version}...\n"
   for file in redis-server redis-cli ; do

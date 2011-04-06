@@ -20,15 +20,15 @@ ensure_paths_exist "${source_path}"
 
 enter "${source_path}"
 
-fetch_package
+package_fetch
 
-extract_package
+package_extract
 
 enter "${package_dir}"
 
-build_package
+package_build
 
-install_redis
+redis_install
 
 # Post install configuration
 setup_redis_user

@@ -5,10 +5,10 @@ ensure_paths_exist "${source_path}"
 enter "${source_path}"
 
 log "Downloading ${package_name} ${package_version}"
-fetch_package
+package_fetch
 
 log "Extracting ${package_name} ${package_version}"
-extract_package
+package_extract
 
 enter "${package_dir}"
 

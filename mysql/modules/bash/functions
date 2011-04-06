@@ -10,10 +10,10 @@ mysql_install_package()
   enter "${source_path}"
 
   log "Downloading ${package_name} ${package_version}"
-  fetch_package
+  package_fetch
 
   log "Extracting ${package_name} ${package_version}"
-  extract_package
+  package_extract
 
   enter "${package_dir}"
 
@@ -30,10 +30,10 @@ mysql_install_package()
   cmake .
 
   log "Building ${package_name} ${package_version}"
-  build_package
+  package_build
 
   log "Installing ${package_name} ${package_version}"
-  if make_install_package ; then
+  if package_install ; then
     log "Installed ${package_name} ${package_version}."
   else
     fail "Failed to install ${package_name} ${package_version} to ${prefix_path}."
