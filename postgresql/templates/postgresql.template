@@ -27,7 +27,7 @@ fail() { log "ERROR: $*" ; exit 1 ; }
 
 run_as_user()
 {
-  su - "${user}" -c "$*"
+  su "${user}" -c "$*"
 }
 
 # Postgresql control functions.
