@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+fossil_install()
+{
+  chmod_files 0755 fossil
+
+  move fossil to "${install_path}/bin/fossil"
+}

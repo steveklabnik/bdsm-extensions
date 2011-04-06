@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+# load cli
+
+package_install
+
