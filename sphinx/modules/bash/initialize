@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+
+modules package
+
+postgreql_flag=0 ; mysql_flag=0
+
+configure_flags=(
+  --prefix="${install_path}"
+  --disable-debug
+  --disable-dependency-tracking
+)
+
+if command_exists pg_config ; then
+  configure_flags[${#configure_flags[@]}]="--with-pgsql"
+  postgreql_flag=1
+else
+  configure_flags[${#configure_flags[@]}]="--without-pgsql"
+fi
+
+if command_exist mysql_config ; then
+  configure_flags[${#configure_flags[@]}]="--with-mysql"
+  mysql_flag=1
+else
+  configure_flags[${#configure_flags[@]}]="--without-mysql"
+fi
+
+load cli
+

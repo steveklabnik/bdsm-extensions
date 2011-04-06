@@ -1,0 +1,4 @@
+version=1.10-beta
+base_url=http://sphinxsearch.com/files
+repo_url=http://sphinxsearch.googlecode.com/svn/trunk
+website=http://www.sphinxsearch.com
