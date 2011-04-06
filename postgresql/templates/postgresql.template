@@ -27,10 +27,7 @@ fail() { log "ERROR: $*" ; exit 1 ; }
 
 run_as_user()
 {
-  local _user="$1" ; shift
-  local _command="$*"
-
-  su - "${_user}" -c "${_command}"
+  su - "${user}" -c "$*"
 }
 
 # Postgresql control functions.
@@ -38,24 +35,21 @@ postgresql_start()
 {
   log "Starting PostgreSQL Server"
 
-  run_as_user "${user}" \
-    "$daemon -D '$data_path' &" >> "$log_file" 2>&1
+  run_as_user "$daemon -D '$data_path' >> '$log_file' 2>&1 &"
 }
 
 postgresql_stop()
 {
   log "Stopping PostgreSQL Server"
 
-  run_as_user "${user}" \
-    "$control stop -D '$data_path' -s -m fast"
+  run_as_user "$control stop -D '$data_path' -s -m fast"
 }
 
 postgresql_restart()
 {
   log "Restarting PostgreSQL Server"
 
-  run_as_user "${user}" \
-    "$control stop -D '$data_path' -s -m fast -w" # Notice the '-w' wait flag.
+  run_as_user "$control stop -D '$data_path' -s -m fast -w" # Notice the '-w' wait flag.
 
   postgresql_start
 }
@@ -64,14 +58,12 @@ postgresql_reload()
 {
   log "Reload PostgreSQL Server configuration"
 
-  run_as_user "${user}" \
-    "$control reload -D '$data_path' -s"
+  run_as_user "$control reload -D '$data_path' -s"
 }
 
 postgresql_status()
 {
-  run_as_user "${user}" \
-    "$control status -D '$data_path'"
+  run_as_user "$control status -D '$data_path'"
 }
 
 usage()
@@ -95,9 +87,6 @@ Actions:
 # Configuration
 #
 
-# The path that is to be used for the script
-PATH="${prefix_path}/bin:/bin:/usr/bin:/usr/local/bin:${PATH}"
-
 # Load settings from postgresql.conf
 [[ -s /etc/conf.d/postgresql.conf ]] && source /etc/conf.d/postgresql.conf
 
@@ -107,6 +96,9 @@ true \
   "${data_path:="/var/db/postgresql/data/data"}" \
   "${log_file:="${data_path}/server.log"}" \
   "${user:="postgres"}"
+
+# The path that is to be used for the script
+PATH="${prefix_path}/bin:/bin:/usr/bin:/usr/local/bin:${PATH}"
 
 # What to use to shut down the postmaster
 daemon="${prefix_path}/bin/postmaster"
