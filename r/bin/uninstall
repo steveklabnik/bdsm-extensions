@@ -2,5 +2,5 @@
 
 load cli
 
-uninstall_package
+package_uninstall
 

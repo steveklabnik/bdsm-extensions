@@ -2,5 +2,5 @@
 
 load cli
 
-install_package
+package_install
 

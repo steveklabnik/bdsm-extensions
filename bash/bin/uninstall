@@ -26,4 +26,4 @@ while [[ $# -gt 0 ]] ; do
   esac
 done
 
-uninstall_package
+package_uninstall

@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
 
-uninstall_package
+package_uninstall
 

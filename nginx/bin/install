@@ -2,7 +2,7 @@
 
 log "\nNote: This will do a standard Nginx install.\nUse the 'passenger' BDSM extension for installing Nginx with Passenger.\n"
 
-install_package
+package_install
 
 configure_nginx
 

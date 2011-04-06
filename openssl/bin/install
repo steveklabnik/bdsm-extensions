@@ -8,6 +8,6 @@ package_definition \
   url "http://www.openssl.org/source/" \
   md5_url "http://www.openssl.org/source/"
 
-install_package
+package_install
 
 succeed "Installed ${package_name} ${package_version}."

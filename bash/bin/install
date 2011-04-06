@@ -26,7 +26,7 @@ while [[ $# -gt 0 ]] ; do
   esac
 done
 
-install_package
+package_install
 
 upgrade_bash
 

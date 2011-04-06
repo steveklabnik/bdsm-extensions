@@ -23,7 +23,7 @@ This script will now:
 
 load cli
 
-install_package
+package_install
 
 ensure_user_exists "$package_user"
 
