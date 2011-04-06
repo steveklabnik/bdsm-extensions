@@ -4,7 +4,7 @@ log "nginx:"
 
 if [[ -s "${nginx_pid_file}" ]] ; then
   log "  status: running"
-  log "  version: $("${nginx_binary}" -v | awk -F'/' '/redis_version/{print $2}')"
+  log "  version: $("${nginx_binary}" -v 2>&1 | sed -e 's#.*/##')"
   log "  pid: $(cat ${nginx_pid_file})"
 else
   log "  status: not running"
