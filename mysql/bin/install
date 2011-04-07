@@ -26,25 +26,4 @@ This script will now:
   package_install
 #fi
 
-ensure_user_exists "${package_user}"
-
-mysql_initdb
-
-mysql_init_script
-
-mysql_ldconfig
-
-mysql_profile_d
-
-mysql_conf_d
-
-log "
-Installation and configuration of mysql is now complete.
-
-  * mysql has been installed to $install_path
-  * mysql configuration and data files will are in $data_path
-  * You can control the mysql server via the bdsm mysql extension'
-  * The mysql superuser is '$package_user', no password.
-  * Use /etc/conf.d/mysql.conf for server startup customization.
-
-"
+mysql_initialize

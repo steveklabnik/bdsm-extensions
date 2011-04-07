@@ -1,4 +1,3 @@
 #!/usr/bin/env bash
 
-mysql_initdb
-
+mysql_initialize

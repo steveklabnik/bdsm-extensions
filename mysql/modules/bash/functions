@@ -40,6 +40,28 @@ mysql_install_package()
   fi
 }
 
+mysql_initialize()
+{
+  ensure_user_exists "${package_user}"
+
+  mysql_initdb
+
+  mysql_init_script
+
+  mysql_conf_d
+
+  log "
+  Installation and configuration of mysql is now complete.
+
+  * mysql has been installed to $install_path
+  * mysql configuration and data files will are in $data_path
+  * You can control the mysql server via the bdsm mysql extension'
+  * The mysql superuser is '$package_user', no password.
+  * Use /etc/conf.d/mysql.conf for server startup customization.
+
+"
+}
+
 mysql_initdb()
 {
   log "Initializing mysql data directory in $data_path"
@@ -95,19 +117,6 @@ mysql_configure()
   chmod_paths 0700 "$data_path"
 }
 
-mysql_ldconfig()
-{
-  log "Adding mysql libraries to system ld path."
-
-  if running_as_root && os_is_linux ; then
-    echo "${prefix_path}/mysql/lib" > /etc/ld.so.conf.d/mysql.conf
-
-    chmod_paths 0644 "/etc/ld.so.conf.d/mysql.conf"
-
-    /sbin/ldconfig
-  fi
-}
-
 mysql_init_script()
 {
   log "Installing mysql init script"
@@ -117,17 +126,6 @@ mysql_init_script()
   ensure_files_are_executable "${init_scripts_path}/mysql"
 
   chmod_paths 0755 "${init_scripts_path}/mysql"
-}
-
-mysql_profile_d()
-{
-  if running_as_root && os_is_linux ; then
-    log "Installing mysql profile.d script"
-
-    install_template "mysql.sh" to "/etc/profile.d/mysql.sh"
-
-    chmod_paths 0755 "/etc/profile.d/mysql.sh"
-  fi
 }
 
 mysql_conf_d()
