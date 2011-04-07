@@ -93,7 +93,7 @@ Actions:
 # Ensure defaults are set.
 true \
   "${prefix_path:="/usr/local/postgresql/active"}" \
-  "${data_path:="/var/db/postgresql/active/data/data"}" \
+  "${data_path:="/var/db/postgresql/active/data"}" \
   "${log_file:="${data_path}/server.log"}" \
   "${user:="postgres"}"
 
