@@ -9,9 +9,9 @@ postgresql_initdb()
 {
   log "Initializing postgresql data directory in $data_path"
 
-  ensure_paths_exist "${data_path%\/*}"
+  ensure_paths_exist "${data_path}"
 
-  chown_paths "$package_user:$package_user" "${data_path%\/*}"
+  chown_paths "$package_user:$package_user" "${data_path}"
 
   command="'$install_path/bin/initdb' --pgdata='$data_path/data' --encoding=utf8 --username=$package_user"
 
@@ -21,47 +21,34 @@ postgresql_initdb()
     "${command}"
   fi
 
-  chown_paths "$package_user:$package_user" "${data_path%\/*}"
+  chown_paths "$package_user:$package_user" "${data_path}"
 
-  chmod_paths 0700 "${data_path%\/*}"
+  chmod_paths 0700 "${data_path}"
 
   postgresql_conf
 }
 
 postgresql_conf()
 {
-  log "Configuring postgresql server."
-
-  link --force "${data_path}" to "${data_path%\/*}/data"
-
   local file
-  for file in postgresql pg_hba pg_ident recovery ; do
-    if [[ ! -s "$data_path/${file}.conf" ]] ; then
-      log "Installing ${file}.conf to ${data_path}"
-      cp -f "$data_path/${file}.conf.sample" "$data_path/${file}.conf"
-    fi
-  done
 
-  remove_paths "$prefix_path/postgresql"
+  log "Configuring postgresql server."
 
   ensure_paths_exist "$data_path" "$log_path"
 
-  chown_paths "$package_user" "$data_path"
+  link --force "${data_path}" to "${data_base_path}/data"
+
+  for file in postgresql pg_hba pg_ident recovery ; do
+    if file_is_empty_or_missing "$data_path/${file}.conf" ; then
+      log "Installing ${file}.conf to ${data_path}"
+
+      copy "$data_path/${file}.conf.sample" to "$data_path/${file}.conf"
+    fi
+  done
+
+  chown_paths "$package_user" "$data_base_path"
 
   chmod_paths 0700 "$data_path"
-}
-
-postgresql_ldconfig()
-{
-  log "Adding Postgresql libraries to system ld path."
-
-  if running_as_root && os_is_linux ; then
-    echo "${prefix_path}/postgresql/lib" > /etc/ld.so.conf.d/postgresql.conf
-
-    chmod_paths 0644 "/etc/ld.so.conf.d/postgresql.conf"
-
-    /sbin/ldconfig
-  fi
 }
 
 postgresql_init_script()
@@ -73,22 +60,6 @@ postgresql_init_script()
   ensure_files_are_executable "${init_scripts_path}/postgresql"
 
   chmod_paths 0755 "${init_scripts_path}/postgresql"
-}
-
-postgresql_profile_d()
-{
-  if running_as_root ; then
-    log "Installing Postgresql profile.d script"
-
-    if os_is_linux ;  then
-      install_template "postgresql.sh" to "/etc/profile.d/postgresql.sh"
-      chmod_paths 0755 "/etc/profile.d/postgresql.sh"
-    elif os_is_darwin ; then
-      file_contains 'conf.d/postgresql.conf' '/etc/profile' ||
-        sed -e '/^#!.*$/d' "${extension_templates_path}/postgresql.sh.template" >> /etc/profile
-    fi
-
-  fi
 }
 
 postgresql_conf_d()

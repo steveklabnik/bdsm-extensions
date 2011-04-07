@@ -6,8 +6,6 @@ package_definition \
   base_url "http://ftp9.us.postgresql.org/pub/mirrors/postgresql/source/v${package_version}"
 
 if running_as_root ; then
-  true "${data_path="/var/db/${package_name}/${package_version}"}"
-
   sudo=""
 
   read_default user prefix package
@@ -29,7 +27,6 @@ else
     "${prefix_path:="$HOME/.bdsm"}"
 
   true \
-    "${data_path:="$prefix_path/db/${package_name}/${package_version}"}" \
     "${profiles:=("$HOME/.bash_profile" "$HOME/.bashrc")}"
 fi
 

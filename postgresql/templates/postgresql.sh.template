@@ -1,5 +1,0 @@
-#!/bin/sh
-if [ -s /etc/conf.d/postgresql.conf ] ; then
-  . /etc/conf.d/postgresql.conf
-  PATH="$PATH:${prefix_path}/bin"
-fi
