@@ -92,8 +92,8 @@ Actions:
 
 # Ensure defaults are set.
 true \
-  "${prefix_path:="/usr/local/postgresql"}" \
-  "${data_path:="/var/db/postgresql/data/data"}" \
+  "${prefix_path:="/usr/local/postgresql/active"}" \
+  "${data_path:="/var/db/postgresql/active/data/data"}" \
   "${log_file:="${data_path}/server.log"}" \
   "${user:="postgres"}"
 
