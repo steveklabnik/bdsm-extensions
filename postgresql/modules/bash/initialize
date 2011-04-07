@@ -1,14 +1,12 @@
 #!/usr/bin/env bash
 
-modules defaults package
+modules package
 
 package_definition \
-  base_url "http://ftp9.us.postgresql.org/pub/mirrors/postgresql/source/v${package_version}" \
-  target_path "${prefix_path}/${package_name}-${package_version}"
+  base_url "http://ftp9.us.postgresql.org/pub/mirrors/postgresql/source/v${package_version}"
 
 if running_as_root ; then
-
-  data_path="/var/db/${package_name}/${package_version}"
+  true "${data_path="/var/db/${package_name}/${package_version}"}"
 
   sudo=""
 
@@ -31,11 +29,9 @@ else
     "${prefix_path:="$HOME/.bdsm"}"
 
   true \
-    "${data_path:="$prefix_path/db/${package_name}-${package_version}"}" \
+    "${data_path:="$prefix_path/db/${package_name}/${package_version}"}" \
     "${profiles:=("$HOME/.bash_profile" "$HOME/.bashrc")}"
 fi
-
-install_path="${prefix_path}/${package_name}-${package_version}"
 
 if [[ "${package_user}" = "postgresql" ]] ; then
   package_user="postgres"
@@ -45,7 +41,7 @@ log_path="$data_path/log"
 
 if [[ "$action" = *install ]] ; then
   configure_flags=(
-    --prefix="$install_path"
+    --prefix="${install_base_path}/${package_version}"
     --datadir="$data_path"
     --with-openssl
     --enable-shared

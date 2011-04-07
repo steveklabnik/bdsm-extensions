@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-source "${extension_modules_path}/cli"
-
 #  First do an install
 extension_action "postgresql" "install"
 
