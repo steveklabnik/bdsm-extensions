@@ -37,7 +37,7 @@ postgresql_initdb()
 
   chown_paths "$package_user:$package_user" "${data_path}"
 
-  command="'$install_path/bin/initdb' --pgdata='$data_path/data' --encoding=utf8 --username=$package_user"
+  command="'$install_path/bin/initdb' --pgdata='${data_path}/data' --encoding=utf8 --username=$package_user"
 
   if running_as_root ; then
     run_as_user "${package_user}" "${command}"
@@ -58,7 +58,7 @@ postgresql_conf()
 
   log "Configuring postgresql server."
 
-  ensure_paths_exist "$data_path" "$log_path"
+  ensure_paths_exist "${data_path}" "$log_path"
 
   link --force "${data_path}" to "${data_base_path}/data"
 
