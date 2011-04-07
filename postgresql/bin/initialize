@@ -1,13 +1,4 @@
 #!/usr/bin/env bash
 
-postgresql_initdb
+postgresql_initialize
 
-postgresql_init_script
-
-postgresql_ldconfig
-
-postgresql_profile_d
-
-postgresql_conf_d
-
-postgresql_kernel_parameters

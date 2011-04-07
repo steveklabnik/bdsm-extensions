@@ -12,4 +12,3 @@ remove_files \
 delete_user "${package_user}"
 
 log "Removal of ${package_name} complete."
-
