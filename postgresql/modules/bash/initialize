@@ -39,7 +39,7 @@ log_path="$data_path/log"
 if [[ "$action" = *install ]] ; then
   configure_flags=(
     --prefix="${install_base_path}/${package_version}"
-    --datadir="$data_path/data"
+    --datadir="$data_path"
     --with-openssl
     --enable-shared
   )
