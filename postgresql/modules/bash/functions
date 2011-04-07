@@ -60,7 +60,7 @@ postgresql_conf()
 
   ensure_paths_exist "${data_path}" "$log_path"
 
-  link --force "${data_path}" to "${data_base_path}/data"
+  link --force "${data_path}" to "${data_base_path}/active"
 
   for file in postgresql pg_hba pg_ident recovery ; do
     if file_is_empty_or_missing "$data_path/${file}.conf" ; then
