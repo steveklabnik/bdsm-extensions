@@ -42,11 +42,7 @@ postgresql_conf()
     fi
   done
 
-  log "\nSymlinking $install_path to $prefix_path/postgresql"
-
   remove_paths "$prefix_path/postgresql"
-
-  link "$install_path" to "$prefix_path/postgresql"
 
   ensure_paths_exist "$data_path" "$log_path"
 
