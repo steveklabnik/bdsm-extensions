@@ -25,10 +25,10 @@ postgresql_initdb()
 
   chmod_paths 0700 "${data_path%\/*}"
 
-  postgresql_configure
+  postgresql_conf
 }
 
-postgresql_configure()
+postgresql_conf()
 {
   log "Configuring postgresql server."
 
