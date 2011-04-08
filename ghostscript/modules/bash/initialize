@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+modules defaults package
+
+package_definition \
+  base_url=http://voxel.dl.sourceforge.net/project/ghostscript/GPL%20Ghostscript/$version
+
