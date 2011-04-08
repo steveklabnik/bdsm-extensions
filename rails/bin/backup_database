@@ -3,23 +3,41 @@
 require "yaml"
 require "fileutils"
 
-# TODO: Load these from the BDSM ruby API
+# TODO: Load these from the ruby bdsm modules
+def log(message)
+  @log_file ||= "#{ENV["extension_log_path"]}/#{ENV["action"]}.log"
+  FileUtils.mkdir_p(@log_path) unless File.exist?(File.dirname(@log_file))
+  File.open(@log_file, 'w+') do |log_file|
+    log_file.write "#{@timestamp} : #{@application} : #{@environment} : #{message}\n"
+  end
+  $stdout.puts message
+end
 
-@trace_flag = ENV["trace_flag"].to_i
+def trace(message)
+  @trace_flag ||= ENV["trace_flag"].to_i
+  log(message) if @trace_flag
+end
 
-def log(message, file) ; %x{echo "#{@timestamp}:#{@application}:#{@environment}:#{message}" >> #{@log_path}/backup.#{file}.log} ; end
-def fail(message)      ; STDERR.puts("#{@timestamp}:#{@application}:#{@environment}:#{message}") ; end
-def succeed(message)   ; log(message, :backup) ; exit 0 ; end
-def trace(message)     ; log(message) if @trace_flag ; end
+def fail(message)
+  log "#{@timestamp} : #{@application} : #{@environment} : #{message}"
+  $stderr.puts "#{@timestamp} : #{@application} : #{@environment} : #{message}"
+  exit 1
+end
 
-trace "Loading BDSM Database Backup Utility."
+def succeed(message)
+  log(message)
+  exit 0
+end
+
+trace "Loading BDSM #{ENV["extension"]} #{ENV["action"]} Utility."
+@timestamp = Time.now.strftime("%Y-%m-%dT%H:%M:%S")
+# /TODO
+
 #
 # Setup & Extract variables
 #
-@timestamp = Time.now.strftime("%Y-%m-%dT%H:%M:%S")
-@log_path  = "#{ENV["HOME"]}/shared/backups/log"
-
-FileUtils.mkdir_p(@log_path) unless File.exist?(@log_path)
+@log_path = "#{ENV["HOME"]}/shared/backups/log"
+@log_file = "#{@log_path}/backup.log"
 
 @user = (ENV["USER"]|| %x{whoami}).strip
 @application = ARGV.shift || ENV["project"]
@@ -63,7 +81,6 @@ case @adapter
 when "mysql"
   @dump = %x{which mysqldump}.strip
 
-  log "" if @trace_flag
   fail "mysqldump command not found" if @dump.empty?
 
   @flags    = "--add-drop-table --complete-insert --default-character-set=utf8 --quote-names --extended-insert"
@@ -108,7 +125,9 @@ else
 
 end
 
-trace "Running system command: '#{@command}'"
+log "Backing up #{@adapter} database."
+
+trace "( #{@command} )"
 
 if system(@command)
   succeed "Successfully backed up database to #{@filename}"
