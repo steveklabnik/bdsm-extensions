@@ -5,13 +5,14 @@ require "fileutils"
 
 # TODO: Load these from the BDSM ruby API
 
+@trace_flag = ENV["trace_flag"].to_i
+
 def log(message, file) ; %x{echo "#{@timestamp}:#{@application}:#{@environment}:#{message}" >> #{@log_path}/backup.#{file}.log} ; end
-def fail(message)      ; log(message, :error) ; exit 1 ; end
+def fail(message)      ; STDERR.puts("#{@timestamp}:#{@application}:#{@environment}:#{message}") ; end
 def succeed(message)   ; log(message, :backup) ; exit 0 ; end
+def trace(message)     ; log(message) if @trace_flag ; end
 
-@trace = 1 if ENV["trace_flag"]
-
-puts "Loading BDSM Database Backup Utility." if @trace
+trace "Loading BDSM Database Backup Utility."
 #
 # Setup & Extract variables
 #
@@ -24,75 +25,96 @@ FileUtils.mkdir_p(@log_path) unless File.exist?(@log_path)
 @application = ARGV.shift || ENV["project"]
 @environment = ARGV.shift || ENV["environment"] || ENV["RAILS_ENV"] || ENV["MERB_ENV"] || ENV["RACK_ENV"] || "production"
 
-fail("application must be specified as the first argument.")  if @application.nil? || @application.empty?
+trace "user: #{@user}, application: #{@application}, environment: #{@environment}."
+fail "application must be specified as the first argument."  if @application.nil? || @application.empty?
 
 @target_path = "#{ENV["HOME"]}/shared/backups/#{@application}/#{@environment}"
 @config      = YAML.load_file("#{ENV["HOME"]}/shared/config/database.yml")[@environment]
 @adapter     = @config["adapter"].to_s.strip
 
-fail("adapter not specified in shared/config/database.yml")  if @adapter.nil? || @adapter.empty?
+trace "target_path: #{@target_path}, config: #{@config}, adapter: #{@adapter}."
+fail "adapter not specified in shared/config/database.yml"  if @adapter.nil? || @adapter.empty?
 
 @username = @config["username"] || @user
 @username = @user if @username.nil? || @username.empty?
 
 @database    = @config["database"].to_s.strip
 
-fail("database not specified in shared/config/database.yml") if @database.nil? || @database.empty?
+trace "username: #{@username}, database: #{@database}"
+fail "database not specified in shared/config/database.yml" if @database.nil? || @database.empty?
 
 @password    = @config["password"].to_s.strip
 
-fail("password: not specified in shared/config/database.yml") if @password.nil? || @password.empty?
+trace "password: #{@password}"
+fail "password: not specified in shared/config/database.yml" if @password.nil? || @password.empty?
 
 @hostname    = @config["host"] || "localhost"
 @port        = @config["port"] || "5432"
+
+trace "hostname: #{@hostname}, port: #{@port}"
+trace "Ensuring that target path '#{@target_path}' exists."
 
 FileUtils.mkdir_p(@target_path) unless File.exist?(@target_path)
 
 #
 # Perform the backup
 #
-if @adapter == "mysql"
-
+case @adapter
+when "mysql"
   @dump = %x{which mysqldump}.strip
 
-  fail("mysqldump command not found") if @dump.empty?
+  log "" if @trace_flag
+  fail "mysqldump command not found" if @dump.empty?
 
   @flags    = "--add-drop-table --complete-insert --default-character-set=utf8 --quote-names --extended-insert"
   @filename = "#{@database}%#{@timestamp}.mysql"
   @command  = "#{@dump} #{@flags} --user=#{@username} -p#{@password} --quick #{@database} | bzip2 -c > #{@target_path}/#{@filename}.bz2"
-
-elsif @adapter == "postgresql"
+when "postgresql"
 
   @dump = %x{which pg_dump}.strip
 
-  fail("pg_dump command not found") if @dump.empty?
+  fail "pg_dump command not found" if @dump.empty?
 
   @flags      = "-b -c -E UTF8 -O -x --no-password"
   @filename   = "#{@database}%#{@timestamp}.psql"
   credentials = "#{@hostname}:#{@port}:#{@database}:#{@username}:#{@password}"
 
   # Only write credentials if they are not already in the file.
-  pgpass = File.open("#{ENV["HOME"]}/.pgpass", "w+")
+  pgpass_filename = "#{ENV["HOME"]}/.pgpass"
+  File.open(pgpass_filename, "w+") do |pgpass|
+    trace "Ensuring '#{pgpass_filename}' contains credentials '#{credentials}'"
+    pgpass.write credentials unless pgpass.read.match(credentials)
 
-  unless pgpass.read.match(credentials)
-    pgpass.write credentials
+    trace "Ensuring '#{pgpass_filename}' has correct permissions 0600."
     pgpass.chmod 0600
   end
 
-  pgpass.close
+  @command  = "#{@dump} #{@flags}"
+  @command << " -U#{@username} -h #{@hostname} #{@database} "
+  @command << "| bzip2 -c - > #{@target_path}/#{@filename}.bz2"
 
-  @command = "#{@dump} #{@flags} -U#{@username} -h #{@hostname} #{@database} | bzip2 -c - > #{@target_path}/#{@filename}.bz2"
+when "mongodb"
+  log "Backups for MongoDB has not yet been implemented"
+
+when "sqlite3"
+  log "Backups for sqlite3 has not yet been implemented"
+
+when "riak"
+  log "Backups for riak has not yet been implemented"
 
 else
-
-  fail("unknown adapter, should be either mysql or postgresql")
-
+  fail "unknown adapter, supported adapters are currently mysql and postgresql"
   %x{rm -f ~/.pgpass}
 
 end
 
-puts "Executing: '#{@command}'" if @trace
+trace "Running system command: '#{@command}'"
 
-system(@command)
-
-$? == 0 ? succeed("backup successful") : fail("backup failed, command: #{@command}")
+if system(@command)
+  succeed "Successfully backed up database to #{@filename}"
+else
+  log "command: #{@command}."
+  log "Log File: #{@filename}."
+  %x{tail -10 #{@filename}}
+  fail "Backup failed!"
+end
