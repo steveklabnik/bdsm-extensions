@@ -39,11 +39,13 @@ trace "Loading BDSM #{ENV["extension"]} #{ENV["action"]} Utility."
 @log_path = "#{ENV["HOME"]}/shared/backups/log"
 @log_file = "#{@log_path}/backup.log"
 
-@user = (ENV["USER"]|| %x{whoami}).strip
-@application = ARGV.shift
-@application = ENV["project"] if @application.nil?
-@environment = ARGV.shift
-@environment = (ENV["environment"] || ENV["RAILS_ENV"] || ENV["MERB_ENV"] || ENV["RACK_ENV"] || "production") if @environment.nil?
+@user = (ENV["USER"]|| %x{printf $USER}).strip
+
+@application = ARGV.shift unless ARGV[0].to_s.strip.empty?
+@application ||= ENV["project"]
+
+@environment = ARGV.shift unless ARGV[0].to_s.strip.empty?
+@environment ||= (ENV["environment"] || ENV["RAILS_ENV"] || ENV["MERB_ENV"] || ENV["RACK_ENV"] || "production")
 
 trace "user: #{@user}, application: #{@application}, environment: #{@environment}."
 fail "application must be specified as the first argument."  if @application.nil? || @application.empty?
