@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+modules defaults package
+
+load cli
