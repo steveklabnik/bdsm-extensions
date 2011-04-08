@@ -40,8 +40,10 @@ trace "Loading BDSM #{ENV["extension"]} #{ENV["action"]} Utility."
 @log_file = "#{@log_path}/backup.log"
 
 @user = (ENV["USER"]|| %x{whoami}).strip
-@application = ARGV.shift || ENV["project"]
-@environment = ARGV.shift || ENV["environment"] || ENV["RAILS_ENV"] || ENV["MERB_ENV"] || ENV["RACK_ENV"] || "production"
+@application = ARGV.shift
+@application = ENV["project"] if @application.nil?
+@environment = ARGV.shift
+@environment = (ENV["environment"] || ENV["RAILS_ENV"] || ENV["MERB_ENV"] || ENV["RACK_ENV"] || "production") if @environment.nil?
 
 trace "user: #{@user}, application: #{@application}, environment: #{@environment}."
 fail "application must be specified as the first argument."  if @application.nil? || @application.empty?
