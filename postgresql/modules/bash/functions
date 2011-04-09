@@ -47,7 +47,7 @@ postgresql_initdb()
 
   chown_paths_recursively "$package_user:$package_user" "${data_path}"
 
-  chmod_paths 0700 "${data_path}"
+  chmod_paths_recursively 0700 "${data_path}"
 
   postgresql_conf
 }
@@ -72,7 +72,7 @@ postgresql_conf()
 
   chown_paths_recursively "$package_user" "$data_base_path"
 
-  chmod_paths 0700 "$data_path"
+  chmod_paths_recursively 0700 "$data_path"
 }
 
 postgresql_init_script()
@@ -83,7 +83,7 @@ postgresql_init_script()
 
   ensure_files_are_executable "${init_scripts_path}/postgresql"
 
-  chmod_paths 0755 "${init_scripts_path}/postgresql"
+  chmod_paths_recursively 0755 "${init_scripts_path}/postgresql"
 }
 
 postgresql_conf_d()
@@ -96,7 +96,7 @@ postgresql_conf_d()
 
     install_template "postgresql.conf.d" to "/etc/conf.d/postgresql.conf"
 
-    chmod_paths 0644 "/etc/conf.d/postgresql.conf"
+    chmod_paths_recursively 0644 "/etc/conf.d/postgresql.conf"
   fi
 }
 

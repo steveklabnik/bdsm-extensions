@@ -52,8 +52,7 @@ riak_configure()
 
   log "Configuring ${package_name} server."
 
-  link --force "${data_path}" \
-    to "${data_path%\/*}/data"
+  link --force "${data_path}" to "${data_path%\/*}/data"
 
   # TODO: Determine which .cnf file to grab based on system resources.
   file="${source_path}/${package_dir}/rel/riak/etc/app.config"
@@ -82,7 +81,7 @@ riak_configure()
 
   chown_paths_recursively "$package_user" "$data_path"
 
-  chmod_paths 0700 "$data_path"
+  chmod_paths_recursively 0700 "$data_path"
 }
 
 riak_init_script()
@@ -91,11 +90,9 @@ riak_init_script()
   install_template "${package_name}" \
     to "${init_scripts_path}/${package_name}"
 
-  ensure_files_are_executable \
-    "${init_scripts_path}/${package_name}"
+  ensure_files_are_executable "${init_scripts_path}/${package_name}"
 
-  chmod_paths 0755 \
-    "${init_scripts_path}/${package_name}"
+  chmod_paths_recursively 0755 "${init_scripts_path}/${package_name}"
 }
 
 riak_profile_d()
@@ -106,8 +103,7 @@ riak_profile_d()
     install_template "${package_name}.sh" \
       to "/etc/profile.d/${package_name}.sh"
 
-    chmod_paths 0755 \
-      "/etc/profile.d/${package_name}.sh"
+    chmod_paths_recursively 0755 "/etc/profile.d/${package_name}.sh"
   fi
 }
 
@@ -119,7 +115,6 @@ riak_conf_d()
     install_template "${package_name}.conf.d" \
       to "/etc/conf.d/${package_name}.conf"
 
-    chmod_paths 0644 \
-      "/etc/conf.d/${package_name}.conf"
+    chmod_paths_recursively 0644 "/etc/conf.d/${package_name}.conf"
   fi
 }
