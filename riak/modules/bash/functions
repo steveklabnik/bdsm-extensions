@@ -30,8 +30,7 @@ riak_initdb()
 
   ensure_paths_exist "${data_path%\/*}"
 
-  chown_paths "$package_user" \
-    "${data_path%\/*}"
+  chown_paths_recursively "$package_user" "${data_path%\/*}"
 
   # TODO: how do you initialize a riak DB?
   command="${install_path}/bin/riak --user=\"${package_user}\" --basedir=\"${install_path}\" --datadir=${data_path} "
@@ -75,22 +74,15 @@ riak_configure()
 
   log "\nSymlinking $install_path to $prefix_path/${package_name}"
 
-  remove_paths \
-    "$prefix_path/${package_name}"
+  remove_paths "$prefix_path/${package_name}"
 
-  link "$install_path" \
-    to "$prefix_path/${package_name}"
+  link "$install_path" to "$prefix_path/${package_name}"
 
-  ensure_paths_exist \
-    "$data_path" \
-    "$log_path" \
-    "/etc/${package_name}/"
+  ensure_paths_exist "$data_path" "$log_path" "/etc/${package_name}/"
 
-  chown_paths "$package_user" \
-    "$data_path"
+  chown_paths_recursively "$package_user" "$data_path"
 
-  chmod_paths 0700 \
-    "$data_path"
+  chmod_paths 0700 "$data_path"
 }
 
 riak_init_script()

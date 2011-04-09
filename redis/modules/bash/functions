@@ -62,11 +62,11 @@ create_redis_directories()
 
   ensure_paths_exist "${directories[@]}"
 
-  chown_paths "$redis_user:$redis_user" "${directories[@]}"
+  chown_paths_recursively "$redis_user:$redis_user" "${directories[@]}"
 
   ensure_paths_exist "${redis_paths[@]}"
 
-  chown_paths "$redis_user:$redis_user" "${redis_paths[@]}"
+  chown_paths_recursively "$redis_user:$redis_user" "${redis_paths[@]}"
 
   ensure_paths_exist "${redis_install_path}"
 }

@@ -68,7 +68,7 @@ mysql_initdb()
 
   ensure_paths_exist "${data_path%\/*}"
 
-  chown_paths "$package_user" "${data_path%\/*}"
+  chown_paths_recursively "$package_user" "${data_path%\/*}"
 
   command="${install_path}/bin/mysql_install_db --user=\"${package_user}\" --basedir=\"${install_path}\" --datadir=${data_path} "
   # --srcdir=\"${source_path}/${package_name}-${package_version}\"
@@ -112,7 +112,7 @@ mysql_configure()
 
   ensure_paths_exist "$data_path" "$log_path" "/etc/mysql/"
 
-  chown_paths "$package_user" "$data_path"
+  chown_paths_recursively "$package_user" "$data_path"
 
   chmod_paths 0700 "$data_path"
 }

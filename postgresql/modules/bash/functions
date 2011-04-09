@@ -33,7 +33,7 @@ postgresql_initdb()
 {
   log "Initializing postgresql data directory in $data_path"
 
-  chown_paths "$package_user:$package_user" "${data_path}"
+  chown_paths_recursively "$package_user:$package_user" "${data_path}"
 
   command="'$install_path/bin/initdb' --pgdata='${data_path}/data' --encoding=utf8 --username=$package_user"
 
@@ -45,7 +45,7 @@ postgresql_initdb()
 
   ensure_paths_exist "${data_path}"
 
-  chown_paths "$package_user:$package_user" "${data_path}"
+  chown_paths_recursively "$package_user:$package_user" "${data_path}"
 
   chmod_paths 0700 "${data_path}"
 
@@ -70,7 +70,7 @@ postgresql_conf()
     fi
   done
 
-  chown_paths "$package_user" "$data_base_path"
+  chown_paths_recursively "$package_user" "$data_base_path"
 
   chmod_paths 0700 "$data_path"
 }
