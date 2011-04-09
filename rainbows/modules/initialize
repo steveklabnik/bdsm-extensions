@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+
+fail "BDSM Extension '${extension}' has not been implemented yet."
+
 modules rvm
 
 [[ -n "$environment" ]] || fail "'environment' is not set (bdsmrc)"
