@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+fail "The ${extension} has not been implemented yet."
+
 export CFLAGS="-O3 -fPIC"
 
 cacti_install()
