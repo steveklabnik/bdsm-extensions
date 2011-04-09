@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+fail "BDSM Extension '${extension}' has not been implemented yet."
+
