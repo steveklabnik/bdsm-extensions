@@ -2,5 +2,6 @@
 
 modules defaults package
 
-read_default file prefix package
-read_default dir prefix package
+package_definition \
+  file "libiconv-${package_version}.${archive_format}" \
+  dir "libiconv-${package_version}"
