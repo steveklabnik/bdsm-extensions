@@ -1,23 +1,15 @@
 #!/usr/bin/env bash
 
-source $extension_scripts_path/initialize
+[[ ${master_pid} -gt 0 ]] && \
+  succeed "rainbows herd master is already running for $project."
 
-if [[ "$master_pid" -gt 0 ]] ; then
-  $scripts_path/log "info" "Rainbows leprechaun master is already running for $project."
-else
-  $scripts_path/log "info" "Starting rainbows leprechaun master for $project."
+log "Starting rainbows herd master for $project."
 
-  if [[ -s "$release_path/config/rainbows.rb" ]] ; then
-    if [[ -s "$release_path/config.ru" ]] ; then
-      rainbows -c $release_path/config/rainbows.rb -E $environment -D
-    else
-      rainbows_rails -c $release_path/config/rainbows.rb -E $environment -D
-    fi
-  else
-    $scripts_path/log "error" "config/rainbows.rb not found, aborting start."
-    exit 1
-  fi
-  $scripts_path/log "info" "Rainbows leprechaun master has been launched $project."
-fi
+[[ -s "$release_path/config/rainbows.rb" ]] || \
+  fail "config/rainbows.rb not found, aborting start."
 
-exit $?
+file_is_nonempty "$release_path/config.ru" || binary="rainbows_rails"
+
+${binary:-rainbows} -c "$release_path/config/rainbows.rb" -E "$environment" -D
+
+log "rainbows herd master has been launched $project."

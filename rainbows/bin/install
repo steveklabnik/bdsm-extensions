@@ -1,8 +1,4 @@
 #!/usr/bin/env bash
 
-if [[ -d "$release_path" ]] ; then
-  cd "$release_path"
-fi
-
-gem install unicorn --no-rdoc --no-ri -q
-
+install_gems rainbows
+# gem install rainbows --no-rdoc --no-ri -q

@@ -1,14 +1,13 @@
 #!/usr/bin/env bash
 
-source $extension_scripts_path/initialize
+[[ ${master_pid} -gt 0 ]] || \
+  succeed "There are no rainbowss running for $project."
 
-if [[ "$master_pid" -le 0 ]] ; then
-  echo "There are no rainbowss running for $project."
+if [[ -n "${project:-}" ]] ; then
+  ps auxww | awk "/[r]ainbows/ && /master/ && /${project}/"
+  ps auxww | awk "/[r]ainbows/ && /worker/ && /${project}/"
 else
-  ps auxww | grep '[r]ainbows' | grep master
-  echo
-  ps auxwww | grep '[r]ainbows' | grep $project | grep $environment | grep worker
+  ps auxww | awk "/[r]ainbows/ && /master/ && /${USER}/"
+  ps auxww | awk "/[r]ainbows/ && /worker/ && /${USER}/"
 fi
-
-exit $?
 

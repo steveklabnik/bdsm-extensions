@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+[[ ${master_pid} -gt 0 ]] ||
+  succeed "rainbows is not running for $project."
+
+kill -TERM ${master_pid}
+

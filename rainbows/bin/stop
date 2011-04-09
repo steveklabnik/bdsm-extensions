@@ -1,12 +1,8 @@
 #!/usr/bin/env bash
 
-source $extension_scripts_path/initialize
+[[ ${master_pid} -gt 0 ]] || \
+  succeed "rainbows herd is not running for $project yet."
 
-if [[ "$master_pid" -le 0 ]] ; then
-  $scripts_path/log "info" "Rainbows leprechaun is not running for $project yet."
-else
-  $scripts_path/log "info" "Signaling rainbows leprechaun master to quit for $project."
-  kill -QUIT $master_pid
-fi
+log "Signaling rainbows master to quit for $project."
 
-exit $?
+kill -QUIT ${master_pid}
