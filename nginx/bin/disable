@@ -13,7 +13,7 @@ project="${extension_args[0]:-$1}"
   fail "project must be specified for 'nginx server'"
 
 if file_exists "$nginx_projects_path/$project.conf" ; then
-  move "$nginx_servers_path/$project.conf" \
+  move_file "$nginx_servers_path/$project.conf" \
     to "$nginx_servers_path/$project.conf.disabled"
 else
   if file_exists "$nginx_servers_path/$project.conf.disabled" ; then

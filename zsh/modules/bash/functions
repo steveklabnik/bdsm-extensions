@@ -9,7 +9,7 @@ upgrade_binary()
 
     log "Preserving old binary as '$original_binary-$original_version'..."
 
-    move "${original_binary}" to "${original_binary}-$original_version"
+    move_file "${original_binary}" to "${original_binary}-$original_version"
   fi
 }
 
