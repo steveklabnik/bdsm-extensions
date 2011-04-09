@@ -66,7 +66,8 @@ postgresql_conf()
     if file_is_empty_or_missing "$data_path/data/${file}.conf" ; then
       log "Installing ${file}.conf to ${data_path}/data/"
 
-      copy "$data_path/data/${file}.conf.sample" to "$data_path/data/${file}.conf"
+      copy_file "$data_path/data/${file}.conf.sample" \
+        to "$data_path/data/${file}.conf"
     fi
   done
 
