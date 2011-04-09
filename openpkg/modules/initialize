@@ -1,10 +1,8 @@
 #!/usr/bin/env bash
 
-source "${bdsm_scripts_path}/bash/functions"
+fail "BDSM Extension '${extension}' has not been implemented yet."
 
-log()  { printf "$*\n" ; return $? ;  }
-
-fail() { log "\nERROR: $*\n" ; exit 1 ; }
+modules package
 
 openpkg_url="http://openpkg.org/go/download/openpkg.src.sh"
 
@@ -20,5 +18,6 @@ fi
 
 # Requires least 150MB free disk space
 ensure_paths_exist "${prefix}/tmp"
+
 
 
