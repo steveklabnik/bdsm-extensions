@@ -51,7 +51,5 @@ if [[ "$action" = *install ]] ; then
   export CFLAGS='-O2'
 fi
 
-load cli
-
 timestamp="$(date +"%Y-%m-%dT%H:%M")"
 
