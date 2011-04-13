@@ -12,7 +12,7 @@ true \
   ${nginx_config_file:="${nginx_path}/nginx.conf"} \
   ${nginx_config_path:="${nginx_path}/conf"} \
   ${nginx_servers_path:="${nginx_path}/servers"} \
-  ${nginx_binary:="/usr/sbin/nginx"} \
+  ${nginx_binary:="${install_path}/bin/nginx"} \
   ${nginx_pid_file:="/var/run/nginx.pid"} \
   ${nginx_lock_file:="/var/lock/nginx.lock"} \
   ${nginx_spool_path:="/var/spool/nginx"} \

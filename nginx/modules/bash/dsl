@@ -24,5 +24,12 @@ configure_nginx()
 
   ensure_user_exists nginx with group nginx
 
+  if running_as_root ; then
+    directory_exists "/etc/nginx" ||
+      link "${install_base_path}/active" "/etc/nginx"
+  fi
+
   chown_paths_recursively "nginx:nginx" "${config_directories[@]}"
+
+  link --force "${nginx_binary}" to /sbin/nginx
 }
