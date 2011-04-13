@@ -6,7 +6,7 @@ export PATH="/sbin:/usr/sbin:/usr/local/sbin:/opt/sbin:/opt/local:sbin:$PATH"
 
 init_scripts_path=$(init_scripts_path)
 
-true ${nginx_path:="/etc/nginx"}
+true ${nginx_path:="${install_path}/nginx"}
 
 true \
   ${nginx_config_file:="${nginx_path}/nginx.conf"} \
@@ -35,10 +35,11 @@ configure_flags=(--prefix="$install_path"
   --with-pcre
 )
 
-config_directories=(/var/spool/nginx/client_body_temp
-/var/log/nginx
-"$nginx_config_path/conf"
-"$nginx_config_path/servers"
+config_directories=(
+  "${nginx_spool_path}/client_body_temp"
+  "${nginx_log_path}"
+  "${nginx_config_path}/conf"
+  "${nginx_config_path}/servers"
 )
 
 nginx_files=( fastcgi.conf fastcgi.conf.default fastcgi_params
