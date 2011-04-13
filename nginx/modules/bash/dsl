@@ -12,15 +12,13 @@ configure_nginx()
 
   ensure_paths_exist "${nginx_config_path}" "${nginx_servers_path}"
 
-  install_template "nginx.conf" to "${nginx_path}/nginx.conf"
+  install_template "nginx.conf" to "${nginx_path}/nginx.conf" mode 0644
 
-  install_template "nginx" to "${init_scripts_path}/nginx"
-
-  chmod_files 0755 "${init_scripts_path}/nginx"
+  install_template "nginx" to "${init_scripts_path}/nginx" mode 0755
 
   templates=( "mime.types" "proxy.conf" )
   for template in "${templates[@]}" ; do
-    install_template "${template}" to "${nginx_config_path}/mime.types"
+    install_template "${template}" to "${nginx_config_path}/mime.types" mode 0644
   done
 
   ensure_user_exists nginx with group nginx
