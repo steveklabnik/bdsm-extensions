@@ -12,14 +12,13 @@ true \
   ${nginx_config_file:="${nginx_path}/nginx.conf"} \
   ${nginx_config_path:="${nginx_path}/conf"} \
   ${nginx_servers_path:="${nginx_path}/servers"} \
-  ${nginx_install_path:="/usr/local/nginx"} \
   ${nginx_binary:="/usr/sbin/nginx"} \
   ${nginx_pid_file:="/var/run/nginx.pid"} \
   ${nginx_lock_file:="/var/lock/nginx.lock"} \
   ${nginx_spool_path:="/var/spool/nginx"} \
   ${nginx_log_path:="/var/log/nginx"}
 
-configure_flags=(--prefix="$nginx_install_path"
+configure_flags=(--prefix="$install_path"
   --conf-path="$nginx_config_file"
   --sbin-path="$nginx_binary"
   --pid-path="$nginx_pid_file"

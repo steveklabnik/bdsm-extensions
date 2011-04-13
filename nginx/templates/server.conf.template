@@ -1,5 +1,5 @@
 upstream {{project}} {
-    server unix:/home/{{project}}/shared/{{project}}.sock fail_timeout=0;
+  server unix:/home/{{project}}/shared/{{project}}.sock fail_timeout=0;
 }
 
 server {
@@ -13,7 +13,7 @@ server {
   access_log /home/{{project}}/shared/log/{{project}}.com.access.log main;
   error_log  /home/{{project}}/shared/log/{{project}}.com.error.log  info;
 
-  # This is a ruby application, deny other common types.
+  # This is a ruby/python/etc... application, deny other types.
   location ~ \.(php|asp|aspx|jsp|cfm|dll)$ {
     deny all;
     break;
@@ -23,21 +23,13 @@ server {
     access_log /var/log/nginx/health.log main;
     index index.html;
     auth_basic off;
-    root /etc/nginx;
-    break;
-  }
-
-  if (-f $document_root/system/maintenance.html) {
-    rewrite  ^(.*)$  /system/maintenance.html last;
+    root /etc/nginx/nginx.conf.default;
     break;
   }
 
   location / {
     include /etc/nginx/conf/proxy.conf;
-    if (!-f $request_filename) {
-      proxy_pass http://{{project}};
-      break;
-    }
+    try_files /system/maintenance.html $uri $uri/index.html $uri.html @{{project}};
   }
 
   error_page   500 502 503 504  /500.html;
