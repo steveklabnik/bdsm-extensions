@@ -7,7 +7,7 @@ configure_nginx()
   (
   # Cleanup default nginx install messy directory.
   enter "$nginx_path"
-  move_files_to "${nginx_config_path}/${file}" "${nginx_files[@]}"
+  move_files_to "${nginx_config_path}" "${nginx_files[@]}"
   )
 
   ensure_paths_exist "${nginx_config_path}" "${nginx_servers_path}"
@@ -18,9 +18,10 @@ configure_nginx()
 
   chmod_files 0755 "${init_scripts_path}/nginx"
 
-  install_template "mime.types" to "${nginx_config_path}/mime.types"
-
-  install_template "proxy.conf" to "${nginx_config_path}/proxy.conf"
+  templates=( "mime.types" "proxy.conf" )
+  for template in "${templates[@]}" ; do
+    install_template "${template}" to "${nginx_config_path}/mime.types"
+  done
 
   ensure_user_exists nginx with group nginx
 
