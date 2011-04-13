@@ -174,11 +174,11 @@ symlink()
 
 cleanup()
 {
-  (
+  ensure_paths_exist "$project_path/previous"
   log "Removing old releases: ${old_releases[@]}"
   enter "$project_path/previous"
-  remove_paths "${old_releases[@]}"
-  )
+  array_is_nonempty old_releases &&
+    remove_paths "${old_releases[@]}"
 }
 
 record()
