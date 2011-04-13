@@ -10,7 +10,7 @@ configure_nginx()
   move_files_to "${nginx_config_path}/${file}" "${nginx_files[@]}"
   )
 
-  ensure_paths_exist "$nginx_config_path" "$nginx_servers_path"
+  ensure_paths_exist "${nginx_config_path}" "${nginx_servers_path}"
 
   install_template "nginx.conf" to "${nginx_path}/nginx.conf"
 
