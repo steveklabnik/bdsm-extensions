@@ -6,7 +6,7 @@ file_is_nonempty *.gems && rvm gemset import *.gems
 
 if file_is_nonempty "Gemfile" ; then
   command_exists bundle || install_gems bundler
-elif file_contains "config/environment.rb" "config.gem"
+elif file_contains "config/environment.rb" "config.gem" ; then
   rake gems:install
 else
   log "No Gemfile or config.gem entries detected, skipping gems."
