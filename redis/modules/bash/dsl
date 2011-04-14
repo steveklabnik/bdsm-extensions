@@ -117,7 +117,7 @@ configure_redis()
 
 redis_install()
 {
-  local _source="src" _major _minor _patch
+  local _source="src/" _major _minor _patch
 
   _major=${package_version//.*}
   # _patch=${package_version//*.}
@@ -132,7 +132,7 @@ redis_install()
 
   log "#installing ${package_name} ${package_version}...\n"
   for file in redis-server redis-cli ; do
-    install -b "${_source}/${file}" "${prefix_path}/bin/${file}" ||
+    install -b "${_source}${file}" "${prefix_path}/bin/${file}" ||
       fail "${package_name} ${package_version} failed to install (specifically ${file}).\n"
   done
 }
