@@ -1,2 +1,6 @@
 #!/usr/bin/env bash
 
+bcrypt_configure()
+{
+  true # There is no configure step for bcrypt.
+}
