@@ -15,7 +15,7 @@ initialize()
   true \
     ${redis_user:="redis"} \
     ${redis_port:="6379"} \
-    ${redis_bin_path:="/usr/local/bin"} \
+    ${redis_bin_path:="/usr/local/redis/active/bin"} \
     ${redis_server_binary:="${redis_bin_path}/redis-server"} \
     ${redis_pid_file:="/var/run/redis/redis.pid"} \
     ${redis_config_file:="/etc/redis/redis.conf"}
