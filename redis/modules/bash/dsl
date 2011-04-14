@@ -131,7 +131,7 @@ redis_install()
   fi
 
   # TODO: Install to install_path
-  ensure_paths_exists "${install_path}/bin"
+  ensure_paths_exist "${install_path}/bin"
 
   log "#installing ${package_name} ${package_version}...\n"
   for file in redis-server redis-cli ; do
