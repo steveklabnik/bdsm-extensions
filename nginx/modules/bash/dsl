@@ -21,7 +21,7 @@ configure_nginx()
     install_template "${template}" to "${nginx_config_path}/mime.types" mode 0644
   done
 
-  ensure_user_exists nginx with group nginx
+  ensure_user_exists "nginx" with group "nginx"
 
   if running_as_root ; then
     directory_exists "/etc/nginx" ||

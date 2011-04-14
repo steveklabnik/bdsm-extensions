@@ -32,6 +32,11 @@ server {
     try_files /system/maintenance.html $uri $uri/index.html $uri.html @{{project}};
   }
 
+  location @{{project}} {
+    include /etc/nginx/conf/proxy.conf;
+    proxy_pass http://{{project}};
+  }
+
   error_page   500 502 503 504  /500.html;
   location = /500.html {
     root   /home/{{project}}/current/public;
