@@ -2,7 +2,5 @@
 
 modules templates system project rvm
 
-# Sanity check
-running_as_root &&
-  fail "bdsm $extension $action must be run as a (project) user and NOT as root."
+must_not_be_root # Sanity check
 
