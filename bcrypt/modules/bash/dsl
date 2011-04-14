@@ -2,5 +2,7 @@
 
 bcrypt_configure()
 {
-  true # There is no configure step for bcrypt.
+  enter "${source_path}/${package_dir}"
+
+  replace_content "^PREFIX =.*" with "${install_path}" in "Makefile"
 }
