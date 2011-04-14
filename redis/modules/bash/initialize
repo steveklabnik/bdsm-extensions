@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-modules rvm package
+modules rvm package service
 
 # Redis Configuration.
 true ${redis_user:=redis}

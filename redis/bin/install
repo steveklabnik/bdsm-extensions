@@ -15,25 +15,3 @@ configure_redis
 
 log "Installation of ${package_name} ${package_version} is complete."
 
-# exit 0
-#
-# true \
-#   "${package_dir:="${package_name}-${package_version}"}"
-# ensure_paths_exist "${source_path}"
-#
-# enter "${source_path}"
-#
-# package_fetch
-#
-# package_extract
-#
-# enter "${package_dir}"
-#
-# package_build
-#
-# redis_install
-#
-#
-#
-
-
