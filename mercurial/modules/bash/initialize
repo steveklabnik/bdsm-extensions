@@ -2,9 +2,3 @@
 
 modules package
 
-# If there is a BDSM installed python interpreter active, use it.
-directory_exists "${prefix_path}/python/active" &&
-  export PYTHONPATH="${prefix_path}/python/active"
-
-export PREFIX="${install_path}"
-
