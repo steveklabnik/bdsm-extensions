@@ -2,5 +2,5 @@
 
 modules templates system project rvm
 
-must_not_be_root # Sanity check
+[[ "$action" = "help" ]] || must_not_be_root # Sanity check
 
