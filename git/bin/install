@@ -1,11 +1,4 @@
 #!/usr/bin/env bash
 
-# TODO: Make version configurable from ~/.bdsm/curl/config
-
-package_definition \
-  archive_format "tar.bz2" \
-  base_url "http://kernel.org/pub/software/scm/git"
-
 package_install
 
-succeed "Installed ${package_name} ${package_version}."
