@@ -11,7 +11,7 @@
 @prefix       = ["Linux","FreeBSD"].include?(%x{uname}.strip) ? "/home/#{@user}/shared" : "tmp/"
 
 # Important for debugging during daemonization
-stderr_path "#{@project_path}/shared/log/unicorn.error.log"
+stderr_path "#{@project_path}/shared/log/unicorn.log"
 stdout_path "#{@project_path}/shared/log/unicorn.log"
 
 #
