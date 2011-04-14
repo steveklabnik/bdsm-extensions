@@ -4,5 +4,5 @@ bcrypt_configure()
 {
   enter "${source_path}/${package_dir}"
 
-  replace_content "^PREFIX =.*" with "${install_path}" in "Makefile"
+  replace_content "^PREFIX =.*" with "PREFIX = ${install_path}" in "Makefile"
 }
