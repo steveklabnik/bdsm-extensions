@@ -1,34 +1,8 @@
 #!/usr/bin/env bash
 
-# TODO: refactor the argument processing.
-while [[ $# -gt 0 ]] ; do
-  token="$1" ; shift
-  case "$token" in
-    --trace)   set -o xtrace          ;;
-    --version) packge_version="$1"   ; shift ;;
-    --url)     package_url="$1" ; shift ;;
-    *)         fail "Unknown command line argument for bdsm redis: '$token'" ;;
-  esac
-done
-
 # TODO: Use package DSL module pieces instead of defining our own here..
 
-true \
-  "${package_dir:="${package_name}-${package_version}"}"
-
-ensure_paths_exist "${source_path}"
-
-enter "${source_path}"
-
-package_fetch
-
-package_extract
-
-enter "${package_dir}"
-
-package_build
-
-redis_install
+package_install
 
 # Post install configuration
 setup_redis_user
@@ -40,3 +14,26 @@ install_init_script
 configure_redis
 
 log "Installation of ${package_name} ${package_version} is complete."
+
+# exit 0
+#
+# true \
+#   "${package_dir:="${package_name}-${package_version}"}"
+# ensure_paths_exist "${source_path}"
+#
+# enter "${source_path}"
+#
+# package_fetch
+#
+# package_extract
+#
+# enter "${package_dir}"
+#
+# package_build
+#
+# redis_install
+#
+#
+#
+
+
