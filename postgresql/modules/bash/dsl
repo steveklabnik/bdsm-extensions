@@ -102,11 +102,7 @@ postgresql_init_script()
 {
   log "Installing Postgresql init script"
 
-  install_template "postgresql" to "${init_scripts_path}/postgresql"
-
-  ensure_files_are_executable "${init_scripts_path}/postgresql"
-
-  chmod_paths_recursively 0755 "${init_scripts_path}/postgresql"
+  install_template "postgresql" to "${init_scripts_path}/postgresql" mode 0755
 }
 
 postgresql_conf_d()
@@ -117,9 +113,8 @@ postgresql_conf_d()
 
     log "Installing Postgresql conf.d script"
 
-    install_template "postgresql.conf.d" to "/etc/conf.d/postgresql.conf"
+    install_template "postgresql.conf.d" to "/etc/conf.d/postgresql.conf" mode 0644
 
-    chmod_paths_recursively 0644 "/etc/conf.d/postgresql.conf"
   fi
 }
 
