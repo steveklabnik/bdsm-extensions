@@ -86,6 +86,7 @@ postgresql_conf()
 
   for file in postgresql pg_hba pg_ident recovery ; do
     if file_is_empty_or_missing "$data_path/data/${file}.conf" ; then
+      file_is_missing "$data_path/data/${file}.conf.sample"  && log "Missing $data_path/data/${file}.conf.sample, skipping." && continue
       log "Installing ${file}.conf to ${data_path}/data/"
 
       copy_file "$data_path/data/${file}.conf.sample" \
