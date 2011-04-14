@@ -1,0 +1,3 @@
+version=1.6.16
+base_url=http://subversion.tigris.org/downloads
+archive_format=tar.bz2
