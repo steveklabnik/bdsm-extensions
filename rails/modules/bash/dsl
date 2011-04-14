@@ -126,10 +126,14 @@ configure_rvm()
     rvm_install
   fi
 
+  ensure_files_exist "$HOME/.bash_profile"
+
   if file_is_nonempty "$shared_path/$project/.rvmrc" ; then
-    . "$HOME/.rvmrc"
-    . "$shared_path/$project/.rvmrc"
+    source_files "$HOME/.rvmrc" "$shared_path/$project/.rvmrc"
   fi
+
+  file_contains "$HOME/.bash_profile" "scripts/rvm" ||
+    echo "[[ -s \"${rvm_path:-"$HOME/.rvm"}/.rvm/scripts/rvm\" ]] && . \"${rvm_path:-"$HOME/.rvm"}/.rvm/scripts/rvm\"  # Load RVM into a shell session *as a function*"
 }
 
 setup_application_server()
