@@ -36,11 +36,13 @@ p7zip_configure()
 p7zip_build()
 {
   log "Building ${package_name} ${package_version}"
-  make ${make_flags:-} all3 > make.log
+  make DEST_HOME="${install_path}" DEST_MAN="${install_path}/man" \
+    ${make_flags:-} all3 > make.log
 }
 
 p7zip_install()
 {
-  make DEST_HOME="${install_path}" DEST_MAN="${install_path}/man" install > make.install.log
+  make DEST_HOME="${install_path}" DEST_MAN="${install_path}/man" \
+    install > make.install.log
   log "Installed ${package_name} ${package_version}"
 }
