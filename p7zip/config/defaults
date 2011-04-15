@@ -1,0 +1,4 @@
+version=9.20.1
+base_url=http://downloads.sourceforge.net/project/p7zip/p7zip
+archive_format=tar.bz2
+website=http://p7zip.sourceforge.net/

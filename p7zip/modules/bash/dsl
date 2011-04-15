@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+p7zip_build()
+{
+  case "$(os_arch_capable)" in
+    x86_64)
+      move_file "makefile.macosx_64bits" to "makefile.machine"
+      ;;
+    *)
+      move_file "makefile.macosx_32bits" to "makefile.machine"
+      ;;
+  esac
+  make ${make_flags:-} all3
+}
+
+p7zip_install()
+{
+  make DEST_HOME="${install_path}" DEST_MAN="${install_path}/man" install
+}

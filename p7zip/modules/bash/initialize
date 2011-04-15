@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+modules package
+
+package_definition \
+  url "${package_base_url}/${package_version}/p7zip_${package_version}_src_all.${archive_format}" \
+  file "p7zip_${package_version}_src_all.${archive_format}" \
+  dir "${package_name}_${package_version}"
+
