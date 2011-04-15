@@ -2,7 +2,7 @@
 
 p7zip_configure()
 {
-  local _machine
+  local _machine=""
 
   log "Configuring ${package_name} ${package_version}"
 
@@ -26,7 +26,7 @@ p7zip_configure()
     esac
   fi
 
-  variable_is_nonempty ||
+  variable_is_nonempty "_machine" ||
     fail "Cannot configure ${package_name} ${package_version}, currently unhandled machine type for extension ${p7zip}."
 
   move_file "${source_path}/${package_dir}/makefile.${_machine}" \
