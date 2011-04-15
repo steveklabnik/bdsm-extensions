@@ -10,7 +10,7 @@ server {
 
   root /home/{{project}}/current/public;
 
-  access_log /home/{{project}}/shared/log/{{project}}.com.access.log main;
+  access_log /home/{{project}}/shared/log/{{project}}.com.access.log;
   error_log  /home/{{project}}/shared/log/{{project}}.com.error.log  info;
 
   # This is a ruby/python/etc... application, deny other types.
@@ -20,7 +20,7 @@ server {
   }
 
   location /nginx/health {
-    access_log /var/log/nginx/health.log main;
+    access_log /var/log/nginx/health.log;
     index index.html;
     auth_basic off;
     root /etc/nginx/nginx.conf.default;

@@ -6,7 +6,7 @@ server {
   client_max_body_size 50M;
   root /home/{{project}}/current/public;
 
-  access_log /home/{{project}}/shared/log/{{project}}.org.access.log main;
+  access_log /home/{{project}}/shared/log/{{project}}.org.access.log;
   error_log  /home/{{project}}/shared/log/{{project}}.org.error.log  info;
 
   ssl                  on;
@@ -18,7 +18,7 @@ server {
   ssl_prefer_server_ciphers   on;
 
   location /nginx/health/ {
-    access_log /var/log/nginx/health.log main;
+    access_log /var/log/nginx/health.log;
     index index.html;
     auth_basic off;
     root /etc/nginx;
