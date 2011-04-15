@@ -25,18 +25,14 @@ server {
     break;
   }
 
-  if (-f $document_root/system/maintenance.html) {
-    rewrite  ^(.*)$  /system/maintenance.html last;
-    break;
-  }
-
   location / {
     include /etc/nginx/conf/proxy.conf;
+    try_files /system/maintenance.html $uri $uri/index.html $uri.html @{{project}};
+  }
 
-    if (!-f $request_filename) {
-      proxy_pass http://{{project}};
-      break;
-    }
+  location @{{project}} {
+    include /etc/nginx/conf/proxy.conf;
+    proxy_pass http://{{project}};
   }
 
   error_page   500 502 503 504  /500.html;
