@@ -2,15 +2,35 @@
 
 p7zip_configure()
 {
+  local _machine
+
   log "Configuring ${package_name} ${package_version}"
-  case "$(os_arch_capable)" in
-    x86_64)
-      move_file "makefile.macosx_64bits" to "makefile.machine"
-      ;;
-    *)
-      move_file "makefile.macosx_32bits" to "makefile.machine"
-      ;;
-  esac
+
+  if os_is_darwin ; then
+    case "$(os_arch_capable)" in
+      x86_64)
+        _machine="macosx_64bits"
+        ;;
+      *)
+        _machine="macosx_32bits"
+        ;;
+    esac
+  elif os_is_linux ; then
+    case "$(os_arch_capable)" in
+      x86_64)
+        _machine="linux_amd64"
+        ;;
+      *)
+        _machine="linux_any_cpu"
+        ;;
+    esac
+  fi
+
+  variable_is_nonempty ||
+    fail "Cannot configure ${package_name} ${package_version}, currently unhandled machine type for extension ${p7zip}."
+
+  move_file "${source_path}/${package_dir}/makefile.${_machine}" \
+    to "${source_path}/${package_dir}/makefile.machine"
 }
 
 p7zip_build()
