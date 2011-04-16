@@ -13,8 +13,8 @@ server {
   ssl_certificate      /etc/nginx/ssl/{{project}}.org.crt;
   ssl_certificate_key  /etc/nginx/ssl/{{project}}.org.key;
   ssl_session_timeout  5m;
-  ssl_protocols        SSLv2 SSLv3 TLSv1;
-  ssl_ciphers          ALL:!ADH:!EXPORT56:RC4+RSA:+HIGH:+MEDIUM:+LOW:+SSLv2:+EXP;
+  ssl_protocols        SSLv3 TLSv1;
+  ssl_ciphers          +HIGH:+MEDIUM:!SSLv2:!ADH:!EXPORT56:!LOW;
   ssl_prefer_server_ciphers   on;
 
   location /nginx/health/ {
@@ -23,6 +23,16 @@ server {
     auth_basic off;
     root /etc/nginx;
     break;
+  }
+
+  # This is a ruby/python/etc... application, deny other types.
+  location ~* ^.+\.(php|asp|aspx|jsp|cfm|dll)$ {
+    deny all;
+    break;
+  }
+
+  location ~* ^.+\.(js|css|png|jpg|jpeg|gif|ico)$ {
+    expires max;
   }
 
   location / {

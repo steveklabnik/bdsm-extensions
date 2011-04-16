@@ -19,6 +19,10 @@ server {
     break;
   }
 
+  location ~* ^.+\.(js|css|png|jpg|jpeg|gif|ico)$ {
+    expires max;
+  }
+
   location /nginx/health {
     access_log /var/log/nginx/health.log;
     index index.html;
