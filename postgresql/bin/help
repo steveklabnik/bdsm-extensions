@@ -10,5 +10,6 @@ actions "
   stop       - Stop postgresql server
   restart    - Restart postgresql server
 "
-show_help
+
+show_help usage
 

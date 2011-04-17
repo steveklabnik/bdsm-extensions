@@ -21,18 +21,11 @@ if running_as_root ; then
   fi
 else
   sudo="sudo"
-
-  true \
-    "${package_user:=$USER}" \
-    "${prefix_path:="$HOME/.bdsm"}"
-
-  true \
-    "${profiles:=("$HOME/.bash_profile" "$HOME/.bashrc")}"
+  { : "${package_user:=$USER}" "${prefix_path:="$HOME/.bdsm"}" }
+  { : "${profiles:=("$HOME/.bash_profile" "$HOME/.bashrc")}" }
 fi
 
-if [[ "${package_user}" = "postgresql" ]] ; then
-  package_user="postgres"
-fi
+[[ "${package_user}" = "postgresql" ]] && package_user="postgres"
 
 log_path="$data_path/log"
 
@@ -44,9 +37,7 @@ if [[ "$action" = *install ]] ; then
     --enable-shared
   )
 
-  if os_is_darwin ; then
-    configure_flags[${#configure_flags[@]}]="--with-bonjour"
-  fi
+  os_is_darwin && configure_flags[${#configure_flags[@]}]="--with-bonjour"
 
   export CFLAGS='-O2'
 fi

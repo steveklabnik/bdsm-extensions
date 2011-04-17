@@ -25,13 +25,9 @@ This script will now:
 postgresql_initialize()
 {
   ensure_user_exists "$package_user"
-
   postgresql_initdb
-
   postgresql_init_script
-
   postgresql_conf_d
-
   postgresql_kernel_parameters
 
   log "
@@ -54,34 +50,24 @@ postgresql_kernel_parameters()
 postgresql_initdb()
 {
   log "Initializing postgresql data directory in $data_path"
-
   ensure_paths_exist "${data_path}"
-
   chown_paths_recursively "$package_user:$package_user" "${data_path}"
-
   command="'$install_path/bin/initdb' --pgdata='${data_path}/data' --encoding=utf8 --username=$package_user"
 
-  if running_as_root ; then
-    run_as_user "${package_user}" "${command}"
-  else
-    "${command}"
-  fi
+  running_as_root \
+    && { run_as_user "${package_user}" "${command}" ; } \
+    || { "${command}"; }
 
   chown_paths_recursively "$package_user:$package_user" "${data_path}"
-
   chmod_paths_recursively 0700 "${data_path}"
-
   postgresql_conf
 }
 
 postgresql_conf()
 {
   local file
-
   log "Configuring postgresql server."
-
   ensure_paths_exist "${data_path}" "$log_path"
-
   link --force "${data_path}" to "${data_base_path}/active"
 
   for file in postgresql pg_hba pg_ident recovery ; do
@@ -95,27 +81,21 @@ postgresql_conf()
   done
 
   chown_paths_recursively "$package_user" "$data_base_path"
-
   chmod_paths_recursively 0700 "$data_path"
 }
 
 postgresql_init_script()
 {
   log "Installing Postgresql init script"
-
   install_template "postgresql" to "${init_scripts_path}/postgresql" mode 0755
 }
 
 postgresql_conf_d()
 {
   if running_as_root ; then
-
     ensure_paths_exist "/etc/conf.d"
-
     log "Installing Postgresql conf.d script"
-
     install_template "postgresql.conf.d" to "/etc/conf.d/postgresql.conf" mode 0644
-
   fi
 }
 
