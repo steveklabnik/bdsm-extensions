@@ -14,4 +14,4 @@ actions "
   enable  <project_name>  - Enable project server config.
   disable <project_name>  - Disable project server config."
 
-show_help
+show_help usage

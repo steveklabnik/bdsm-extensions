@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
 
-modules defaults package
+modules package service
 
 export PATH="/sbin:/usr/sbin:/usr/local/sbin:/opt/sbin:/opt/local:sbin:$PATH"
 
 init_scripts_path=$(init_scripts_path)
 
-true ${nginx_path:="${install_path}/nginx"}
+{ : ${nginx_path:="${install_path}/nginx"} }
 
-true \
+: \
   ${nginx_config_file:="${nginx_path}/nginx.conf"} \
   ${nginx_config_path:="${nginx_path}/conf"} \
   ${nginx_servers_path:="${nginx_path}/servers"} \

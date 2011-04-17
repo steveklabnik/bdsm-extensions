@@ -1,6 +1,4 @@
 #!/usr/bin/env bash
 
-[[ -x "${init_scripts_path}/${extension}" ]] || \
-  fail "${init_scripts_path}/${extension} is missing or not executable."
+service_stop
 
-exec "${init_scripts_path}/${extension}" "${action}"

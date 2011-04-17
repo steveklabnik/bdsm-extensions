@@ -2,8 +2,7 @@
 
 project="${extension_args[0]:-$1}"
 
-[[ -n "$project" ]] ||
-  fail "project must be specified for 'nginx server'"
+[[ -n "$project" ]] || fail "project must be specified for 'nginx server'"
 
 # TODO: Account for user name being different from project name.
 nginx_config_path="${nginx_config_path:-"/etc/nginx/conf"}"
@@ -15,6 +14,6 @@ ensure_paths_exist "$nginx_servers_path/"
 
 chmod_paths_recursively 'g+rx' "/home/${project}"
 
-sed -e "s#{{project}}#${project}#g" \
+command sed -e "s#{{project}}#${project}#g" \
   "$extension_templates_path/server.conf.template" \
   > "$nginx_servers_path/$project.conf"

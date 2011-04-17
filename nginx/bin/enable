@@ -5,8 +5,7 @@
 
 project="${1:-}"
 
-[[ -n "$project" ]] || \
-  fail "project must be specified for 'nginx project'"
+[[ -n "$project" ]] || fail "project must be specified for 'nginx project'"
 
 if file_exists "$nginx_projects_path/$project.conf.disbled" ; then
   move_file "$nginx_servers_path/$project.conf.disbled" \
