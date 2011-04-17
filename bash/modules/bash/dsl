@@ -2,12 +2,12 @@
 
 patch_package()
 {
-  local patch_name patches=$(curl -s -l "${package_patches_url}/" | grep -v .sig)
+  local _patch
+  local _patches=$(curl -s -l "${package_patches_url}/" | grep -v .sig)
 
-  for patch_name in "${patches[@]}" ; do
-    log "Applying Patch ${patch_name}..."
-
-    patch -p0 < <(curl -s "${package_patches_url}/${patch_name}")
+  for _patch in "${_patches[@]}" ; do
+    log "Applying Patch ${_patch}..."
+    patch -p0 < <(curl -s "${package_patches_url}/${_patch}")
   done
 }
 
