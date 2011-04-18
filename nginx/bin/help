@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 
-modules help
 
 description "Extension for managing Nginx (http://wiki.nginx.org/Main)."
 

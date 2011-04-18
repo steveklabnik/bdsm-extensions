@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 
-modules help
 
 description "Extension for managing redis (http://wiki.redis.org/Main)."
 
