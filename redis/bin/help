@@ -13,4 +13,4 @@ actions "  install  - Install redis on the system.
   help     - Display this help text.
 "
 
-show_help
+show_help usage
