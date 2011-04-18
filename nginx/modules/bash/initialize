@@ -6,7 +6,7 @@ export PATH="/sbin:/usr/sbin:/usr/local/sbin:/opt/sbin:/opt/local:sbin:$PATH"
 
 init_scripts_path=$(init_scripts_path)
 
-{ : ${nginx_path:="${install_path}/nginx"} }
+{ : ${nginx_path:="${install_path}/nginx"}; }
 
 : \
   ${nginx_config_file:="${nginx_path}/nginx.conf"} \
