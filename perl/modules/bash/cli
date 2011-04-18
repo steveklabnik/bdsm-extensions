@@ -31,7 +31,7 @@ for ((index=0 ; index < $number_of_args ; index++)) ; do
       package_version="${extension_args[$((++index))]}"
       ;;
     --license)
-      display_extension_license
+      extension_license
       exit 0
       ;;
     --help)

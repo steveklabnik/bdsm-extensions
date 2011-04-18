@@ -4,7 +4,7 @@ bdsmrc
 
 load cli
 
-display_extension_license
+extension_license
 
 ensure_paths_exist "$shared_path"
 
