@@ -1,7 +1,7 @@
 # BDSM Framework
 
 This is the official extensions repository for the
-[Bash Devops Scripting Manager (BDSM) Framework](https://bdsm.beginrescueend.com/).
+[Bash Delectable Scripting Manager (BDSM) Framework](https://bdsm.beginrescueend.com/).
 
 [BDSM is a framework](https://bdsm.beginrescueend.com/bdsm/basics/)
 which provides functionality through concept of extensions.
