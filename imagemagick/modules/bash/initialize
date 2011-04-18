@@ -3,8 +3,7 @@
 modules package
 
 package_definition \
-  file "ImageMagick-${package_version}.${archive_format}" # \ dir "ImageMagick-${package_version}"
+  file "ImageMagick-${package_version}.${archive_format}" \
+  dir "ImageMagick-${package_version}"
 
 dependencies=( freetype libpng jpeg tiff libwmf lcms ghostscript)
-
-load_cli
