@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-modules package
+modules package service
 
 postgreql_flag=0 ; mysql_flag=0
 
@@ -23,6 +23,4 @@ if command_exist mysql_config ; then
 else
   configure_flags[${#configure_flags[@]}]="--without-mysql"
 fi
-
-load cli
 
