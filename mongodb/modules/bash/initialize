@@ -1,8 +1,6 @@
 #!/usr/bin/env bash
 
-modules package
-
-load cli
+modules package service
 
 case "$HOSTTYPE" in
   i386|i686)

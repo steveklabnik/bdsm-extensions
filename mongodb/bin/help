@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+modules help
+
 description "${extension} BDSM extension."
 
 actions "install  - Install the $extension gem.
@@ -9,4 +11,4 @@ actions "install  - Install the $extension gem.
   restart  - Restart extension.
   status   - Display extension status."
 
-show_help
+show_help usage
