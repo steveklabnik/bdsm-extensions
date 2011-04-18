@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
 
-modules defaults package
+modules package
 
 package_definition \
   base_url "http://cran.stat.ucla.edu/src/base/R-${package_version//-*}"
 
-load cli
