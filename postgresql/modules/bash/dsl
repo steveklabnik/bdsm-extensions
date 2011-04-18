@@ -67,12 +67,19 @@ postgresql_conf()
 {
   local file
   log "Configuring postgresql server."
+
   ensure_paths_exist "${data_path}" "$log_path"
+
   link --force "${data_path}" to "${data_base_path}/active"
 
-  for file in postgresql pg_hba pg_ident recovery ; do
-    if file_is_empty_or_missing "$data_path/data/${file}.conf" ; then
-      file_is_missing "$data_path/data/${file}.conf.sample"  && log "Missing $data_path/data/${file}.conf.sample, skipping." && continue
+  for file in postgresql pg_hba pg_ident recovery
+  do
+    if file_is_empty_or_missing "$data_path/data/${file}.conf"
+    then
+      if file_is_missing "$data_path/data/${file}.conf.sample" ; then
+        log "Missing $data_path/data/${file}.conf.sample, skipping."
+        continue
+      fi
       log "Installing ${file}.conf to ${data_path}/data/"
 
       copy_file "$data_path/data/${file}.conf.sample" \
