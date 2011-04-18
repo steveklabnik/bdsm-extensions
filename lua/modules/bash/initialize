@@ -2,18 +2,5 @@
 
 modules package
 
-# Override make command based on platform type.
-if os_is_linux ; then
-  make_command="make linux"
-elif os_is_darwin ; then
-  make_command="make darwin"
-elif os_is_solaris ; then
-  make_command="make solaris"
-elif os_is_aix ; then
-  make_command="make aix"
-else # posix...
-  make_command="make posix"
-fi
-
 true "${package_dir:="${package_name}-${package_version}"}"
 
