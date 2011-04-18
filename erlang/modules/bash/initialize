@@ -15,7 +15,8 @@ configure_flags=(
   --enable-kernel-poll
 )
 
-if os_is_darwin ; then
+if os_is_darwin
+then
   configure_flags[${#configure_flags[@]}]="--enable-darwin-64bit"
 fi
 
