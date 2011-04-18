@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-modules package extensions
+modules package
 
 package_definition \
   base_url "http://ftp9.us.postgresql.org/pub/mirrors/postgresql/source/v${package_version}"

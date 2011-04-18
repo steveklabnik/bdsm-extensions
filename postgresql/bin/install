@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-display_extension_licence
-
 display_install_message
 
 package_install
