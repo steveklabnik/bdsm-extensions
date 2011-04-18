@@ -2,7 +2,5 @@
 
 fossil_install()
 {
-  chmod_files 0755 fossil
-
-  move_file fossil to "${install_path}/bin/fossil"
+  move_file fossil to "${install_path}/bin/fossil" mode 0755
 }
