@@ -1,31 +1,5 @@
 #!/usr/bin/env bash
 
-while [[ $# -gt 0 ]] ; do
-
-  token="$1" ; shift
-
-  case "$token" in
-    --trace)
-      trace_flag=1
-      enable_trace
-      ;;
-
-    --version)
-      package_version="$1"
-      shift
-      ;;
-
-    --url)
-      package_url="$1"
-      shift
-      ;;
-
-    *)
-      fail "Unknown command line argument for bdsm ${extension} ${action}: '$token'"
-      ;;
-  esac
-done
-
 package_install
 
 upgrade_bash

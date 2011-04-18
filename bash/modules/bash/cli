@@ -1,3 +1,4 @@
 #!/usr/bin/env bash
 
-package_uninstall
+package_cli
+

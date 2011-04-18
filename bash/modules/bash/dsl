@@ -5,7 +5,8 @@ patch_package()
   local _patch
   local _patches=$(curl -s -l "${package_patches_url}/" | grep -v .sig)
 
-  for _patch in "${_patches[@]}" ; do
+  for _patch in "${_patches[@]}"
+  do
     log "Applying Patch ${_patch}..."
     patch -p0 < <(curl -s "${package_patches_url}/${_patch}")
   done
@@ -15,10 +16,11 @@ upgrade_bash()
 {
   original_binary="${prefix_path}/bin/bash"
 
-  if [[ -x "$original_binary" ]] ; then
-    original_version=$("$original_binary" -c 'printf ${BASH_VERSION//\(*}')
+  if file_is_executable "${original_binary}"
+  then
+    original_version=$("${original_binary}" -c 'printf ${BASH_VERSION//\(*}')
 
-    log "Preserving old binary as '$original_binary-$original_version'..."
+    log "Preserving old binary as '${original_binary}-${original_version}'..."
 
     move_file "${original_binary}" to "${original_binary}-${original_version}"
   fi
