@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-modules defaults package
+modules package
 
 package_definition \
   file "${package_name}-${package_version}-stable.${archive_format}" \
