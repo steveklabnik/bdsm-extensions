@@ -6,4 +6,5 @@ description "${extension} BDSM extension."
 
 actions "install  - Install $extension"
 
-show_help
+show_help usage
+
