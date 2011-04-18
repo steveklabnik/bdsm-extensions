@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
 
-install_template ".gitconfig" to "${HOME}"
-install_template ".gitignore.user" to "${HOME}"
+install_template ".gitconfig" to "${HOME}/.gitconfig"
+install_template ".gitignore.user" to "${HOME}/.gitignore.user"
 
