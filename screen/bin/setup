@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
 
-install_template ".screenrc" to "${HOME}"
+install_template ".screenrc" to "${HOME}/.screenrc" mode 0644
 
