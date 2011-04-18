@@ -10,5 +10,6 @@ actions "
   stop       - Stop mysql server
   restart    - Restart mysql server
 "
-show_help
+
+show_help usage
 

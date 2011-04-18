@@ -1,24 +1,4 @@
 #!/usr/bin/env bash
 
-file_is_executable "${init_scripts_path}/${extension}" ||
-  fail "${init_scripts_path}/${extension} is missing or not executable."
+service_status
 
-exec "${init_scripts_path}/${extension}" "${action}"
-
-#
-# TODO: status script with more information
-#
-#log "mysql:"
-#if [[ -s "${pid_file}" ]] ; then
-#  log "  status: running"
-#  log "  version: $("${init_scripts_path}/mysql" info | head -1 | awk -F: '/version/{print $2}')"
-#  log "  pid: $(cat ${pid_file})"
-#else
-#  log "  status: not running"
-#fi
-#
-#log "  port: $(awk '/^port/{print $2}' ${config_file} || printf "6379")"
-#log "  pidfile: $(awk '/^pidfile/{print $2}' ${config_file})"
-#log "  logfile: $(awk '/^logfile/{print $2}' ${config_file})"
-#log "  dbfile: $(awk '/^dbfilename/{print $2}' ${config_file})"
-#

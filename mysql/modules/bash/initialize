@@ -1,21 +1,23 @@
 #!/usr/bin/env bash
 
-modules defaults package
+modules package service
 
 package_definition \
   base_url "http://mysql.mirrors.pair.com/Downloads/MySQL-${package_version%.*}" \
   target_path "${prefix_path}/${package_name}-${package_version}"
 
-if running_as_root ; then
-
+if running_as_root
+then
   data_path="/var/db/${package_name}/${package_version}"
 
   sudo=""
 
-  if [[ -d /etc/profile.d ]] ; then
+  if [[ -d /etc/profile.d ]]
+  then
     profiles=(/etc/profile.d/mysql.sh)
   else
-    if [[ -f /etc/bash.bashrc ]] ; then
+    if [[ -f /etc/bash.bashrc ]]
+    then
       profiles=(/etc/bash.bashrc)
     else
       profiles=(/etc/bashrc)
@@ -38,7 +40,8 @@ fi
 
 log_path="$data_path/log"
 
-if [[ "$action" = *install ]] ; then
+if [[ "$action" = *install ]]
+then
   # TODO: configure flags per OS.
   # http://dev.mysql.com/doc/refman/5.1/en/source-configuration-options.html
   configure_flags=(

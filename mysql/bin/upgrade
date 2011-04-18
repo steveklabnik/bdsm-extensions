@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-load cli
-
 #  First do an install
 extension_action "mysql" "install"
 

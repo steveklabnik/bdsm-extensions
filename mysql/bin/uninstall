@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-load cli
-
 remove_paths \
   "${prefix_path}/${package_name}" \
   "${prefix_path}/${package_name}-${package_version}"
