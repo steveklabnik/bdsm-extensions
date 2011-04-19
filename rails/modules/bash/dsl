@@ -129,7 +129,10 @@ configure_rvm()
   ensure_files_exist "$HOME/.bash_profile"
 
   if file_is_nonempty "$shared_path/$project/.rvmrc" ; then
-    source_files "$HOME/.rvmrc" "$shared_path/$project/.rvmrc"
+    (
+      source_files \
+        "$HOME/.rvm/scripts/rvm" "$HOME/.rvmrc" "$shared_path/$project/.rvmrc"
+    )
   fi
 
   file_contains "$HOME/.bash_profile" "scripts/rvm" ||
