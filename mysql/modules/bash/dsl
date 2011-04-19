@@ -46,7 +46,7 @@ mysql_initdb()
     "${command}"
   fi
 
-  mysql_configure
+  mysql_postinstall
 }
 
 mysql_postinstall()
