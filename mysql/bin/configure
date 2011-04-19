@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-configure_mysql
+mysql_postinstall
 
 configure_mysql_for_users
 
