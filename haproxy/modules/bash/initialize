@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+modules package service
+
+package_definition \
+  base_url "http://haproxy.1wt.eu/download/${package_version%.*}/src/"
+
+dependencies=( pcre )

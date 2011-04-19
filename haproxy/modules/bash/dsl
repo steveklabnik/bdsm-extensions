@@ -1,0 +1,41 @@
+#!/usr/bin/env bash
+
+haproxy_configure()
+{
+    # We build generic since the Makefile.osx doesn't appear to work
+    if os_is_darwin
+    then
+      make_flags=(
+        -j$(os_cpu_count)
+        DESTDIR="${install_path}"
+        TARGET=generic
+        USE_KQUEUE=1
+        USE_POLL=1
+        PCREDIR="$prefix_path/pcre/active"
+        USE_PCRE=1
+      )
+    elif os_is_linux
+    then
+      make_flags=(
+        -j$(os_cpu_count)
+        DESTDIR="${install_path}"
+        PCREDIR="$prefix_path/pcre/active"
+        USE_PCRE=1
+        TARGET=generic
+      )
+    else
+      make_flags=(
+        -j$(os_cpu_count)
+        DESTDIR="${install_path}"
+        PCREDIR="$prefix_path/pcre/active"
+        USE_PCRE=1
+        TARGET=generic
+      )
+    fi
+
+    make "${make_flags[@]}"
+}
+
+# install_template "haproxy.cfg" to "/etc/haproxy/haproxy.cfg" mode 0644 owner "root:root"
+# install_template "haproxy" to "${init_scripts_path}/haproxy" mode 0755 owner "root:root"
+
