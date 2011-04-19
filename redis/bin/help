@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 
-
 description "Extension for managing redis (http://wiki.redis.org/Main)."
 
 actions "  install  - Install redis on the system.
