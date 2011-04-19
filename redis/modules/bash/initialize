@@ -4,8 +4,7 @@ modules package service
 
 # Redis Configuration.
 : \
-  ${redis_install_path:="$prefix"} \
-  ${redis_bin_path:="${redis_install_path}/bin"} \
+  ${redis_bin_path:="${install_path}/bin"} \
   ${redis_pid_path:="/var/run/redis"} \
   ${redis_config_path:="/etc/redis"} \
   ${redis_db_path:="/var/db/redis"} \
@@ -16,7 +15,6 @@ modules package service
   ${redis_bind_interface:="127.0.0.1"} \
   ${redis_src_path:="${source_path}/${package}-${version}"} \
   ${redis_config_file:="${redis_config_path}/redis.conf"} \
-  ${redis_servers_path:="$redis_etc_path/servers"} \
   ${redis_log_file:="${redis_log_path}/redis.log"} \
   ${redis_server_binary:="${redis_bin_path}/redis-server"} \
   ${redis_cli_binary:="${redis_bin_path}/redis-cli"} \

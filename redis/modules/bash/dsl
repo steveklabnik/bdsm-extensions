@@ -59,7 +59,7 @@ create_redis_directories()
   log "#creating paths for ${package_name} ${package_version}..."
 
   ensure_paths_exist \
-    "${directories[@]}" "${redis_paths[@]}" "${redis_install_path}"
+    "${directories[@]}" "${redis_paths[@]}" "${install_path}"
 
   chown_paths_recursively "${redis_user}:${redis_user}" \
     "${directories[@]}" "${redis_paths[@]}"
