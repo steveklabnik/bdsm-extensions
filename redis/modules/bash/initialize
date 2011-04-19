@@ -28,7 +28,6 @@ redis_paths=(
   "${redis_pid_path}"
   "${redis_db_path}"
   "${redis_lock_path}"
-  "${redis_servers_path}"
   "${redis_log_path}"
 )
 
