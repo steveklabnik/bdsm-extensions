@@ -2,14 +2,14 @@
 
 modules package service
 
+# TODO: if package_version >= 5.5, dependencies+=(cmake)
+
 package_definition \
   base_url "http://mysql.mirrors.pair.com/Downloads/MySQL-${package_version%.*}" \
   target_path "${prefix_path}/${package_name}-${package_version}"
 
 if running_as_root
 then
-  data_path="/var/db/${package_name}/${package_version}"
-
   sudo=""
 
   if [[ -d /etc/profile.d ]]
@@ -23,19 +23,11 @@ then
       profiles=(/etc/bashrc)
     fi
   fi
-
-  install_path="${prefix_path}/${package_name}-${package_version}"
 else
   sudo="sudo"
 
-  true \
-    "${package_user:=$USER}" \
-    "${prefix_path:="$HOME"}"
-
-  true \
-    "${data_path:="$prefix_path/.${package_name}-${package_version}"}" \
-    "${profiles:=("$HOME/.bash_profile" "$HOME/.bashrc")}" \
-    "${install_path:="$prefix_path/.${package_name}-${package_version}"}"
+  : \
+    "${profiles:=("$HOME/.bash_profile" "$HOME/.bashrc")}"
 fi
 
 log_path="$data_path/log"
@@ -56,8 +48,6 @@ then
   export CXX=gcc
   export CXXFLAGS="-O3 -felide-constructors -fno-exceptions -fno-rtti"
 fi
-
-load cli
 
 timestamp="$(date +"%Y-%m-%dT%H:%M")"
 

@@ -108,8 +108,6 @@ mysql_configure()
 
   remove_paths "$prefix_path/mysql"
 
-  link "$install_path" to "$prefix_path/mysql"
-
   ensure_paths_exist "$data_path" "$log_path" "/etc/mysql/"
 
   chown_paths_recursively "$package_user" "$data_path"
@@ -121,11 +119,9 @@ mysql_init_script()
 {
   log "Installing mysql init script"
 
-  install_template "mysql" to "${init_scripts_path}/mysql"
+  install_template "mysql" to "${init_scripts_path}/mysql" mode 0755
 
   ensure_files_are_executable "${init_scripts_path}/mysql"
-
-  chmod_paths_recursively 0755 "${init_scripts_path}/mysql"
 }
 
 mysql_conf_d()
