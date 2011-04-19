@@ -54,21 +54,15 @@ setup_redis_user()
 
 create_redis_directories()
 {
-  local directory redis_path
-
-  # TODO: can likely merge directory creation into path creation.
+  local directory redis_path directories=("$@")
 
   log "#creating paths for ${package_name} ${package_version}..."
 
-  ensure_paths_exist "${directories[@]}"
+  ensure_paths_exist \
+    "${directories[@]}" "${redis_paths[@]}" "${redis_install_path}"
 
-  chown_paths_recursively "$redis_user:$redis_user" "${directories[@]}"
-
-  ensure_paths_exist "${redis_paths[@]}"
-
-  chown_paths_recursively "$redis_user:$redis_user" "${redis_paths[@]}"
-
-  ensure_paths_exist "${redis_install_path}"
+  chown_paths_recursively "${redis_user}:${redis_user}" \
+    "${directories[@]}" "${redis_paths[@]}"
 }
 
 install_init_script()
