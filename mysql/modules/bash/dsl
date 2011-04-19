@@ -1,44 +1,10 @@
 #!/usr/bin/env bash
 
-mysql_install_package()
-{
-  # deal with mysql version_greater_than "5.5", eg. cmake etc...
-  # This function must: configure, build, install to ${install_path}
-
-  ensure_paths_exist "${source_path}"
-
-  enter "${source_path}"
-
-  log "Downloading ${package_name} ${package_version}"
-  package_fetch
-
-  log "Extracting ${package_name} ${package_version}"
-  package_extract
-
-  enter "${package_dir}"
-
-  # If the extension has defined a patch_package function, call it.
-  if command -v patch_package 2>/dev/null ; then
-    log "Patching ${package_name} ${package_version}"
-    patch_package
-  fi
-
-  log "Configuring ${package_name} ${package_version}"
-  # TODO: adjust this for new cmake install method.
-  # http://dev.mysql.com/doc/refman/5.5/en/source-configuration-options.html
-  # http://dev.mysql.com/doc/refman/5.5/en/installing-source-distribution.html
-  cmake .
-
-  log "Building ${package_name} ${package_version}"
-  package_build
-
-  log "Installing ${package_name} ${package_version}"
-  if package_install ; then
-    log "Installed ${package_name} ${package_version}."
-  else
-    fail "Failed to install ${package_name} ${package_version} to ${prefix_path}."
-  fi
-}
+# TODO: deal with mysql version_greater_than "5.5", eg. cmake etc...
+# This function must: configure, build, install to ${install_path}
+# TODO: adjust this for new cmake install method.
+# http://dev.mysql.com/doc/refman/5.5/en/source-configuration-options.html
+# http://dev.mysql.com/doc/refman/5.5/en/installing-source-distribution.html
 
 mysql_initialize()
 {
@@ -120,8 +86,6 @@ mysql_init_script()
   log "Installing mysql init script"
 
   install_template "mysql" to "${init_scripts_path}/mysql" mode 0755
-
-  ensure_files_are_executable "${init_scripts_path}/mysql"
 }
 
 mysql_conf_d()
@@ -129,9 +93,7 @@ mysql_conf_d()
   if running_as_root && os_is_linux ; then
     log "Installing mysql conf.d script"
 
-    install_template "mysql.conf.d" to "/etc/conf.d/mysql.conf"
-
-    chmod_paths_recursively 0644 "/etc/conf.d/mysql.conf"
+    install_template "mysql.conf.d" to "/etc/conf.d/mysql.conf" mode 0644
   fi
 }
 
