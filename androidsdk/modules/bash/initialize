@@ -15,6 +15,6 @@ else
 fi
 
 package_definition \
-  file "android-sdk_${package_version}-${os_type}_x86." \
+  file "android-sdk_${package_version}-${os_type}_x86.${archive_format}" \
   dir "android-sdk-${os_type}_x86"
 
