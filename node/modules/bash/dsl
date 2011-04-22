@@ -8,6 +8,9 @@ node_configure()
     then
       replace_content "\#!/usr/bin/env python" \
         with "\#!$(command -v python2)" in "tools/waf-light"
+
+      replace_content "\#!/usr/bin/env python" \
+        with "\#!$(command -v python2)" in "tools/wafadmin/Scripting.py"
     fi
   fi
   ./configure --prefix="${install_path}"
