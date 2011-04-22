@@ -1,0 +1,4 @@
+version=r10
+base_url=http://dl.google.com/android
+archive_format=tar.gz
+website=http://developer.android.com/sdk/index.html

@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+modules package system
+
+if os_is_darwin
+  os_type="mac"
+  archive_format="zip"
+elif os_is_linux
+  os_type="linux"
+  archive_format="tgz"
+else
+  error "Only Darwin and Linux are currently supported for ${extension}."
+fi
+
+package_definition \
+  file "android-sdk_${package_version}-${os_type}_x86." \
+  dir "android-sdk-${os_type}_x86"
+

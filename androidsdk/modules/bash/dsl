@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+androidsdk_configure()
+{
+  true # no-op
+}
+
+androidsdk_build()
+{
+  true # no-op
+}
+
+androidsdk_install()
+{
+  copy_paths_to "${install_path}" add-ons platforms tools
+  copy_files_to "${install_path}" "SDK Readme.txt"
+}
+
