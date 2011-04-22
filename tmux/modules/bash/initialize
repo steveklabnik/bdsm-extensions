@@ -5,5 +5,5 @@ modules package
 dependencies=( libevent )
 
 package_definition \
-  url "http://downloads.sourceforge.net/project/tmux/tmux/tmux-${package_version}/tmux-${package_version}.tar.gz" #?r=&ts=1302031904&use_mirror=surfnet"
+  base_url "http://downloads.sourceforge.net/project/tmux/tmux/tmux-${package_version}"
 

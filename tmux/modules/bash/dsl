@@ -1,6 +1,1 @@
 #!/usr/bin/env bash
-
-tmux_patch()
-{
-  true
-}
