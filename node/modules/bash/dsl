@@ -4,13 +4,11 @@ node_configure()
 {
   if os_is_linux
   then
-    if command_exists python2
+    if python=$(command -v python2)
     then
-      replace_content "\#!/usr/bin/env python" \
-        with "\#!$(command -v python2)" in "tools/waf-light"
-
-      replace_content "\#!/usr/bin/env python" \
-        with "\#!$(command -v python2)" in "tools/wafadmin/Scripting.py"
+      #replace_content "\#!/usr/bin/env python" \
+      #  with "\#!${python}" in "tools/waf-light"
+      replace_content "python " with "${python} " in "Makefile"
     fi
   fi
   ./configure --prefix="${install_path}"
