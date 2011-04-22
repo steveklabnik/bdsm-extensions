@@ -4,7 +4,7 @@ unrar_extract()
 {
   if directory_exists "unrar"
   then
-    remove_directories "unrar"
+    remove_paths "unrar"
   fi
 
   tar zxf ${package_file}
