@@ -9,5 +9,5 @@ unrar_extract()
 
   tar zxf ${package_file}
 
-  rename_directory "unrar" to "unrar-${package_version}"
+  rename_directory "unrar" to "${package_dir}"
 }
