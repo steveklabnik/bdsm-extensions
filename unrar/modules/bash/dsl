@@ -1,2 +1,13 @@
 #!/usr/bin/env bash
 
+unrar_extract()
+{
+  if directory_exists "unrar"
+  then
+    remove_directories "unrar"
+  fi
+
+  tar zxf ${package_file}
+
+  rename_directory "unrar" to "unrar-${package_version}"
+}
