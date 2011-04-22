@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+cat << Info
+init_scripts_path: $(init_scripts_path)
+os_type:           $(os_type)
+os_arch_type:      $(os_arch_type)
+os_arch:           $(os_arch)
+os_arch_capable:   $(os_arch_capable)
+os_cpu_count:      $(os_cpu_count)
+Info

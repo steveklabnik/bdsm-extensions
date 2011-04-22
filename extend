@@ -45,7 +45,11 @@ while [[ $# -gt 0 ]] ; do
           fi
           exit 1
         fi
-        cp -Rf $token "$bdsm_path/extensions/"
+	if command -v rsync >/dev/null ; then
+	  rsync -av "$token" "$bdsm_path/extensions/"
+	else
+	  cp -Rf $token "$bdsm_path/extensions/"
+	fi
       else
         printf "$token is an unknown command / extension.\n"
         usage
