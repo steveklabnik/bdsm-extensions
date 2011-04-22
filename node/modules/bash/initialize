@@ -2,8 +2,9 @@
 
 modules package
 
+dependencies=(python-2)
+
 package_definition \
   file "${package_name}-v${package_version}.${archive_format}"\
   dir "${package_name}-v${package_version}"\
-
 

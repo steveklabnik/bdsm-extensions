@@ -1,2 +1,15 @@
 #!/usr/bin/env bash
 
+node_configure()
+{
+  if os_is_linux
+  then
+    if command_exists python2
+    then
+      replace_contents "#!/usr/bin/env python" \
+        with "#!$(command -v python2)" in "tools/waf-light"
+    fi
+  fi
+  ./configure --prefix="${install_path}"
+}
+
