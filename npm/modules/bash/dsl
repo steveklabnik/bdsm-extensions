@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+latest_version()
+{
+  json="$(^Crl http://registry.npmjs.org/npm/latest)"
+  package_version="${json##*version\":\"}"
+  package_version="${version%%\"*}"
+
+  printf "%s" "${package_version}"
+}
