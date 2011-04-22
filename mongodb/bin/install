@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+package_install
+
+mongodb_postinstall
+
