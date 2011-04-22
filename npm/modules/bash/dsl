@@ -2,9 +2,9 @@
 
 latest_version()
 {
-  json="$(^Crl http://registry.npmjs.org/npm/latest)"
-  package_version="${json##*version\":\"}"
-  package_version="${version%%\"*}"
+  json="$(curl http://registry.npmjs.org/npm/latest)"
+  version="${json##*version\":\"}"
+  version="${version%%\"*}"
 
-  printf "%s" "${package_version}"
+  printf "%s" "${version}"
 }
