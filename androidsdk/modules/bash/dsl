@@ -12,7 +12,7 @@ androidsdk_build()
 
 androidsdk_install()
 {
-  copy_paths_to "${install_path}" add-ons platforms tools
+  copy_directories_to "${install_path}" add-ons platforms tools
   copy_files_to "${install_path}" "SDK Readme.txt"
   link from "${install_path}/tools" to "${install_path}/bin"
 }
