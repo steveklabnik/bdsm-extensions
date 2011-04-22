@@ -5,6 +5,10 @@ unrar_configure()
   replace_content "^DESTDIR=.*$" \
     with "DESTDIR=${install_path}" \
     in "makefile.unix"
+
+  replace_content "install -D unrar" \
+    with "${package_dir}" \
+    in "makefile.unix"
 }
 
 unrar_extract()
