@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
 
+npm_configure()
+{
+  move_directory "package" to "${package_dir}"
+}
+
 latest_version()
 {
   json="$(curl http://registry.npmjs.org/npm/latest)"
