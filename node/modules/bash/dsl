@@ -6,7 +6,7 @@ node_configure()
   then
     if command_exists python2
     then
-      replace_content "#!/usr/bin/env python" \
+      replace_content "\#!/usr/bin/env python" \
         with "\#!$(command -v python2)" in "tools/waf-light"
     fi
   fi
