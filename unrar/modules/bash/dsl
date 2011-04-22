@@ -1,5 +1,12 @@
 #!/usr/bin/env bash
 
+unrar_configure()
+{
+  replace_content "^DESTDIR=.*$" \
+    with "DESTDIR=${install_path}" \
+    in "makefile.unix"
+}
+
 unrar_extract()
 {
   if directory_exists "unrar"
@@ -11,3 +18,14 @@ unrar_extract()
 
   move_directory "unrar" to "${package_dir}"
 }
+
+unrar_build()
+{
+  make --makefile makefile.unix
+}
+
+unrar_install()
+{
+  make install --makefile makefile.unix
+}
+
