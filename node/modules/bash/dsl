@@ -7,7 +7,7 @@ node_configure()
     if command_exists python2
     then
       replace_content "#!/usr/bin/env python" \
-        with "#!$(command -v python2)" in "tools/waf-light"
+        with "\#!$(command -v python2)" in "tools/waf-light"
     fi
   fi
   ./configure --prefix="${install_path}"
