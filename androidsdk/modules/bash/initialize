@@ -3,9 +3,11 @@
 modules package system
 
 if os_is_darwin
+then
   os_type="mac"
   archive_format="zip"
 elif os_is_linux
+then
   os_type="linux"
   archive_format="tgz"
 else
