@@ -1,1 +1,10 @@
 #!/usr/bin/env bash
+
+tmux_configure()
+{
+  # Ensure that libevent is in the search paths.
+  export CFLAGS="-I${prefix_path}/libevent/active/include"
+  export LDFLAGS="-L${prefix_path}/libevent/active/lib"
+
+  package_configure
+}
