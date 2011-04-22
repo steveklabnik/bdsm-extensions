@@ -2,44 +2,9 @@
 
 modules package service
 
-case "$HOSTTYPE" in
-  i386|i686)
-    architecture="i686"
-    ;;
+mongodb_set_architecture
 
-  x86_64)
-    architecture="x86_64"
-    ;;
-
-  *)
-    if [[ "$action" = *install ]] ; then
-      fail "Unhandled architecture: $HOSTTYPE for ${extension} ${action}"
-    fi
-    ;;
-esac
-
-case "$MACHTYPE" in
-  *linux*)
-    os="linux"
-    ;;
-
-  *darwin*)
-    os="osx"
-    ;;
-
-  *solaris*)
-    os="sunos5"
-    if [[ "$architecture" = "i686" ]] ; then
-      architecture="i86pc" # C'mon Solaris, really???
-    fi
-    ;;
-
-  *)
-    if [[ "$action" = *install ]] ; then
-      fail "Unhandled operating system: $MACHTYPE for ${extension} ${action}"
-    fi
-    ;;
-esac
+mongodb_set_os
 
 package_definition \
   base_url "http://fastdl.mongodb.org/${os}" \

@@ -4,10 +4,57 @@ mongodb_install()
 {
   ensure_paths_exist "${install_path}"
   files=$(find "${source_path}/${package_dir}/bin/" -type f)
-  copy_files_to "${install_path}" "${files[@]}"
+  copy_files_to "${install_path}/bin" "${files[@]}"
 }
 
-mongodb_configure()
+mongodb_postinstall()
 {
-  path_exists "${install_base_path}" || activate_package
+  path_exists "${install_base_path}" ||
+    activate_package "${package_name}" "${package_version}"
 }
+
+mongodb_set_architecture()
+{
+  case "$HOSTTYPE" in
+    i386|i686)
+      architecture="i686"
+      ;;
+
+    x86_64)
+      architecture="x86_64"
+      ;;
+
+    *)
+      if [[ "$action" = *install ]] ; then
+        fail "Unhandled architecture: $HOSTTYPE for ${extension} ${action}"
+      fi
+      ;;
+  esac
+}
+
+mongodb_set_os()
+{
+  case "$MACHTYPE" in
+    *linux*)
+      os="linux"
+      ;;
+
+    *darwin*)
+      os="osx"
+      ;;
+
+    *solaris*)
+      os="sunos5"
+      if [[ "$architecture" = "i686" ]] ; then
+        architecture="i86pc" # C'mon Solaris, really???
+      fi
+      ;;
+
+    *)
+      if [[ "$action" = *install ]] ; then
+        fail "Unhandled operating system: $MACHTYPE for ${extension} ${action}"
+      fi
+      ;;
+  esac
+}
+

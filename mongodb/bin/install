@@ -1,19 +1,6 @@
 #!/usr/bin/env bash
 
-ensure_paths_exist "${source_path}"
+package_install
 
-enter "${source_path}"
+mongodb_postinstall
 
-log "Downloading ${package_name} ${package_version}"
-package_fetch
-
-log "Extracting ${package_name} ${package_version}"
-package_extract
-
-enter "${package_dir}"
-
-log "Installing ${package_name} ${package_version}"
-mongodb_install
-
-log "Post Install configuration for ${package_name} ${package_version}"
-mongodb_configure
