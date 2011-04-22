@@ -1,0 +1,3 @@
+version=0.4.6
+base_url=http://nodejs.org/dist
+archive_format=tar.gz
