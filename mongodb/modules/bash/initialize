@@ -42,7 +42,7 @@ case "$MACHTYPE" in
 esac
 
 package_definition \
-  base_url="http://fastdl.mongodb.org/${os}" \
-  file="mongodb-${os}-${architecture}-${package_version}.${archive_format}" \
-  dir="mongodb-${os}-${architecture}-${package_version}"
+  base_url "http://fastdl.mongodb.org/${os}" \
+  file "mongodb-${os}-${architecture}-${package_version}.${archive_format}" \
+  dir "mongodb-${os}-${architecture}-${package_version}"
 
