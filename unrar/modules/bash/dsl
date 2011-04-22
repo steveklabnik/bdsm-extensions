@@ -5,10 +5,6 @@ unrar_configure()
   replace_content "^DESTDIR=.*$" \
     with "DESTDIR=${install_path}" \
     in "makefile.unix"
-
-  replace_content "install -D unrar" \
-    with "${package_dir}" \
-    in "makefile.unix"
 }
 
 unrar_extract()
@@ -30,6 +26,8 @@ unrar_build()
 
 unrar_install()
 {
-  make install --makefile makefile.unix
+  ensure_paths_exist "${install_path}/bin"
+  move_file "unrar" to "${install_path}/bin/unrar"
+  ensure_files_are_executable "${install_path}/bin/unrar"
 }
 
