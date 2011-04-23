@@ -14,8 +14,8 @@ configure_profiles
 
 configure_bdsmrc
 
-configure_rvm
-
 fetch_repository
+
+configure_rvm
 
 setup_application_server
