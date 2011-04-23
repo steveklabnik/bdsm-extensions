@@ -1,4 +1,6 @@
 # BDSM Extension README
 
-This is a BDSM extension which has the purpose to...
+This extension installs and manages memcached on a system.
 
+Visit the memcached website for more information on memcached,
+  http://memcached.org/
