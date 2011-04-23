@@ -18,6 +18,8 @@ fetch_repository
 
 configure_rvm
 
+extension_action "bdsm" "deploy"
+
 bootstrap_gems
 
 setup_application_server
