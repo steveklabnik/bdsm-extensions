@@ -162,3 +162,18 @@ setup_application_server()
   esac
 }
 
+bootstrap_gems()
+{
+  (
+    . "${HOME}/.rvm/scripts/rvm"
+
+    enter "${release_path}"
+
+    if file_exists "Gemfile"
+    then
+      gem install bundler --no-rdoc --no-ri
+      bundle
+    fi
+  )
+}
+
