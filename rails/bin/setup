@@ -1,9 +1,5 @@
 #!/usr/bin/env bash
 
-bdsmrc
-
-load cli
-
 extension_license
 
 ensure_paths_exist "$shared_path"
