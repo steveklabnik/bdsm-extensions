@@ -12,8 +12,6 @@
 #
 detect_scm
 
-bdsmrc # Ensure a reload of bdsmrc here.
-
 log "Deploying..."
 (
   hook "before_update_repository"
