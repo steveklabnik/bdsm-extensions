@@ -24,7 +24,7 @@ This script will now:
 
 postgresql_initialize()
 {
-  ensure_user_exists "$package_user"
+  user_create_if_missing "$package_user"
   postgresql_initdb
   postgresql_init_script
   postgresql_conf_d

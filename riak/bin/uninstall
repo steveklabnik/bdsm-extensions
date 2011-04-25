@@ -11,7 +11,7 @@ remove_files \
   /etc/ld.so.conf.d/${package_name}.conf \
   "${init_scripts_path}/riak"
 
-delete_user "${package_user}"
+user_delete "${package_user}"
 
 log "Removal of ${package_name} complete."
 

@@ -24,7 +24,7 @@ configure_nginx()
       mode 0644 owner "${nginx_user}"
   done
 
-  ensure_user_exists "nginx" with group "nginx"
+  user_create_if_missing "nginx" with group "nginx"
 
   if running_as_root ; then
     directory_exists "/etc/nginx" ||
