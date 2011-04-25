@@ -2,7 +2,7 @@
 
 modules variables project rvm templates
 
-variables_must_not_be_empty environment RAILS_ENV project
+variables_must_be_set environment RAILS_ENV project
 
 # Fetch the pid_file pid.
 pid_file="$shared_path/pids/$project.pid"
