@@ -4,30 +4,7 @@ modules package service
 
 # Redis Configuration.
 : \
-  ${redis_bin_path:="${install_path}/bin"} \
-  ${redis_pid_path:="/var/run/redis"} \
-  ${redis_config_path:="/etc/redis"} \
-  ${redis_db_path:="/var/db/redis"} \
-  ${redis_log_path:="/var/log/redis"} \
-  ${redis_lock_path:="/var/lock/redis"} \
-  ${redis_user:=redis} \
-  ${redis_port:=6379} \
-  ${redis_bind_interface:="127.0.0.1"} \
-  ${redis_src_path:="${source_path}/${package}-${version}"} \
-  ${redis_config_file:="${redis_config_path}/redis.conf"} \
-  ${redis_log_file:="${redis_log_path}/redis.log"} \
-  ${redis_server_binary:="${redis_bin_path}/redis-server"} \
-  ${redis_cli_binary:="${redis_bin_path}/redis-cli"} \
-  ${redis_pid_file:="${redis_pid_path}/redis.pid"} \
-  ${redis_db_file:="${redis_db_path}/dump.rdb"} \
-  ${redis_lock_file:="${redis_lock_path}/redis.lock"}
-
-redis_paths=(
-  "${redis_bin_path}"
-  "${redis_config_path}"
-  "${redis_pid_path}"
-  "${redis_db_path}"
-  "${redis_lock_path}"
-  "${redis_log_path}"
-)
-
+  ${service_port:=6379} \
+  ${service_binary:="${service_bin_path}/redis-server"} \
+  ${service_cli_binary:="${service_bin_path}/redis-cli"} \
+  ${service_bind_interface:="127.0.0.1"} \

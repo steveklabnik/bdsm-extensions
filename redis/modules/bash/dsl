@@ -1,110 +1,22 @@
 #!/usr/bin/env bash
 
-setup_redis_user()
-{
-  if [[ $UID -eq 0 ]] ; then
-    (
-    case "$(uname)" in
-      "OpenBSD")
-        groupadd "$redis_user"
-        useradd -g "$redis_user" "$redis_user" -s /bin/bash
-        usermod -s /bin/bash "$redis_user"
-        ;;
-      "FreeBSD")
-        pw groupadd -q "$redis_user"
-        ;;
-      "Linux")
-        if [[ -f "/etc/SuSE-release" ]] ; then
-          groupadd "$redis_user"
-        else
-          groupadd -f "$redis_user"
-        fi
-        useradd -g "$redis_user" -s /bin/bash -d /var/lib/redis "$redis_user"
-        usermod -s /bin/bash "$redis_user"
-      ;;
-
-      "Darwin")
-        gid="501" #only gids > 500 show up in user preferences
-
-        #Find an open gid
-        while true; do
-          name=$(dscl . search /groups PrimaryGroupID $gid | cut -f1 -s)
-          if [ -z "$name" ] ; then
-            break
-          fi
-          gid=$[$gid +1]
-        done
-
-        #Create the group
-        dscl . -create "/Groups/$redis_user"
-        dscl . -create "/Groups/$redis_user" gid "$gid"
-        dscl . -create "/Users/${redis_user}" PrimaryGroupID "$gid" # UserShell /bin/bash
-      ;;
-      "SunOS")
-        groupadd "$redis_user"
-        useradd -g "$redis_user" -s /bin/bash -d /var/lib/redis "$redis_user"
-        usermod -s /bin/bash "$redis_user"
-        ;;
-    esac
-    ) || true # Ignore failures with this for now...
-
-  fi
-  return 0
-}
-
-create_redis_directories()
-{
-  local directory redis_path directories=("$@")
-
-  log "#creating paths for ${package_name} ${package_version}..."
-
-  ensure_paths_exist \
-    "${directories[@]}" "${redis_paths[@]}" "${install_path}"
-
-  chown_paths_recursively "${redis_user}:${redis_user}" \
-    "${directories[@]}" "${redis_paths[@]}"
-}
-
-install_init_script()
-{
-  log "#installing init script"
-
-  install_template "redis" to "${init_scripts_path}/redis"
-
-  ensure_files_are_executable "${init_scripts_path}/redis"
-
-  # Add to system startup
-  if [[ $UID -eq 0 ]] ; then
-    if command -v rc-update >/dev/null 2>&1 ; then
-      rc-update add redis default
-    elif command -v chkconfig >/dev/null 2>&1 ; then
-      chkconfig redis on
-    else
-      # Falling back on rc.local to start redis at system startup.
-      echo "${init_scripts_path}/redis start" >> /etc/rc.local
-    fi
-  fi
-
-  return 0
-}
-
 configure_redis()
 {
-  if [[ -s "${redis_config_file}" ]] ; then
-    log "${redis_config_file} already exists, not overwriting."
+  if [[ -s "${service_config_file}" ]] ; then
+    log "${service_config_file} already exists, not overwriting."
   else
-    log "#installing redis.conf file to ${redis_config_file}"
+    log "#installing redis.conf file to ${service_config_file}"
 
-    sed -e "s#pidfile .*\$#pidfile ${redis_pid_file}#" \
-        -e "s#logfile .*\$#logfile ${redis_log_file}#" \
-        -e "s#dir .*\$#dir ${redis_db_path}#" \
+    sed -e "s#pidfile .*\$#pidfile ${service_pid_file}#" \
+        -e "s#logfile .*\$#logfile ${service_log_file}#" \
+        -e "s#dir .*\$#dir ${service_db_path}#" \
         -e "s#^.*daemonize .*\$#daemonize yes#" \
-        -e "s#dbfilename .*\$#dbfilename ${redis_db_file}#" \
-        -e "s#port .*\$#port ${redis_port}#" \
-        -e "s#bind .*\$#bind ${redis_bind_interface}#" \
-      "${source_path}/${package_dir}/redis.conf" > "${redis_config_file}"
+        -e "s#dbfilename .*\$#dbfilename ${service_db_file}#" \
+        -e "s#port .*\$#port ${service_port}#" \
+        -e "s#bind .*\$#bind ${service_bind_interface}#" \
+      "${source_path}/${package_dir}/redis.conf" > "${service_config_file}"
 
-    chown -R $redis_user:$redis_user "${redis_config_file}"
+    chown -R $service_user:$service_user "${service_config_file}"
   fi
   return 0
 }
@@ -118,7 +30,8 @@ redis_install()
   _minor=${package_version%.*}
   _minor=${_minor#*.}
 
-  if (( _major >= 2 )) ; then
+  if (( _major >= 2 ))
+  then
     (( _major = 2 && _minor >= 2 )) || _source=""
   else
     _source=""
@@ -128,7 +41,8 @@ redis_install()
   ensure_paths_exist "${install_path}/bin"
 
   log "#installing ${package_name} ${package_version}...\n"
-  for file in redis-server redis-cli ; do
+  for file in redis-server redis-cli
+  do
     install -b "${_source}${file}" "${install_path}/bin/${file}" ||
       fail "${package_name} ${package_version} failed to install (specifically ${file}).\n"
   done
@@ -138,17 +52,17 @@ redis_status()
 {
   log "redis-server:"
 
-  if [[ -s "${redis_pid_file}" ]] ; then
+  if [[ -s "${service_pid_file}" ]] ; then
     log "  status: running"
-    log "  version: $("${init_scripts_path}/redis" info | head -1 | awk -F: '/redis_version/{print $2}')"
-    log "  pid: $(cat ${redis_pid_file})"
+    log "  version: $("${init_scripts_path}/redis" info | head -1 | awk -F: '/service_version/{print $2}')"
+    log "  pid: $(cat ${service_pid_file})"
   else
     log "  status: not running"
   fi
 
-  log "  port: $(awk '/^port/{print $2}' ${redis_config_file} || printf "6379")"
-  log "  pidfile: $(awk '/^pidfile/{print $2}' ${redis_config_file})"
-  log "  logfile: $(awk '/^logfile/{print $2}' ${redis_config_file})"
-  log "  dbfile: $(awk '/^dbfilename/{print $2}' ${redis_config_file})"
+  log "  port: $(awk '/^port/{print $2}' ${service_config_file} || printf "6379")"
+  log "  pidfile: $(awk '/^pidfile/{print $2}' ${service_config_file})"
+  log "  logfile: $(awk '/^logfile/{print $2}' ${service_config_file})"
+  log "  dbfile: $(awk '/^dbfilename/{print $2}' ${service_config_file})"
 }
 

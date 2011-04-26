@@ -1,17 +1,6 @@
 #!/usr/bin/env bash
 
-# TODO: Use package DSL module pieces instead of defining our own here..
-
 package_install
 
-# Post install configuration
-setup_redis_user
-
-create_redis_directories
-
-install_init_script
-
 configure_redis
-
-log "Installation of ${package_name} ${package_version} is complete."
 
