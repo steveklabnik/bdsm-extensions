@@ -26,7 +26,8 @@ configure_nginx()
 
   user_create_if_missing "nginx" with group "nginx"
 
-  if running_as_root ; then
+  if user_is_root
+  then
     directory_exists "/etc/nginx" ||
       link "${install_base_path}/active/nginx" "/etc/nginx"
 
@@ -34,5 +35,4 @@ configure_nginx()
   fi
 
   chown_paths_recursively "nginx:nginx" "${config_directories[@]}"
-
 }
