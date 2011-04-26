@@ -39,7 +39,7 @@ make rel
 riak_install
 # Now to install...
 
-ensure_user_exists "$package_user"
+user_create_if_missing "$package_user"
 
 riak_initdb
 

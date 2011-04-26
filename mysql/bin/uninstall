@@ -9,7 +9,7 @@ remove_files \
   /etc/ld.so.conf.d/mysql.conf \
   "${init_scripts_path}/mysql"
 
-delete_user "${package_user}"
+user_delete "${package_user}"
 
 if os_is_darwin ; then
   remove_files \

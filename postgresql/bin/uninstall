@@ -9,6 +9,6 @@ remove_files \
   /etc/ld.so.conf.d/postgresql.conf \
   "${init_scripts_path}/postgresql"
 
-delete_user "${package_user}"
+user_delete "${package_user}"
 
 log "Removal of ${package_name} complete."
