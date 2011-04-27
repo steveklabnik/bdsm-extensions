@@ -5,6 +5,7 @@ modules package service
 # Redis Configuration.
 : \
   ${service_port:=6379} \
-  ${service_binary:="${service_bin_path}/redis-server"} \
-  ${service_cli_binary:="${service_bin_path}/redis-cli"} \
   ${service_bind_interface:="127.0.0.1"} \
+
+service_binary="${service_bin_path}/redis-server"}
+service_cli_binary="${service_bin_path}/redis-cli"
