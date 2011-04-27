@@ -1,0 +1,3 @@
+version=1.12
+base_url=http://ftp.gnu.org/gnu/wget
+archive_format=tar.bz2
