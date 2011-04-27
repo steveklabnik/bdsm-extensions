@@ -1,2 +1,8 @@
 #!/usr/bin/env bash
 
+freetds_extract()
+{
+  package_extract
+
+  move_file "${package_name}-${package_version}"* to "${package_dir}"
+}
