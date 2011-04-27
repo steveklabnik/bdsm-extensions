@@ -9,3 +9,5 @@ modules package service
 
 service_binary="${service_bin_path}/redis-server"}
 service_cli_binary="${service_bin_path}/redis-cli"
+service_db_file="${service_db_path}/dump.rdb"
+
