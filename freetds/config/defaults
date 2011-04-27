@@ -1,0 +1,3 @@
+version=0.91rc
+base_url=ftp://ftp.ibiblio.org/pub/Linux/ALPHA/freetds/stable
+archive_format=tgz
