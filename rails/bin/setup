@@ -18,7 +18,7 @@ fetch_repository
 
 configure_rvm
 
-extension_action "bdsm" "deploy"
+extension_action "deploy" "deploy"
 
 bootstrap_gems
 
