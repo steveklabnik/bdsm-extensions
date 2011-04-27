@@ -5,7 +5,8 @@ modules package service
 package_definition \
   base_url "http://ftp9.us.postgresql.org/pub/mirrors/postgresql/source/v${package_version}"
 
-if running_as_root ; then
+if user_is_root
+then
   sudo=""
 
   read_default user prefix package
@@ -29,7 +30,8 @@ fi
 
 log_path="$data_path/log"
 
-if [[ "$action" = *install ]] ; then
+if [[ "$action" = *install ]]
+then
   configure_flags=(
     --prefix="${install_base_path}/${package_version}"
     --datadir="$data_path"
