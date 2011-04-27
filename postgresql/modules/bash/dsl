@@ -57,7 +57,7 @@ postgresql_initdb()
 
   if user_is_root
   then
-    run_as_user "${package_user}" "${command}"
+    user_run_as "${package_user}" "${command}"
   else
     "${command}"
   fi
