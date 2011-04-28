@@ -39,6 +39,11 @@ do
   if directory_exists "${prefix_path}/${_library}/active"
   then
     configure_flags+=( --with-${_library}="${prefix_path}/${_library}/active/lib" )
+  else
+    if [[ "$_library" = pcre ]]
+    then
+      configure_flags+=( --with-pcre )
+    fi
   fi
 done
 unset _library
