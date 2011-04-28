@@ -39,11 +39,6 @@ do
   if directory_exists "${prefix_path}/${library}/active"
   then
     configure_flags+=( --with-${library}="${prefix_path}/${library}/active/lib" )
-  else
-    if [[ ${library} != openssl ]]
-    then
-      configure_flags+=( --with-${library} )
-    fi
   fi
 done
 
