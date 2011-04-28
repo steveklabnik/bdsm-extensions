@@ -1,2 +1,6 @@
 #!/usr/bin/env bash
 
+openssl_configure()
+{
+  ./config --prefix="${install_path}" zlib shared
+}
