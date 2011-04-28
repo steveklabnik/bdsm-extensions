@@ -1,5 +1,17 @@
 #!/usr/bin/env bash
 
+nginx_configure()
+{
+  if variable_is_nonempty CFLAGS
+  then # Adjust for gcc 4.6 strictness.
+    export CFLAGS="-Wunused-but-set-variable ${CFLAGS}"
+  else
+    export CFLAGS="-Wunused-but-set-variable"
+  fi
+
+  package_configure
+}
+
 configure_nginx()
 {
   ensure_paths_exist "${config_directories[@]}"
