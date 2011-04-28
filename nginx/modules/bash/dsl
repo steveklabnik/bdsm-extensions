@@ -2,17 +2,14 @@
 
 nginx_configure()
 {
-  if variable_is_nonempty CFLAGS
-  then # Adjust for gcc 4.6 strictness.
-    export CFLAGS="-Wunused-but-set-variable ${CFLAGS}"
-  else
-    export CFLAGS="-Wunused-but-set-variable"
-  fi
-  if command_exists gcc
-  then # Nginx is c, not c++
-    export CC="gcc"
-  else
-    export CC="cc"
+  if gcc --version | grep '4.6' > /dev/null 2>&1
+  then
+    if variable_is_nonempty CFLAGS
+    then # Adjust for gcc 4.6 strictness.
+      export CFLAGS="-Wunused-but-set-variable ${CFLAGS}"
+    else
+      export CFLAGS="-Wunused-but-set-variable"
+    fi
   fi
 
   package_configure
