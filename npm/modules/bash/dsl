@@ -5,7 +5,10 @@ npm_extract()
   package_extract
 
   remove_paths "${package_dir}"
-  move_directory "package" to "${package_dir}"
+  if directory_exists "package"
+  then
+    move_directory "package" to "${package_dir}"
+  fi
 }
 
 npm_install()
