@@ -36,6 +36,13 @@ configure_flags=(--prefix="$install_path"
 
 if directory_exists "${prefix_path}/pcre/active"
 then
+  configure_flags+=( --with-openssl="${prefix_path}/openssl/active/lib" )
+else
+  configure_flags+=( --with-openssl="/usr/lib" )
+fi
+
+if directory_exists "${prefix_path}/pcre/active"
+then
   configure_flags+=( --with-pcre="${prefix_path}/pcre/active/lib" )
 else
   configure_flags+=( --with-pcre )
