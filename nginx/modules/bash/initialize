@@ -40,7 +40,10 @@ do
   then
     configure_flags+=( --with-${library}="${prefix_path}/${library}/active/lib" )
   else
-    configure_flags+=( --with-${library}="/usr/lib" )
+    if [[ ${library} != openssl ]]
+    then
+      configure_flags+=( --with-${library} )
+    fi
   fi
 done
 
