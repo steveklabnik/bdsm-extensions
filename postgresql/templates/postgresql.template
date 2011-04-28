@@ -25,7 +25,7 @@ log() { printf "$*\n" ; }
 
 fail() { log "ERROR: $*" ; exit 1 ; }
 
-run_as_user()
+user_run_as()
 {
   su "${user}" -c "$*"
 }
@@ -35,21 +35,21 @@ postgresql_start()
 {
   log "Starting PostgreSQL Server"
 
-  run_as_user "$daemon -D '$data_path' >> '$log_file' 2>&1 &"
+  user_run_as "$daemon -D '$data_path' >> '$log_file' 2>&1 &"
 }
 
 postgresql_stop()
 {
   log "Stopping PostgreSQL Server"
 
-  run_as_user "$control stop -D '$data_path' -s -m fast"
+  user_run_as "$control stop -D '$data_path' -s -m fast"
 }
 
 postgresql_restart()
 {
   log "Restarting PostgreSQL Server"
 
-  run_as_user "$control stop -D '$data_path' -s -m fast -w" # Notice the '-w' wait flag.
+  user_run_as "$control stop -D '$data_path' -s -m fast -w" # Notice the '-w' wait flag.
 
   postgresql_start
 }
@@ -58,12 +58,12 @@ postgresql_reload()
 {
   log "Reload PostgreSQL Server configuration"
 
-  run_as_user "$control reload -D '$data_path' -s"
+  user_run_as "$control reload -D '$data_path' -s"
 }
 
 postgresql_status()
 {
-  run_as_user "$control status -D '$data_path'"
+  user_run_as "$control status -D '$data_path'"
 }
 
 usage()

@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+freetds_extract()
+{
+  local _directory
+
+  package_extract
+
+  _directory=$(
+    find -mindepth 1 -maxdepth 1 -iname "${package_name}-${package_version}*" -type d
+  )
+
+  if variable_is_nonempty _directory
+  then
+    move_directory "${_directory}" to "${package_dir}"
+  fi
+}

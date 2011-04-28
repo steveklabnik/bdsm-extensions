@@ -9,7 +9,7 @@ configure_redis()
 
     sed -e "s#pidfile .*\$#pidfile ${service_pid_file}#" \
         -e "s#logfile .*\$#logfile ${service_log_file}#" \
-        -e "s#dir .*\$#dir ${service_db_path}#" \
+        -e "s#dir .*\$#dir ${service_db_path}/active#" \
         -e "s#^.*daemonize .*\$#daemonize yes#" \
         -e "s#dbfilename .*\$#dbfilename ${service_db_file}#" \
         -e "s#port .*\$#port ${service_port}#" \
@@ -52,7 +52,8 @@ redis_status()
 {
   log "redis-server:"
 
-  if [[ -s "${service_pid_file}" ]] ; then
+  if (( service_pid > 0 ))
+  then
     log "  status: running"
     log "  version: $("${init_scripts_path}/redis" info | head -1 | awk -F: '/service_version/{print $2}')"
     log "  pid: $(cat ${service_pid_file})"
@@ -60,7 +61,7 @@ redis_status()
     log "  status: not running"
   fi
 
-  log "  port: $(awk '/^port/{print $2}' ${service_config_file} || printf "6379")"
+  log "  port: $(awk '/^port/{print $2}' "${service_config_file}" 2>/dev/null || printf "6379")"
   log "  pidfile: $(awk '/^pidfile/{print $2}' ${service_config_file})"
   log "  logfile: $(awk '/^logfile/{print $2}' ${service_config_file})"
   log "  dbfile: $(awk '/^dbfilename/{print $2}' ${service_config_file})"

@@ -52,14 +52,19 @@ postgresql_initdb()
   log "Initializing postgresql data directory in $data_path"
   ensure_paths_exist "${data_path}"
   chown_paths_recursively "$package_user:$package_user" "${data_path}"
+
   command="'$install_path/bin/initdb' --pgdata='${data_path}/data' --encoding=utf8 --username=$package_user"
 
-  running_as_root \
-    && { run_as_user "${package_user}" "${command}" ; } \
-    || { "${command}"; }
+  if user_is_root
+  then
+    user_run_as "${package_user}" "${command}"
+  else
+    "${command}"
+  fi
 
   chown_paths_recursively "$package_user:$package_user" "${data_path}"
   chmod_paths_recursively 0700 "${data_path}"
+
   postgresql_conf
 }
 
@@ -99,10 +104,15 @@ postgresql_init_script()
 
 postgresql_conf_d()
 {
-  if running_as_root ; then
+  if user_is_root
+  then
     ensure_paths_exist "/etc/conf.d"
+
     log "Installing Postgresql conf.d script"
-    install_template "postgresql.conf.d" to "/etc/conf.d/postgresql.conf" mode 0644
+
+    install_template "postgresql.conf.d" \
+      to "/etc/conf.d/postgresql.conf" \
+      mode 0644
   fi
 }
 
