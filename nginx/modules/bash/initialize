@@ -38,9 +38,9 @@ for library in pcre openssl zlib
 do
   if directory_exists "${prefix_path}/${library}/active"
   then
-    configure_flags+=( --with-${library/open}="${prefix_path}/${library}/active/lib" )
+    configure_flags+=( --with-${library}="${prefix_path}/${library}/active/lib" )
   else
-    configure_flags+=( --with-${library/open}="/usr/lib" )
+    configure_flags+=( --with-${library}="/usr/lib" )
   fi
 done
 
