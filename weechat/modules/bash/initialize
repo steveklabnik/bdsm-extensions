@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+modules package
+
+dependencies=(cmake gnutls ncursesw)
+
+NIY
