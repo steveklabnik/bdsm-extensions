@@ -2,8 +2,16 @@
 
 freetds_extract()
 {
+  local _directory
+
   package_extract
 
-  move_directory "${package_name}-${package_version}"* \
-    to "${package_dir}"
+  _directory=$(
+    find -mindepth 1 -maxdepth 1 -iname "${package_name}-${package_version}*" -type d
+  )
+
+  if variable_is_nonempty _directory
+  then
+    move_directory "${_directory}" to "${package_dir}"
+  fi
 }
