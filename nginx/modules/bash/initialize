@@ -36,7 +36,7 @@ configure_flags=(--prefix="$install_path"
 
 if directory_exists "${prefix_path}/pcre/active"
 then
-  configure_flags+=( --with-pcre="${prefix_path}/pcre/active" )
+  configure_flags+=( --with-pcre="${prefix_path}/pcre/active/lib" )
 else
   configure_flags+=( --with-pcre )
 fi
