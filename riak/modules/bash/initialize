@@ -10,8 +10,8 @@ package_definition \
 
 dependencies=( ncurses openssl )
 
-if running_as_root ; then
-
+if user_is_root
+then
   data_path="/var/db/${package_name}/${package_version}"
 
   sudo=""

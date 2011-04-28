@@ -40,8 +40,9 @@ mysql_initdb()
   # --srcdir=\"${source_path}/${package_name}-${package_version}\"
   export PATH="${install_path}/bin:$PATH"
 
-  if running_as_root ; then
-    run_as_user "${package_user}" "${command}"
+  if user_is_root
+  then
+    user_run_as "${package_user}" "${command}"
   else
     "${command}"
   fi

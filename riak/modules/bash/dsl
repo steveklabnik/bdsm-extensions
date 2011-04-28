@@ -37,8 +37,9 @@ riak_initdb()
 
   export PATH="${install_path}/bin:$PATH"
 
-  if running_as_root ; then
-    run_as_user "${package_user}" "${command}"
+  if user_is_root
+  then
+    user_run_as "${package_user}" "${command}"
   else
     "${command}"
   fi
@@ -97,24 +98,24 @@ riak_init_script()
 
 riak_profile_d()
 {
-  if running_as_root && os_is_linux ; then
+  if user_is_root && os_is_linux
+  then
     log "Installing ${package_name} profile.d script"
 
     install_template "${package_name}.sh" \
-      to "/etc/profile.d/${package_name}.sh"
-
-    chmod_paths_recursively 0755 "/etc/profile.d/${package_name}.sh"
+      to "/etc/profile.d/${package_name}.sh" \
+      mode 0755
   fi
 }
 
 riak_conf_d()
 {
-  if running_as_root && os_is_linux ; then
+  if user_is_root && os_is_linux
+  then
     log "Installing ${package_name} conf.d script"
 
     install_template "${package_name}.conf.d" \
-      to "/etc/conf.d/${package_name}.conf"
-
-    chmod_paths_recursively 0644 "/etc/conf.d/${package_name}.conf"
+      to "/etc/conf.d/${package_name}.conf" \
+      mode 0644
   fi
 }
