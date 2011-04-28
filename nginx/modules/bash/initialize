@@ -4,8 +4,6 @@ modules package service
 
 dependencies=( pcre )
 
-export PATH="/sbin:/usr/sbin:/usr/local/sbin:/opt/sbin:/opt/local:sbin:$PATH"
-
 init_scripts_path=$(init_scripts_path)
 
 
