@@ -4,5 +4,6 @@ freetds_extract()
 {
   package_extract
 
-  move_file "${package_name}-${package_version}"* to "${package_dir}"
+  move_directory "${package_name}-${package_version}"* \
+    to "${package_dir}"
 }
