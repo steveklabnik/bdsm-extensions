@@ -8,6 +8,12 @@ nginx_configure()
   else
     export CFLAGS="-Wunused-but-set-variable"
   fi
+  if command_exists gcc
+  then # Nginx is c, not c++
+    export CC="gcc"
+  else
+    export CC="cc"
+  fi
 
   package_configure
 }
