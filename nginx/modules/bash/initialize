@@ -2,7 +2,7 @@
 
 modules package service
 
-dependencies=( pcre )
+dependencies=( zlib pcre openssl)
 
 init_scripts_path=$(init_scripts_path)
 
@@ -28,25 +28,21 @@ configure_flags=(--prefix="$install_path"
   --http-fastcgi-temp-path="$nginx_spool_path/fastcgi_temp"
   --http-log-path="$nginx_log_path/access.log"
   --error-log-path="$nginx_log_path/error.log"
-  --with-imap
-  --with-imap_ssl_module
   --with-http_ssl_module
   --with-http_stub_status_module
 )
+# --with-imap
+# --with-imap_ssl_module
 
-if directory_exists "${prefix_path}/pcre/active"
-then
-  configure_flags+=( --with-openssl="${prefix_path}/openssl/active/lib" )
-else
-  configure_flags+=( --with-openssl="/usr/lib" )
-fi
-
-if directory_exists "${prefix_path}/pcre/active"
-then
-  configure_flags+=( --with-pcre="${prefix_path}/pcre/active/lib" )
-else
-  configure_flags+=( --with-pcre )
-fi
+for library in pcre openssl zlib
+do
+  if directory_exists "${prefix_path}/${library}/active"
+  then
+    configure_flags+=( --with-${library}="${prefix_path}/${library}/active/lib" )
+  else
+    configure_flags+=( --with-${library} )
+  fi
+done
 
 config_directories=(
   "${nginx_spool_path}/client_body_temp"
