@@ -2,3 +2,5 @@
 
 modules package
 
+package_definition \
+  file "${package_name}-${package_version}rc.${archive_format}"
