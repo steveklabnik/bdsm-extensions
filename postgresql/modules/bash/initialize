@@ -22,8 +22,9 @@ then
   fi
 else
   sudo="sudo"
-  { : "${package_user:=$USER}" "${prefix_path:="$HOME/.bdsm"}"; }
-  { : "${profiles:=("$HOME/.bash_profile" "$HOME/.bashrc")}"; }
+  true \
+   "${package_user:=$USER}" "${prefix_path:="$HOME/.bdsm"}" \
+   "${profiles:=("$HOME/.bash_profile" "$HOME/.bashrc")}"
 fi
 
 [[ "${package_user}" = "postgresql" ]] && package_user="postgres"
