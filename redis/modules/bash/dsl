@@ -9,7 +9,7 @@ configure_redis()
 
     sed -e "s#pidfile .*\$#pidfile ${service_pid_file}#" \
         -e "s#logfile .*\$#logfile ${service_log_file}#" \
-        -e "s#dir .*\$#dir ${service_db_path}#" \
+        -e "s#dir .*\$#dir ${service_db_path}/active#" \
         -e "s#^.*daemonize .*\$#daemonize yes#" \
         -e "s#dbfilename .*\$#dbfilename ${service_db_file}#" \
         -e "s#port .*\$#port ${service_port}#" \
