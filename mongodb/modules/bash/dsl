@@ -12,9 +12,17 @@ mongodb_build()
 
 mongodb_install()
 {
+  local file files name
+
   ensure_paths_exist "${install_path}"
-  files=$(find "${source_path}/${package_dir}/bin/" -type f)
-  copy_files_to "${install_path}/bin" "${files[@]}"
+
+  files=$(find "${source_path}/${package_dir}/bin" -mindepth 1 -maxdepth 1 -type f)
+
+  for file in "${files[@]}"
+  do
+    name=${file//*\/}
+    copy_file "${file}" to "${install_path}/bin/${name}" mode 0755
+  done
 }
 
 mongodb_postinstall()
