@@ -1,6 +1,11 @@
 #!/usr/bin/env bash
 
-mongodb_compile()
+mongodb_configure()
+{
+  true # no-op
+}
+
+mongodb_build()
 {
   true # no-op
 }
