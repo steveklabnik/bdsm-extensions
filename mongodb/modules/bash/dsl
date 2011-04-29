@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
 
+mongodb_compile()
+{
+  true # no-op
+}
+
 mongodb_install()
 {
   ensure_paths_exist "${install_path}"
