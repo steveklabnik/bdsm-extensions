@@ -2,13 +2,13 @@
 
 description "Extension for managing redis (http://wiki.redis.org/Main)."
 
-actions "  install  - Install redis on the system.
-  setup    - Setup redis configuration.
-  start    - Startup redis.
-  stop     - Stop redis.
-  restart  - Restart redis.
-  info     - Display redis server INFO
-  help     - Display this help text.
-"
+action "install" "Installs ${package_name} ${package_version}."
+action "setup" "Setup redis configuration."
+action "start" "Startup redis."
+action "stop" "Stop redis."
+action "restart" "Restart redis."
+action "info" "Display redis server INFO"
+action "help" "Display this help text."
 
 show_help usage
+

@@ -1,9 +1,8 @@
 #!/usr/bin/env bash
 
-
 description "${extension} BDSM extension."
 
-actions "install  - Install the $extension gem.
-  setup   - setup ~/.gitconfig and ~/.gitignore files"
+action "install" "Installs ${package_name} ${package_version}."
+action "setup" "Sets up both the ~/.gitconfig and ~/.gitignore files."
 
 show_help usage

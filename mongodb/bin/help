@@ -1,13 +1,12 @@
 #!/usr/bin/env bash
 
-
 description "${extension} BDSM extension."
 
-actions "install  - Install the $extension gem.
-  setup    - Setup and Configure $extension.
-  start    - Start extension.
-  stop     - Stop extension.
-  restart  - Restart extension.
-  status   - Display extension status."
+action "install" "Installs ${package_name} ${package_version}."
+action "setup" "Setup and Configure $extension."
+action "start" "Start extension."
+action "stop" "Stop extension."
+action "restart" "Restart extension."
+action "status" "Display extension status."
 
 show_help usage

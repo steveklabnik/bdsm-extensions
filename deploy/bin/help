@@ -1,33 +1,22 @@
 #!/usr/bin/env bash
 
-description()
-{
-  log "Deployment management extension."
-}
+description "Deployment management extension."
 
-actions()
-{
-  log "
-  deploy   - Deploy application from ${shared_path}
-  rollback - Reset ~/current to the most recent previous release.
-  help     - Display this help text.
-  "
-}
+note "If any one of the deployment steps fail, then the deploy should fail as well.  If this is not the case please let me know right away and provide a gist of 'bdsm --trace deploy' so that I can inspect where the failure is occurring. "
 
-usage() {
-  log "
-Description
+resource "http://extensions.beginrescueend.com/deploy/"
+resource "https://www.pivotaltracker.com/projects/26822"
 
-  BDSM $(description)
+action "deploy" \
+  "Deploy application from ${shared_path}"
 
-Usage
+action "rollback" \
+  "Reset ~/current to the most recent previous release."
 
-  bdsm deploy <action> <<arguments>>
+action "help" \
+  "Display this help text."
 
-Actions
-
-  $(actions)
-
+description "
 Deployment Steps:
 
 1. update_repository
@@ -53,39 +42,13 @@ Hooks
   If you want to execute a task before the code is moved in place but after
     everything is setup in the staging area, use 'before_replace_current' hook.
 
-
-
-Notes
-
-  If any one of the deployment steps fail, then the deploy should fail as well.
-    If this is not the case please let me know right away and provide a gist of
-    'bdsm --trace deploy' so that I can inspect where the failure is occurring.
-
 Prerequisites
 
    - git
    - curl
    - rsync
    - subversion / mercurial (if the application's repository uses them).
-
-Resources
-
-  http://extensions.beginrescueend.com/deploy/
-  https://www.pivotaltracker.com/projects/26822
-
 "
-}
 
-command="usage" # Default
-while [[ $# -gt 0 ]] ; do
-  token="$1" ; shift
-  case "$token" in
-    description) command="description" ;;
-    actions)     command="actions"     ;;
-    *)           command="usage"       ;;
-  esac
-done
+show_help usage
 
-$command
-
-exit $?

@@ -1,16 +1,14 @@
 #!/usr/bin/env bash
 
-
 description "Extension for managing Nginx (http://wiki.nginx.org/Main)."
 
-actions "
-  install  - Install nginx on the system.
-  setup    - Setup Nginx configuration.
-  start    - Startup nginx.
-  stop     - Stop nginx.
-  restart  - Restart nginx.
-  server  <project_name>  - Add and enable a new server(s)
-  enable  <project_name>  - Enable project server config.
-  disable <project_name>  - Disable project server config."
+action "install" "Installs ${package_name} ${package_version}."
+action "setup" "Setup Nginx configuration."
+action "start" "Startup nginx."
+action "stop" "Stop nginx."
+action "restart" "Restart nginx."
+action "server  <project_name>" "Add and enable a new server(s)"
+action "enable  <project_name>" "Enable project server config."
+action "disable <project_name>" "Disable project server config."
 
 show_help usage

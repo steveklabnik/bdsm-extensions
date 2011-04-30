@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+
+base_url="http://pkgconfig.freedesktop.org/releases" ; package="pkg-config" ; version="0.23" ; package_install
+
+base_url="ftp://ftp.simplesystems.org/pub/png/src"
+package="libpng"   ; version="1.2.41" ; package_install
+
+base_url="http://oss.oetiker.ch/rrdtool/pub/libs"
+
+package="zlib"     ; version="1.2.3" ; package_install
+
+package="freetype" ; version="2.3.5"  ; package_install
+
+package="libxml2"  ; version="2.6.32"  ; package_install
+
+base_url="http://fontconfig.org/release/"
+configure_args="--with-freetype-config=$prefix_path/bin/freetype-config"
+package="fontconfig" ; version="2.8.0" ; package_install
+
+base_url="http://oss.oetiker.ch/rrdtool/pub/libs"
+package="pixman"     ; version="0.10.0"  ; package_install
+
+configure_args="--enable-xlib=no --enable-xlib-render=no --enable-win32=no"
+package="cairo"      ; version="1.6.4"  ; package_install
+
+package="glib"      ; version="2.15.4"  ; package_install
+
+configure_args="--without-x"
+package="pango" ; version="1.21.1"  ; package_install
+
+configure_args="--disable-tcl --disable-python"
+package="rrdtool" ; version="1.4.2"  ; package_install
+package="cacti"   ; version="0.8.7e" ; package_install
+
