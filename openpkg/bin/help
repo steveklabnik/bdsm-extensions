@@ -1,3 +1,4 @@
 #!/usr/bin/env bash
 
+action "install" "Installs ${package_name} ${package_version}."
 

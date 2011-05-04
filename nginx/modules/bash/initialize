@@ -34,18 +34,19 @@ configure_flags=(--prefix="$install_path"
 # --with-imap
 # --with-imap_ssl_module
 
-for library in pcre openssl zlib
+for _library in pcre openssl zlib
 do
-  if directory_exists "${prefix_path}/${library}/active"
+  if directory_exists "${prefix_path}/${_library}/active"
   then
-    configure_flags+=( --with-${library}="${prefix_path}/${library}/active/lib" )
+    configure_flags+=( --with-${_library}="${prefix_path}/${_library}/active/lib" )
   else
-    if [[ ${library} != openssl ]]
+    if [[ "$_library" = pcre ]]
     then
-      configure_flags+=( --with-${library} )
+      configure_flags+=( --with-pcre )
     fi
   fi
 done
+unset _library
 
 config_directories=(
   "${nginx_spool_path}/client_body_temp"

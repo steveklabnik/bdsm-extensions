@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+# chkconfig: 345 85 15
+# description: Manages the nginx webserver
+# processname: nginx
 
 # Author: Wayne E. Seguin
 #         wayneeseguin@gmail.com

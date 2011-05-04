@@ -2,6 +2,6 @@
 
 description "${extension} BDSM extension."
 
-actions "info  - Display system information summary."
+action "info" "Display system information summary."
 
 show_help usage

@@ -2,5 +2,5 @@
 
 openssl_configure()
 {
-  ./config --prefix="${install_path}" zlib shared
+  ./config --prefix="${install_path}" zlib shared > configure.log 2>&1
 }

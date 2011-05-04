@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+export CFLAGS="-O3 -fPIC"
+
+cacti_install()
+{
+  prefix_path="${prefix_path:-/usr/local/src}"
+  set -x
+  echo "Installing $package $version to $prefix_path"
+  mkdir -p $prefix_path
+  pushd $prefix_path 2>/dev/null
+  wget "${base_url}/${package}-${version}.tar.gz" && tar zxf "${package}-${version}.tar.gz" && cd "${package}-${version}" && ./configure --prefix=/usr/local $configure_args && make && make install
+  popd $prefix_path 2>/dev/null
+  unset configure_args
+  set +x
+}
+

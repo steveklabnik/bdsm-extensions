@@ -1,15 +1,12 @@
 #!/usr/bin/env bash
 
-echo -e "
-Usage
-  $0 {install,setup,start,stop,restart,status,help}
-Actions
-  install  - Install the unicorn gem.
-  setup    - Setup the unicorn config file with a template in $release_path/config/
-  start    - Start service.
-  stop     - Stop service.
-  restart  - Restart service.
-  status   - Display service status.
-  help     - Display this help text.
-"
-exit $?
+action "install" "Installs ${package_name} ${package_version}."
+action "setup" "Setup the unicorn config file with a template in $release_path/config/"
+action "start" "Start service."
+action "stop" "Stop service."
+action "restart" "Restart service."
+action "status" "Display service status."
+action "help" "Display this help text."
+
+show_help usage
+

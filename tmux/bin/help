@@ -2,5 +2,7 @@
 
 description "${extension} BDSM extension."
 
-actions "install  - Install ${package_name} ${package_version}.
-  setup   - setup ${extension} configuration files"
+action "install" "Installs ${package_name} ${package_version}."
+action "setup" "setup ${extension} configuration files"
+
+show_help usage
