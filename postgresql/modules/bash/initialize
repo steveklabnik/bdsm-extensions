@@ -23,9 +23,9 @@ then
   fi
 else
   sudo="sudo"
-  package_user=$USER
+  package_user="$USER"
   prefix_path="$HOME/.bdsm"
-  profiles:=("$HOME/.bash_profile" "$HOME/.bashrc")
+  profiles=("$HOME/.bash_profile" "$HOME/.bashrc")
 fi
 
 if [[ "${package_user}" = "postgresql" || -z ${package_user} ]]
