@@ -11,24 +11,16 @@ then
 
   read_default user prefix package
   service_user="$_package_user"
-
-  if [[ -d /etc/profile.d ]] ; then
-    profiles=(/etc/profile.d/postgresql.sh)
-  else
-    if [[ -f /etc/bash.bashrc ]] ; then
-      profiles=(/etc/bash.bashrc)
-    else
-      profiles=(/etc/bashrc)
-    fi
-  fi
 else
   sudo="sudo"
-  true \
-   "${package_user:=$USER}" "${prefix_path:="$HOME/.bdsm"}" \
-   "${profiles:=("$HOME/.bash_profile" "$HOME/.bashrc")}"
+  package_user="$USER"
+  prefix_path="$HOME/.bdsm"
 fi
 
-[[ "${package_user}" = "postgresql" ]] && package_user="postgres"
+if [[ "${package_user}" = "postgresql" || -z ${package_user} ]]
+then
+  package_user="postgres"
+fi
 
 log_path="$data_path/log"
 
@@ -41,7 +33,10 @@ then
     --enable-shared
   )
 
-  os_is_darwin && configure_flags[${#configure_flags[@]}]="--with-bonjour"
+  if os_is_darwin
+  then
+    configure_flags[${#configure_flags[@]}]="--with-bonjour"
+  fi
 
   export CFLAGS='-O2'
 fi
