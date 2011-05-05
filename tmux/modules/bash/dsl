@@ -3,8 +3,8 @@
 tmux_configure()
 {
   # Ensure that libevent is in the search paths.
-  export CFLAGS="-I${prefix_path}/libevent/active/include"
-  export LDFLAGS="-L${prefix_path}/libevent/active/lib"
+  export CFLAGS="-I${active_path}/include"
+  export LDFLAGS="-L${active_path}/lib"
 
   package_configure
 }
