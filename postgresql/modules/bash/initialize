@@ -44,7 +44,10 @@ then
     --enable-shared
   )
 
-  os_is_darwin && configure_flags[${#configure_flags[@]}]="--with-bonjour"
+  if os_is_darwin
+  then
+    configure_flags[${#configure_flags[@]}]="--with-bonjour"
+  fi
 
   export CFLAGS='-O2'
 fi
