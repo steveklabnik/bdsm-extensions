@@ -11,21 +11,10 @@ then
 
   read_default user prefix package
   service_user="$_package_user"
-
-  if [[ -d /etc/profile.d ]] ; then
-    profiles=(/etc/profile.d/postgresql.sh)
-  else
-    if [[ -f /etc/bash.bashrc ]] ; then
-      profiles=(/etc/bash.bashrc)
-    else
-      profiles=(/etc/bashrc)
-    fi
-  fi
 else
   sudo="sudo"
   package_user="$USER"
   prefix_path="$HOME/.bdsm"
-  profiles=("$HOME/.bash_profile" "$HOME/.bashrc")
 fi
 
 if [[ "${package_user}" = "postgresql" || -z ${package_user} ]]
