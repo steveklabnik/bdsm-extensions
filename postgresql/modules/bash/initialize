@@ -5,41 +5,27 @@ modules package service
 package_definition \
   base_url "http://ftp9.us.postgresql.org/pub/mirrors/postgresql/source/v${package_version}"
 
+: \
+  ${service_port:=5432} \
+  ${service_bind_interface:="127.0.0.1"}
+
+service_binary="${service_bin_path}/pg_ctl"
+service_cli_binary="${service_bin_path}/psql"
+service_flags+=( -D "$data_path" -s )
+service_stop_flags+=( -m fast -w )
+
+export PGDATA="${service_db_path}"
+
 if user_is_root
 then
-  sudo=""
-
   read_default user prefix package
-  service_user="$_package_user"
+  if [[ "${package_user}" = "postgresql" || -z ${package_user} ]]
+  then
+    package_user="postgres"
+  fi
 else
-  sudo="sudo"
   package_user="$USER"
   prefix_path="$HOME/.bdsm"
 fi
 
-if [[ "${package_user}" = "postgresql" || -z ${package_user} ]]
-then
-  package_user="postgres"
-fi
-
-log_path="$data_path/log"
-
-if [[ "$action" = *install ]]
-then
-  configure_flags=(
-    --prefix="${install_base_path}/${package_version}"
-    --datadir="$data_path"
-    --with-openssl
-    --enable-shared
-  )
-
-  if os_is_darwin
-  then
-    configure_flags[${#configure_flags[@]}]="--with-bonjour"
-  fi
-
-  export CFLAGS='-O2'
-fi
-
-timestamp="$(date +"%Y-%m-%dT%H:%M")"
-
+service_user="$package_user"

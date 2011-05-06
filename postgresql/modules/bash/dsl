@@ -116,3 +116,38 @@ postgresql_conf_d()
   fi
 }
 
+
+postgresql_preconfigure()
+{
+  if [[ "$action" = *install ]]
+  then
+    configure_flags=(
+      --prefix="${install_base_path}/${package_version}"
+      --datadir="$data_path"
+      --with-openssl
+      --enable-shared
+    )
+
+    if os_is_darwin
+    then
+      configure_flags[${#configure_flags[@]}]="--with-bonjour"
+    fi
+
+    export CFLAGS='-O2'
+  fi
+}
+
+# Postgresql control functions.
+#postgresql_start()
+#{
+#  log "Starting PostgreSQL Server"
+#
+#  user_run_as "${service_user}" "$daemon -D '$data_path' >> '$log_file' 2>&1 &"
+#}
+
+postgresql_reload()
+{
+  log "Reload PostgreSQL Server configuration"
+
+  user_run_as "${service_user}" "$control reload -D '$data_path' -s"
+}

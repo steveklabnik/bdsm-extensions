@@ -17,55 +17,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-#
-# Function Definitions
-#
-# Helper functions, for more readable maintainable code
-log() { printf "$*\n" ; }
-
-fail() { log "ERROR: $*" ; exit 1 ; }
-
-user_run_as()
-{
-  su "${user}" -c "$*"
-}
-
-# Postgresql control functions.
-postgresql_start()
-{
-  log "Starting PostgreSQL Server"
-
-  user_run_as "$daemon -D '$data_path' >> '$log_file' 2>&1 &"
-}
-
-postgresql_stop()
-{
-  log "Stopping PostgreSQL Server"
-
-  user_run_as "$control stop -D '$data_path' -s -m fast"
-}
-
-postgresql_restart()
-{
-  log "Restarting PostgreSQL Server"
-
-  user_run_as "$control stop -D '$data_path' -s -m fast -w" # Notice the '-w' wait flag.
-
-  postgresql_start
-}
-
-postgresql_reload()
-{
-  log "Reload PostgreSQL Server configuration"
-
-  user_run_as "$control reload -D '$data_path' -s"
-}
-
-postgresql_status()
-{
-  user_run_as "$control status -D '$data_path'"
-}
-
 usage()
 {
   log "
@@ -88,7 +39,10 @@ Actions:
 #
 
 # Load settings from postgresql.conf
-[[ -s /etc/conf.d/postgresql.conf ]] && source /etc/conf.d/postgresql.conf
+if [[ -s /etc/conf.d/postgresql.conf ]]
+then
+  source /etc/conf.d/postgresql.conf
+fi
 
 # Ensure defaults are set.
 true \
