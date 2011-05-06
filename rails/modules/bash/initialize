@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 
-modules templates system project rvm
+modules project rvm
 
-[[ "$action" = "help" ]] || user_must_not_be_root # Sanity check
+if [[ "$action" != "help" ]]
+then # Sanity check
+  user_must_not_be_root
+fi
 
