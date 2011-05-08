@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+modules system defaults
+
+if ! os_is_darwin
+then
+  error "${extension} may only be run on OSX"
+fi
+
+project_settings
+

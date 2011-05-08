@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+# TODO: Specify validate target from cli params, default build full
+

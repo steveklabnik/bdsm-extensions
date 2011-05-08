@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+# TODO: Specify build target from cli params, default build full
+build_full
+

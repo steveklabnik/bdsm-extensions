@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+description "${extension} BDSM extension."
+
+actions "setup" "Isetup iOS project development defaults."
+actions "build app" "Build the application"
+actions "build ota_plist" "Build ota_plist for the project"
+actions "describe sdks" "Describe available sdks"
+actions "describe workspace" "Describe project workspace"
+actions "sign" "Sign the application"
+actions "validate" "Validate the keychain"
+actions "verify" "Verify the application"
+
+show_help usage
+

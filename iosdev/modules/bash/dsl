@@ -1,0 +1,174 @@
+#!/usr/bin/env bash
+
+#!/bin/bash
+
+# command line OTA distribution references and examples
+# http://nachbaur.com/blog/how-to-automate-your-iphone-app-builds-with-hudson
+# http://nachbaur.com/blog/building-ios-apps-for-over-the-air-adhoc-distribution
+# http://blog.octo.com/en/automating-over-the-air-deployment-for-iphone/
+# http://www.neat.io/posts/2010/10/27/automated-ota-ios-app-distribution.html
+
+project_settings()
+{
+  # TODO: Pass in project fundamentals on command line and parse based on this.
+
+  #extract settings from the Info.plist file
+  short_version_string=$(defaults read "$info_plist" CFBundleShortVersionString)
+  bundle_identifier=$(defaults read "$info_plist" CFBundleIdentifier)
+  workspace="ProjectName.xcworkspace"
+  scheme="Ad Hoc"
+  mobileprovision="$project_dir/ad_hoc/ProjectName_Acceptance_Ad_Hoc.mobileprovision"
+  provisioning_profile="iPhone Distribution: Company, LLC"
+  info_plist="$project_dir/ProjectName/ProjectName/ProjectName-Info.plist"
+  info_plist=$(ls $info_plist | sed -e 's/\.plist//')
+}
+
+validate_keychain()
+{
+  # unlock the keychain containing the provisioning profile's private key and set it as the default keychain
+  keychain="login"
+  keychain_password="keychain password"
+  security unlock-keychain -p "$keychain_password" "~/Library/Keychains/$keychain.keychain"
+  security default-keychain -s "~/Library/Keychains/$keychain.keychain"
+
+  log "Available provisioning profiles:"
+  security find-identity -p codesigning -v
+
+  log "Verifying that the requested provisioning profile can be found"
+  log "security find-certificate -a -c \"$provisioning_profile\")"
+ if security find-certificate -a -c "$provisioning_profile" -Z | grep ^SHA-1 > /dev/null 2>&1
+ then
+   log "Successfully verified provisioning_profile profile '${provisioning_profile}'"
+ else
+   error "Unable to verify provisioning_profile '${provisioning_profile}'"
+ fi
+}
+
+describe_sdks()
+{
+  #list the installed sdks
+  echo "Available SDKs"
+  echo xcodebuild -showsdks
+  xcodebuild -showsdks
+}
+
+describe_workspace()
+{
+  log "Describing the project workspace available schemes"
+  xcodebuild -list -workspace $workspace
+}
+
+build_app()
+{
+  log "Building the application, please be patient as this may take a while."
+  if xcodebuild -verbose -workspace "$workspace" -scheme "$scheme" -sdk iphoneos -configuration Release clean build > build.log 2>&1
+  then
+    log "Application built successfully."
+  else
+    error "Failed building the application, see build.log for details"
+  fi
+
+  #locate project's DerivedData directory
+  # TODO: fix this       vv, use filesystem find_ dsl
+  project_derived_data=$(ls -ut1 ~/Library/Developer/Xcode/DerivedData | head -n 1)
+
+  #copy app and dsym files to working directory
+  echo cp -r "~/Library/Developer/Xcode/DerivedData/$project_derived_data/Build/Products/Release-iphoneos/*.app*" .
+  cp -r "~/Library/Developer/Xcode/DerivedData/$project_derived_data/Build/Products/Release-iphoneos/*.app*" .
+
+  #locate the .app file
+  # TODO: fix this       vv, use filesystem find_ dsl
+  project_app=$(ls -d1 *.app | head -n 1)
+
+  relink_code_resources
+}
+relink_code_resources()
+{
+  log "Relinking CodeResources as xcodebuild does not reliably construct the appropriate symlinks."
+  link --force "$project_app/_CodeSignature/CodeResources" to "$project_app/CodeResources"
+}
+
+function sign_app()
+{
+  #sign build for distribution and package as a .ipa
+  echo xcrun -sdk iphoneos PackageApplication "$project_dir/$project_app" -o "$project_dir/$project_app.ipa" --sign "$provisioning_profile" --embed "$mobileprovision"
+  xcrun -sdk iphoneos PackageApplication "$project_dir/$project_app" -o "$project_dir/$project_app.ipa" --sign "$provisioning_profile" --embed "$mobileprovision" || failed codesign
+}
+
+verify_app()
+{
+  log "Verifying the application."
+  if codesign -d --file-list - "$project_dir/$project_app"
+  then
+    log "Application verified successfully ."
+  else
+    failed verification
+  fi
+}
+
+function build_ota_plist()
+{
+  cat <<Plist > $project_app.plist
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>items</key>
+  <array>
+    <dict>
+      <key>assets</key>
+      <array>
+        <dict>
+          <key>kind</key>
+          <string>software-package</string>
+          <key>url</key>
+          <string>http://server.Company.com:8111/repository/download/%system.teamcity.buildType.id%/%teamcity.build.id%:id/ProjectName.acceptance.app.ipa</string>
+        </dict>
+        <dict>
+          <key>kind</key>
+          <string>full-size-image</string>
+          <key>needs-shine</key>
+          <true/>
+          <key>url</key>
+          <string>http://server.Company.com:8111/repository/download/%system.teamcity.buildType.id%/%teamcity.build.id%:id/Icon-512.png</string>
+        </dict>
+        <dict>
+          <key>kind</key>
+          <string>display-image</string>
+          <key>needs-shine</key>
+          <true/>
+          <key>url</key>
+          <string>http://server.Company.com:8111/repository/download/%system.teamcity.buildType.id%/%teamcity.build.id%:id/Icon-57.png</string>
+        </dict>
+      </array>
+      <key>metadata</key>
+      <dict>
+        <key>bundle-identifier</key>
+        <string>${bundle_identifier}</string>
+        <key>bundle-version</key>
+        <string>${short_version_string} %env.BUILD_NUMBER%</string>
+        <key>kind</key>
+        <string>software</string>
+        <key>subtitle</key>
+        <string>Acceptance</string>
+        <key>title</key>
+        <string>ProjectName</string>
+      </dict>
+    </dict>
+  </array>
+</dict>
+</plist>
+Plist
+}
+
+build_full()
+{
+  validate_keychain
+  describe_sdks
+  describe_workspace
+  build_app
+  sign_app
+  verify_app
+  build_ota_plist
+}
+
