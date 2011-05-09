@@ -7,3 +7,5 @@ then # Sanity check
   user_must_not_be_root
 fi
 
+scm_flags=()
+

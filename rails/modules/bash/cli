@@ -42,6 +42,9 @@ for ((index=0 ; index < $number_of_args ; index++)) ; do
     -s|--server)
       server="${extension_args[$((++index))]}"
       ;;
+    --scm-flag|-F)
+      scm_flags+=("${extension_args[$((++index))]}")
+      ;;
     --help)
       usage
       exit 0
