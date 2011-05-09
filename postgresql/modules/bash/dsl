@@ -137,14 +137,7 @@ postgresql_preconfigure()
   fi
 }
 
-# Postgresql control functions.
-#postgresql_start()
-#{
-#  log "Starting PostgreSQL Server"
-#
-#  user_run_as "${service_user}" "$daemon -D '$data_path' >> '$log_file' 2>&1 &"
-#}
-
+# TODO: Enable this at the service level.
 postgresql_reload()
 {
   log "Reload PostgreSQL Server configuration"
