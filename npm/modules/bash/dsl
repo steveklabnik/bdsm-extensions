@@ -11,14 +11,6 @@ npm_extract()
   fi
 }
 
-npm_install()
-{
-  (
-  export PATH="${prefix_path}/node/active/bin:/bin:/usr/bin:/usr/local/bin"
-  make install
-  )
-}
-
 latest_version()
 {
   json="$(curl http://registry.npmjs.org/npm/latest)"

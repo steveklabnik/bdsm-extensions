@@ -2,6 +2,8 @@
 
 display_install_message
 
+postgresql_preconfigure
+
 package_install
 
 postgresql_initialize

@@ -89,6 +89,12 @@ postgresql_conf()
 
       copy_file "$data_path/data/${file}.conf.sample" \
         to "$data_path/data/${file}.conf"
+
+      if file_is_missing "${service_config_path}/${file}.conf"
+      then
+        link "$data_path/data/${file}.conf" \
+          to "${service_config_path}/${file}.conf"
+      fi
     fi
   done
 
@@ -116,3 +122,31 @@ postgresql_conf_d()
   fi
 }
 
+
+postgresql_preconfigure()
+{
+  if [[ "$action" = *install ]]
+  then
+    configure_flags=(
+      --prefix="${install_base_path}/${package_version}"
+      --datadir="$data_path"
+      --with-openssl
+      --enable-shared
+    )
+
+    if os_is_darwin
+    then
+      configure_flags[${#configure_flags[@]}]="--with-bonjour"
+    fi
+
+    export CFLAGS='-O2'
+  fi
+}
+
+# TODO: Enable this at the service level.
+postgresql_reload()
+{
+  log "Reload PostgreSQL Server configuration"
+
+  user_run_as "${service_user}" "$control reload -D '$data_path' -s"
+}
