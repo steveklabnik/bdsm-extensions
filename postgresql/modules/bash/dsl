@@ -89,6 +89,12 @@ postgresql_conf()
 
       copy_file "$data_path/data/${file}.conf.sample" \
         to "$data_path/data/${file}.conf"
+
+      if file_is_missing "${service_config_path}/${file}.conf"
+      then
+        link "$data_path/data/${file}.conf" \
+          to "${service_config_path}/${file}.conf"
+      fi
     fi
   done
 
