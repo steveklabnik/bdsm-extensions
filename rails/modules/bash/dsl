@@ -41,7 +41,7 @@ configure_database_yml()
         ;;
 
       sqlite*|*)
-        install_gems sqlite
+        install_gems sqlite3
         ;;
     esac
   fi
