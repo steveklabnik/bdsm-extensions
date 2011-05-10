@@ -11,3 +11,5 @@ service_binary="${service_bin_path}/redis-server"
 service_cli_binary="${service_bin_path}/redis-cli"
 service_db_file="${service_db_path}/active/redis.rdb"
 
+service_flags+=( "${service_config_file}" )
+
