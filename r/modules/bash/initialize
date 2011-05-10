@@ -1,7 +1,0 @@
-#!/usr/bin/env bash
-
-modules package
-
-package_definition \
-  base_url "http://cran.cnr.berkeley.edu/src/base/R-${package_version//.*}"
-

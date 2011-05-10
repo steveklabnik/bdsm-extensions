@@ -1,8 +1,0 @@
-#!/usr/bin/env bash
-
-description "${extension} BDSM extension."
-
-action "install" "Installs ${package_name} ${package_version}."
-action "uninstall" "Uninstall ${extension}."
-
-show_help usage
