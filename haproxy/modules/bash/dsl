@@ -5,10 +5,7 @@ haproxy_configure()
     # We build generic since the Makefile.osx doesn't appear to work
     if os_is_darwin
     then
-      cp Makefile.osx Makefile
-
-      LDFLAGS="-L${active_path}/lib ${LDFLAGS:-}"
-      CFLAGS="-I${active_path}/include ${CFLAGS:-} "
+      copy_file --force "Makefile.osx" to "Makefile"
 
       make_flags=(
         -j$(os_cpu_count)
@@ -16,7 +13,7 @@ haproxy_configure()
         TARGET=generic
         USE_KQUEUE=1
         USE_POLL=1
-        PCREDIR="$prefix_path/pcre/active"
+        PCREDIR="${active_path}"
         USE_PCRE=1
       )
     elif os_is_linux
@@ -24,7 +21,7 @@ haproxy_configure()
       make_flags=(
         -j$(os_cpu_count)
         DESTDIR="${install_path}"
-        PCREDIR="$prefix_path/pcre/active"
+        PCREDIR="${active_path}"
         USE_PCRE=1
         TARGET=generic
       )
@@ -32,7 +29,7 @@ haproxy_configure()
       make_flags=(
         -j$(os_cpu_count)
         DESTDIR="${install_path}"
-        PCREDIR="$prefix_path/pcre/active"
+        PCREDIR="${active_path}"
         USE_PCRE=1
         TARGET=generic
       )
