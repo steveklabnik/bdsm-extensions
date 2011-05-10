@@ -70,7 +70,7 @@ postgresql_initdb()
 
 postgresql_conf()
 {
-  local file
+  local file _entries
   log "Configuring postgresql server."
 
   ensure_paths_exist "${service_data_path}" "$log_path"
@@ -104,7 +104,12 @@ postgresql_conf()
 
   chown_paths_recursively "$package_user" "$data_base_path"
   chmod_paths_recursively 0600 "${service_data_path}"
-  chmod_paths 0700 "${service_data_path}" "${service_data_path}/data"
+
+  _files="$(find "${service_data_path}" -type f)"
+  chmod_files 0600 "${_entries[@]}"
+
+  _entries="$(find "${service_data_path}" -type d)"
+  chmod_paths 0700 "${_entries[@]}"
 }
 
 postgresql_init_script()
