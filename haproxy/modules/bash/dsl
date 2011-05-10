@@ -9,7 +9,7 @@ haproxy_configure()
 
       make_flags=(
         -j$(os_cpu_count)
-        DESTDIR="${install_path}"
+        PREFIX="${install_path}"
         TARGET=generic
         USE_KQUEUE=1
         USE_POLL=1
@@ -20,7 +20,7 @@ haproxy_configure()
     then
       make_flags=(
         -j$(os_cpu_count)
-        DESTDIR="${install_path}"
+        PREFIX="${install_path}"
         PCREDIR="${active_path}"
         USE_PCRE=1
         TARGET=generic
@@ -28,7 +28,7 @@ haproxy_configure()
     else
       make_flags=(
         -j$(os_cpu_count)
-        DESTDIR="${install_path}"
+        PREFIX="${install_path}"
         PCREDIR="${active_path}"
         USE_PCRE=1
         TARGET=generic
