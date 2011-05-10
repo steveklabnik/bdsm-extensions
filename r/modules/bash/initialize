@@ -3,5 +3,5 @@
 modules package
 
 package_definition \
-  base_url "http://cran.stat.ucla.edu/src/base/R-${package_version//-*}"
+  base_url "http://cran.cnr.berkeley.edu/src/base/R-${package_version//.*}"
 
