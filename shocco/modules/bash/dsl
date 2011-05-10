@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+shocco_download()
+{
+  if ! directory_exists shocco-head
+  then
+    git clone ${package_base_url} shocco-head
+  fi
+}
+
+shocco_extract()
+{
+  git pull origin master
+}
+
