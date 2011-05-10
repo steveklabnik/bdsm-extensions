@@ -81,7 +81,8 @@ postgresql_conf()
   do
     if file_is_empty_or_missing "$data_path/data/${file}.conf"
     then
-      if file_is_missing "$data_path/data/${file}.conf.sample" ; then
+      if file_is_missing "$data_path/data/${file}.conf.sample"
+      then
         log "Missing $data_path/data/${file}.conf.sample, skipping."
         continue
       fi
