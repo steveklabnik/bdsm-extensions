@@ -48,7 +48,7 @@ configure_nginx()
     then
       link "${install_base_path}/active/nginx" "/etc/nginx"
     fi
-    link --force "${nginx_binary}" to /usr/sbin/nginx
+    link --force "${nginx_binary}" to "/usr/sbin/nginx"
   fi
 
   chown_paths_recursively "nginx:nginx" "${config_directories[@]}"

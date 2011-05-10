@@ -79,6 +79,9 @@ postgresql_conf()
 
   for file in postgresql pg_hba pg_ident recovery
   do
+
+   log "service_data_path: ${service_data_path}"
+
     if file_is_empty_or_missing "${service_data_path}/${file}.conf"
     then
       if file_is_missing "$service_data_path/${file}.conf.sample"
@@ -100,8 +103,8 @@ postgresql_conf()
   done
 
   chown_paths_recursively "$package_user" "$data_base_path"
-  chmod_paths 0700 "${service_data_path}"
-  chmod_paths_recursively 0600 "$service_data_path"
+  chmod_paths_recursively 0740 "$service_data_path"
+  chmod_paths 0750 "${service_data_path}" "${service_data_path}/data"
 }
 
 postgresql_init_script()
