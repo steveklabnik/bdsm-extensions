@@ -34,7 +34,8 @@ configure_nginx()
     mode 0755 owner "${nginx_user}"
 
   templates=( "mime.types" "proxy.conf" )
-  for template in "${templates[@]}" ; do
+  for template in "${templates[@]}"
+  do
     install_template "${template}" to "${nginx_config_path}/${template}" \
       mode 0644 owner "${nginx_user}"
   done
@@ -43,9 +44,10 @@ configure_nginx()
 
   if user_is_root
   then
-    directory_exists "/etc/nginx" ||
+    if ! directory_exists "/etc/nginx"
+    then
       link "${install_base_path}/active/nginx" "/etc/nginx"
-
+    fi
     link --force "${nginx_binary}" to /usr/sbin/nginx
   fi
 
