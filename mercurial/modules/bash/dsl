@@ -11,6 +11,6 @@ mercurial_configure()
 
 mercurial_install()
 {
-  make install PREFIX="${install_path}"
+  make install-bin PREFIX="${install_path}"
 }
 
