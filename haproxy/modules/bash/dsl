@@ -13,6 +13,7 @@ haproxy_configure()
         USE_KQUEUE=1
         USE_POLL=1
         PCREDIR="${active_path}"
+        SBINDIR="${install_path}/bin"
         USE_PCRE=1
       )
     elif os_is_linux
@@ -20,6 +21,7 @@ haproxy_configure()
       make_flags=(
         PREFIX="${install_path}"
         PCREDIR="${active_path}"
+        SBINDIR="${install_path}/bin"
         USE_PCRE=1
         TARGET=generic
       )
@@ -27,6 +29,7 @@ haproxy_configure()
       make_flags=(
         PREFIX="${install_path}"
         PCREDIR="${active_path}"
+        SBINDIR="${install_path}/bin"
         USE_PCRE=1
         TARGET=generic
       )
