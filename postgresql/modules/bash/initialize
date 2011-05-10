@@ -14,7 +14,7 @@ service_cli_binary="${service_bin_path}/psql"
 service_flags+=( -D "$data_path" -s )
 service_stop_flags+=( -m fast -w )
 
-export PGDATA="${service_db_path}"
+export PGDATA="${service_data_path}"
 
 if user_is_root
 then
