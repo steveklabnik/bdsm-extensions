@@ -32,7 +32,7 @@ haproxy_configure()
       )
     fi
 
-    make_install_flags=(${make_flags[@]})
+    make_install_flags=( install ${make_flags[@]})
     make_flags+=( -j$(os_cpu_count) )
 
     make "${make_flags[@]}"
