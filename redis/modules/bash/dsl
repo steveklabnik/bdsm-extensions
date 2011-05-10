@@ -61,7 +61,7 @@ redis_status()
   if (( service_pid > 0 ))
   then
     log "  status: running"
-    log "  version: $("${init_scripts_path}/redis" info |  awk -F: '/service_version/{print $2}')"
+    log "  version: $("${init_scripts_path}/redis" info |  awk -F: '/_version/{print $2}')"
     log "  pid: $(cat ${service_pid_file})"
   else
     log "  status: not running"
