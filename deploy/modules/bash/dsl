@@ -3,34 +3,41 @@
 hook()
 {
   hook="$1"
-  true ${hooks_flag:=1}
-  [[ ${hooks_flag:-1} -eq 0 ]] && return 0 # Return if hooks flag is set to false
 
-  # System
-  if [[ -s "$shared_path/deploy/$hook" ]] ; then
-    ( source "$shared_path/deploy/$hook" )
-  fi
+  if (( ${hooks_flag:=1} == 1 ))
+  then # Only process hooks if the flag is not explicitely set to 0.
+    # System
+    if [[ -s "$shared_path/deploy/$hook" ]]
+    then
+      ( source "$shared_path/deploy/$hook" )
+    fi
 
-  # System, Environment specific
-  if [[ -n "${environment:-""}" && -x "$shared_path/deploy/#{$environment}/$hook" ]] ; then
-    ( source "$shared_path/deploy/#{$environment}/$hook" )
-  fi
+    # System, Environment specific
+    if [[ -n "${environment:-""}" && -x "$shared_path/deploy/#{$environment}/$hook" ]]
+    then
+      ( source "$shared_path/deploy/#{$environment}/$hook" )
+    fi
 
-  # Project
-  if [[ -d "$shared_path/$project" && -x "$shared_path/$project/config/deploy/$hook" ]] ; then
-    ( source "$shared_path/$project/config/deploy/$hook" )
-  fi
+    # Project
+    if [[ -d "$shared_path/$project" && -x "$shared_path/$project/config/deploy/$hook" ]]
+    then
+      ( source "$shared_path/$project/config/deploy/$hook" )
+    fi
 
-  # Project, Environment specific
-  if [[ -n "${environment:-""}" && -x "$shared_path/$project/config/deploy/$environment/$hook" ]] ; then
-    ( source "$shared_path/project/config/deploy/$environment/$hook" )
+    # Project, Environment specific
+    if [[ -n "${environment:-""}" && -x "$shared_path/$project/config/deploy/$environment/$hook" ]]
+    then
+      ( source "$shared_path/project/config/deploy/$environment/$hook" )
+    fi
   fi
 }
 
 update()
 {
-  update_repository && replace_current
-
+  if update_repository
+  then
+    replace_current
+  fi
   return $?
 }
 
@@ -42,7 +49,6 @@ update_repository()
   enter "$shared_path/$project"
 
   case "$scm" in
-
     git)
       git checkout master -f -q
 
@@ -57,24 +63,31 @@ update_repository()
 
       current_branch=$(git symbolic-ref -q HEAD 2>/dev/null)
 
-      if [[ "$current_branch" = "$branch" ]] ; then
+      if [[ "$current_branch" = "$branch" ]]
+      then
         log "Already on branch '$branch'."
-      elif ! git branch | awk "/$branch$/" >/dev/null 2>&1 ; then
+
+      elif ! git branch | awk "/$branch$/" >/dev/null 2>&1
+      then
         git checkout -b $branch --track $remote/$branch 2>/dev/null
-      elif ! git checkout $branch 2>/dev/null ; then
+
+      elif ! git checkout $branch 2>/dev/null
+      then
         error "Branch $remote/$branch not found. Skipping remainder of update."
         return 1
       fi
 
       git pull
 
-      if [[ -f .gitmodules ]] ; then
+      if file_exists ".gitmodules"
+      then
         log "Updating submodules."
         git submodule init 2>/dev/null
         git submodule update
       fi
 
-      if [[ -n "$revision" ]] ; then
+      if [[ -n "$revision" ]]
+      then
         log "Checking out revision '$revision'."
         git checkout $revision >/dev/null 2>&1
       fi
@@ -85,7 +98,8 @@ update_repository()
       log "Pulling from remote"
       hg pull
 
-      if [[ -n "$revision" ]] ; then
+      if [[ -n "$revision" ]]
+      then
         # TODO: Find out if this is how it's done for hg ;)
         log "Checking out revision '$revision'."
         hg update $branch $revision
@@ -99,12 +113,13 @@ update_repository()
       # TODO: specific revision / branch handling
       log "Updating repository"
       svn update
-      if [[ "$revision" -gt 0 ]] ; then
+      if [[ "$revision" -gt 0 ]]
+      then
         log "Checking out revision $revision"
         svn checkout -r $revision
       fi
-
       ;;
+
     *)
       fail "No scm specified found (git,hg,svn)"
       ;;
@@ -117,15 +132,16 @@ stage_current()
 {
   log "Staging new release to $stage_path"
 
-  rsync -ag --exclude=".${scm}/" \
-    "$shared_path/$project/" "$stage_path"
+  # TODO: If rsync is available use it otherwise use cp -Rf
+  rsync -ag --exclude=".${scm}/" "$shared_path/$project/" "$stage_path"
 
   ensure_paths_exist "$stage_path/public"
 }
 
 replace_current()
 {
-  if [[ -d "$release_path" ]] ; then
+  if directory_exists "$release_path"
+  then
     log "Moving aside previous release."
     mv "$release_path" "$project_path/previous/$timestamp"
   fi
@@ -136,8 +152,9 @@ replace_current()
 
 configure()
 {
-  if [[ ! -d "$shared_path/config" ]] ; then
-    log "No shared config path found, skipping."
+  if ! directory_exists "$shared_path/config"
+  then
+    log "No shared config path found, skipping shared configuration."
     return 0
   fi
 
@@ -148,7 +165,8 @@ configure()
   enter "$shared_path/config"
 
   log "Setting up persistent config files:"
-  for config_item in "$shared_path"/config/* ; do
+  for config_item in "$shared_path"/config/*
+  do
     item=$(basename "$config_item")
     log "  - $item"
     link --force "$shared_path/config/$item" "$stage_path/config/$item"
@@ -159,13 +177,15 @@ symlink()
 {
   log "Setting up persistent directories:"
 
-  for dir in tmp log pids files ; do
+  for dir in tmp log pids files
+  do
     log "  - $dir"
     remove_paths "${stage_path}/${dir}"
     link --force "${shared_path}/${dir}" to "${stage_path}/${dir}"
   done
 
-  for dir in $(ls -A "$shared_path/public/") ; do
+  for dir in $(ls -A "$shared_path/public/")
+  do
     log "  - public/$dir"
     remove_paths "${stage_path}/public/${dir}"
     link --force "${shared_path}/public/${dir}" to "${stage_path}/public/${dir}"
@@ -174,11 +194,16 @@ symlink()
 
 cleanup()
 {
-  ensure_paths_exist "$project_path/previous"
-  log "Removing old releases: ${old_releases[@]}"
-  enter "$project_path/previous"
-  array_is_nonempty old_releases &&
-    remove_paths "${old_releases[@]}"
+  if directory_exists "$project_path/previous"
+  then
+    log "Removing old releases: ${old_releases[@]}"
+    enter "$project_path/previous"
+
+    if array_is_nonempty old_releases
+    then
+      remove_paths "${old_releases[@]}"
+    fi
+  fi
 }
 
 record()
@@ -197,14 +222,18 @@ record()
 
 detect_scm()
 {
-  [[ -z "${scm:-}" ]] || return 0
-
-  if [[ -d "$shared_path/$project/.git" ]] ; then
-    scm="git"
-  elif [[ -d "$shared_path/$project/.svn" ]] ; then
-    scm="svn"
-  elif [[ -d "$shared_path/$project/.hg" ]] ; then
-    scm="hg"
+  if [[ -z "${scm:-}" ]]
+  then
+    if [[ -d "$shared_path/$project/.git" ]]
+    then
+      scm="git"
+    elif [[ -d "$shared_path/$project/.svn" ]]
+    then
+      scm="svn"
+    elif [[ -d "$shared_path/$project/.hg" ]]
+    then
+      scm="hg"
+    fi
   fi
 }
 
