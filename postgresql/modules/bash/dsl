@@ -105,7 +105,7 @@ postgresql_conf()
   chown_paths_recursively "$package_user" "$data_base_path"
   chmod_paths_recursively 0600 "${service_data_path}"
 
-  _files="$(find "${service_data_path}" -type f)"
+  _entries="$(find "${service_data_path}" -type f)"
   chmod_files 0600 "${_entries[@]}"
 
   _entries="$(find "${service_data_path}" -type d)"
