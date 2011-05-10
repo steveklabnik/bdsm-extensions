@@ -3,8 +3,10 @@
 mercurial_configure()
 {
   # If there is a BDSM installed python interpreter active, use it.
-  directory_exists "${prefix_path}/python/active" &&
-    export PYTHONPATH="${prefix_path}/python/active"
+  if file_exists "${active_path}/bin/python"
+  then
+    export PYTHONPATH="${active_path}/"
+  fi
 }
 
 mercurial_install()
