@@ -2,7 +2,8 @@
 
 configure_redis()
 {
-  if [[ -s "${service_config_file}" ]] ; then
+  if file_is_nonempty "${service_config_file}"
+  then
     log "${service_config_file} already exists, not overwriting."
   else
     log "#installing redis.conf file to ${service_config_file}"
@@ -32,7 +33,10 @@ redis_install()
 
   if (( _major >= 2 ))
   then
-    (( _major = 2 && _minor >= 2 )) || _source=""
+    if ! (( _major = 2 && _minor >= 2 ))
+    then
+      _source=""
+    fi
   else
     _source=""
   fi
@@ -43,8 +47,10 @@ redis_install()
   log "#installing ${package_name} ${package_version}...\n"
   for file in redis-server redis-cli
   do
-    install -b "${_source}${file}" "${install_path}/bin/${file}" ||
+    if ! install -b "${_source}${file}" "${install_path}/bin/${file}"
+    then
       fail "${package_name} ${package_version} failed to install (specifically ${file}).\n"
+    fi
   done
 }
 
