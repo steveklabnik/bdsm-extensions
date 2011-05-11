@@ -15,18 +15,18 @@ file_is_nonempty "$pid_file" && pid_file_pid=$(cat "$pid_file")
 if variable_is_nonempty project ; then
 
   running_pid=$(
-  ps auxww | awk "/[u]nicorn master/ && ! /(old)/ && / ${project} / {print \$2}"
+  ps auxww | awk "/[u]nicorn master/ && ! /(old)/ && /\/${project}\// {print \$2}"
   )
 
   old_pid=$(
-  ps auxww | awk "/[u]nicorn master/ && /(old)/ && / ${project} / {print \$2}"
+  ps auxww | awk "/[u]nicorn master/ && /(old)/ && /\/${project}\// {print \$2}"
   )
 else
   running_pid=$(
-  ps auxww | awk "/[u]nicorn master/ && ! /(old)/ && / ${USER} / {print \$2}"
+  ps auxww | awk "/[u]nicorn master/ && ! /(old)/ && /\/${USER}\// {print \$2}"
   )
   old_pid=$(
-  ps auxww | awk "/[u]nicorn master/ && /(old)/ && / ${USER} / {print \$2}"
+  ps auxww | awk "/[u]nicorn master/ && /(old)/ && /\/${USER}\// {print \$2}"
   )
 
   log "WARNING: 'project' should be set in ~/.bdsmrc"
