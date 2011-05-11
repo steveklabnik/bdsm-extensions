@@ -30,7 +30,7 @@ else
     "${profiles:=("$HOME/.bash_profile" "$HOME/.bashrc")}"
 fi
 
-log_path="$data_path/log"
+log_path="$service_data_path/log"
 
 if [[ "$action" = *install ]]
 then
@@ -38,7 +38,7 @@ then
   # http://dev.mysql.com/doc/refman/5.1/en/source-configuration-options.html
   configure_flags=(
     --prefix="${install_path}"
-    --localstatedir="${data_path}"
+    --localstatedir="${service_data_path}"
     --enable-assembler
     --with-mysqld-ldflags=-all-static
     --with-charset=utf8

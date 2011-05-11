@@ -20,7 +20,7 @@ mysql_initialize()
   Installation and configuration of mysql is now complete.
 
   * mysql has been installed to $install_path
-  * mysql configuration and data files will are in $data_path
+  * mysql configuration and data files will are in $service_data_path
   * You can control the mysql server via the bdsm mysql extension'
   * The mysql superuser is '$package_user', no password.
   * Use /etc/conf.d/mysql.conf for server startup customization.
@@ -30,13 +30,13 @@ mysql_initialize()
 
 mysql_initdb()
 {
-  log "Initializing mysql data directory in $data_path"
+  log "Initializing mysql data directory in $service_data_path"
 
-  ensure_paths_exist "${data_path%\/*}"
+  ensure_paths_exist "${service_data_path%\/*}"
 
-  chown_paths_recursively "$package_user" "${data_path%\/*}"
+  chown_paths_recursively "$package_user" "${service_data_path%\/*}"
 
-  command="${install_path}/bin/mysql_install_db --user=\"${package_user}\" --basedir=\"${install_path}\" --datadir=${data_path} "
+  command="${install_path}/bin/mysql_install_db --user=\"${package_user}\" --basedir=\"${install_path}\" --datadir=${service_data_path} "
   # --srcdir=\"${source_path}/${package_name}-${package_version}\"
   export PATH="${install_path}/bin:$PATH"
 
@@ -57,7 +57,7 @@ mysql_postinstall()
   log "Configuring mysql server."
 
   # TODO: Is this not done in package_install ??? vvv
-  link --force "${data_path}" to "${data_path%\/*}/data"
+  link --force "${service_data_path}" to "${service_data_path%\/*}/data"
 
   if [[ -s "/etc/mysql/my.cnf" ]] ; then
     log "Skipping /etc/mysql/my.cnf as it already exists, use bdsm mysql configure to override later."
@@ -76,11 +76,11 @@ mysql_postinstall()
 
   remove_paths "$prefix_path/mysql"
 
-  ensure_paths_exist "$data_path" "$log_path" "/etc/mysql/"
+  ensure_paths_exist "$service_data_path" "$log_path" "/etc/mysql/"
 
-  chown_paths_recursively "$package_user" "$data_path"
+  chown_paths_recursively "$package_user" "$service_data_path"
 
-  chmod_paths_recursively 0700 "$data_path"
+  chmod_paths_recursively 0700 "$service_data_path"
 }
 
 mysql_init_script()
