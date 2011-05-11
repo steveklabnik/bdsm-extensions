@@ -4,10 +4,10 @@
   succeed "There are no unicorns running for $project."
 
 if [[ -n "${project:-}" ]] ; then
-  ps auxww | awk "/[u]nicorn/ && /master/ && /${project}/"
-  ps auxww | awk "/[u]nicorn/ && /worker/ && /${project}/"
+  ps auxww | awk "/[u]nicorn/ && /master/ && /\/${project}\//"
+  ps auxww | awk "/[u]nicorn/ && /worker/ && /\/${project}\//"
 else
-  ps auxww | awk "/[u]nicorn/ && /master/ && /${USER}/"
-  ps auxww | awk "/[u]nicorn/ && /worker/ && /${USER}/"
+  ps auxww | awk "/[u]nicorn/ && /master/ && /\/${USER}\//"
+  ps auxww | awk "/[u]nicorn/ && /worker/ && /\/${USER}\//"
 fi
 
