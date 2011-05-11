@@ -7,7 +7,8 @@ freetds_extract()
   package_extract
 
   _directory=$(
-    find -mindepth 1 -maxdepth 1 -iname "${package_name}-${package_version}*" -type d
+    cd "${source_path}"
+    find . -mindepth 1 -maxdepth 1 -iname "${package_name}-${package_version}*" -type d
   )
 
   if variable_is_nonempty _directory

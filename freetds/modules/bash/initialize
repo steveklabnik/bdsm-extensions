@@ -3,4 +3,4 @@
 modules package
 
 package_definition \
-  file "${package_name}-${package_version}rc.${archive_format}"
+  file "${package_name}-${package_version}RC2.${archive_format}"
