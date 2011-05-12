@@ -6,53 +6,47 @@ dependencies=( zlib pcre openssl)
 
 init_scripts_path=$(init_scripts_path)
 
-: \
-  ${nginx_path:="${install_path}/nginx"} \
-  ${nginx_config_file:="${nginx_path}/nginx.conf"} \
-  ${nginx_config_path:="${nginx_path}/conf"} \
-  ${nginx_servers_path:="${nginx_path}/servers"} \
-  ${nginx_binary:="${install_path}/bin/nginx"} \
-  ${nginx_pid_file:="/var/run/nginx.pid"} \
-  ${nginx_lock_file:="/var/lock/nginx.lock"} \
-  ${nginx_spool_path:="/var/spool/nginx"} \
-  ${nginx_log_path:="/var/log/nginx"} \
-  ${nginx_user:="nginx"}
+service_user="nginx"
 
-configure_flags=(--prefix="$install_path"
-  --conf-path="$nginx_config_file"
-  --sbin-path="$nginx_binary"
-  --pid-path="$nginx_pid_file"
-  --lock-path="$nginx_lock_file"
-  --http-client-body-temp-path="$nginx_spool_path/client_body_temp"
-  --http-proxy-temp-path="$nginx_spool_path/proxy_temp"
-  --http-fastcgi-temp-path="$nginx_spool_path/fastcgi_temp"
-  --http-log-path="$nginx_log_path/access.log"
-  --error-log-path="$nginx_log_path/error.log"
+# TODO: Allow overriding of these parameters via cli
+# These defaults may be overridden also by the nginx configuration files.
+configure_flags=(
+  --prefix="${install_path}"
+  --conf-path="${install_path}/nginx/conf"
+  --sbin-path="${install_path}/sbin"
+  --pid-path="${install_path}/run/nginx.pid"
+  --lock-path="${install_path}/run/nginx.lock"
+  --http-client-body-temp-path="${install_path}/spool/client_body_temp"
+  --http-proxy-temp-path="${install_path}/spool/proxy_temp"
+  --http-fastcgi-temp-path="${install_path}/spool/fastcgi_temp"
+  --http-log-path="${install_path}/log/access.log"
+  --error-log-path="${install_path}/log/error.log"
   --with-http_ssl_module
   --with-http_stub_status_module
 )
+# TODO: Add a CLI --imap flag
 # --with-imap
 # --with-imap_ssl_module
 
-for _library in pcre openssl zlib
+for library in pcre openssl zlib
 do
-  if directory_exists "${prefix_path}/${_library}/active"
+  if directory_exists "${prefix_path}/${library}/active"
   then
-    configure_flags+=( --with-${_library}="${prefix_path}/${_library}/active/lib" )
+    configure_flags+=( --with-${library}="${prefix_path}/${library}/active/lib" )
   else
-    if [[ "$_library" = pcre ]]
+    if [[ "$library" == pcre ]]
     then
       configure_flags+=( --with-pcre )
     fi
   fi
 done
-unset _library
+unset library
 
 config_directories=(
   "${nginx_spool_path}/client_body_temp"
   "${nginx_log_path}"
-  "${nginx_config_path}/conf"
-  "${nginx_config_path}/servers"
+  "${active_path}/conf"
+  "${active_path}/servers"
 )
 
 nginx_files=( fastcgi.conf fastcgi.conf.default fastcgi_params
