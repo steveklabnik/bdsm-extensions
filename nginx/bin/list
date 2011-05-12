@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+if (( master_pid > 0 ))
+then
+  ps auxww | awk "/[n]ginx/ && /master/"
+  ps auxww | awk "/[n]ginx/ && /worker/"
+else
+  succeed "There are no uginxs running for $project."
+fi
