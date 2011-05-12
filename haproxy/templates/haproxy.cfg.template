@@ -8,7 +8,7 @@ global
   daemon
   stats socket /var/run/haproxy/haproxy.stat mode 0600
   log 127.0.0.1 local4
-  maxconn 40000
+  maxconn 15000
   ulimit-n 80013
   pidfile /var/run/haproxy/haproxy.pid
   spread-checks 5
