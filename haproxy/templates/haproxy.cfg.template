@@ -1,5 +1,62 @@
 #!/usr/bin/env bash
 
-# Temlpates are useful for many things. Examples include but are not limited
-# to init scripts for services and default configuation files.
+# HAProxy Configuration File
+global
+  # uid 69
+  # gid 69
+  daemon
+  stats socket /var/run/haproxy/haproxy.stat mode 0600
+  log 127.0.0.1 local4
+  maxconn 40000
+  ulimit-n 80013
+  pidfile /var/run/haproxy/haproxy.pid
 
+defaults
+  log global
+  mode http
+  contimeout 4000
+  clitimeout 4200
+  srvtimeout 4300
+  balance roundrobin
+
+listen http_apps 127.0.0.1:80
+  mode http
+
+  # Set X-Forwarded-For header.
+  option forwardfor
+
+  # This line is important for tproxy, if not using tproxy then remove this line
+  # 0.0.0.0 can/should be replaced by the HAProxy IP Address
+  source 0.0.0.0 usesrc clientip
+
+  cookie SERVERID insert nocache indirect
+
+  # Servers block
+  server app_1 127.0.0.1:5000 weight 1 cookie app1 check minconn 3 maxconn 10
+  server app_2 227.0.0.1:5000 weight 2 cookie app2 check minconn 3 maxconn 10
+  server app_3 227.0.0.1:5000 weight 3 cookie app3 check minconn 3 maxconn 10
+  # NOTE: Adjust the {min,max}conn to whatever backend you are running.
+
+  # Fallback server, in case the servers block is not responding.
+  server fallback 127.0.0.1:80 backup source 0.0.0.0
+
+  option redispatch
+
+# NOTE: The configuration below is yet untested
+#listen https_apps 127.0.0.1:443
+#  mode tcp
+#
+#  # This line is important for tproxy, if not using tproxy then remove this line
+#  # 0.0.0.0 can/should be replaced by the HAProxy IP Address
+#  source 0.0.0.0 usesrc clientip
+#
+#  # Servers block
+#  server app_1 127.0.0.1:5000 weight 1 cookie app1 check minconn 3 maxconn 10
+#  server app_2 227.0.0.1:5000 weight 2 cookie app2 check minconn 3 maxconn 10
+#  server app_3 227.0.0.1:5000 weight 3 cookie app3 check minconn 3 maxconn 10
+#
+#  # Fallback server, in case the servers block is not responding.
+#  server fallback 127.0.0.1:80 backup source 0.0.0.0
+#
+#  option redispatch
+#

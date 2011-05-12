@@ -14,7 +14,7 @@ haproxy_configure()
         USE_POLL=1
         PCREDIR="${active_path}"
         SBINDIR="${install_path}/bin"
-        USE_PCRE=1
+        USE_STATIC_PCRE=1
       )
     elif os_is_linux
     then
@@ -22,15 +22,28 @@ haproxy_configure()
         PREFIX="${install_path}"
         PCREDIR="${active_path}"
         SBINDIR="${install_path}/bin"
-        USE_PCRE=1
-        TARGET=generic
+        USE_STATIC_PCRE=1
       )
+
+      # TODO: TPROXY is only availablle in kernels 2.6.28 and newer, check.
+      # if os_kernel_version >= 2.6.28
+      # then
+      make_flags+=(USE_LINUX_TPROXY=1)
+      # fi
+
+      # TODO: Add in the check below
+      # if os_kernel_version >= 2.6
+      # then
+         make_flags+=(TARGET=linux26)
+      # else
+      #   make_flags+=(TARGET=generic)
+      # fi
     else
       make_flags=(
         PREFIX="${install_path}"
         PCREDIR="${active_path}"
         SBINDIR="${install_path}/bin"
-        USE_PCRE=1
+        USE_STATIC_PCRE=1
         TARGET=generic
       )
     fi
@@ -41,6 +54,51 @@ haproxy_configure()
     make "${make_flags[@]}"
 }
 
-# install_template "haproxy.cfg" to "/etc/haproxy/haproxy.cfg" mode 0644 owner "root:root"
-# install_template "haproxy" to "${init_scripts_path}/haproxy" mode 0755 owner "root:root"
+haproxy_postinstall()
+{
+  if user_is_root
+  then
+    if os_is_linux
+    then
+      if command_exists iptables
+      then
+        if ! file_contains "/etc/rc.local" '--set-mark 1'
+        then
+          log "# HAProxy" append to "/etc/rc.local"
+          log "iptables -t mangle -N DIVERT" append to "/etc/rc.local"
+          log "iptables -t mangle -A PREROUTING -p tcp -m socket -j DIVERT"\
+            append to "/etc/rc.local"
+          log "iptables -t mangle -A DIVERT -j MARK --set-mark 1"\
+            append to "/etc/rc.local"
+          log "iptables -t mangle -A DIVERT -j ACCEPT" append to "/etc/rc.local"
+          log "ip rule add fwmark 1 lookup 100" append to "/etc/rc.local"
+          log "ip route add local 0.0.0.0/0 dev lo table 100"\
+            append to "/etc/rc.local"
+          log "# HAProxy" append to "/etc/rc.local"
+        fi
+      else
+        warn "The iptables command was not found, skipping iptables configuration."
+      fi
 
+      note "If you have an HAProxy pair running with heartbeat then you should"\
+      " have an extenal floating virtual IP (VIP) and an internal floating IP "\
+      "(FIP) for the default gateway. Then for internal servers you may also need"\
+      " an additional IPTables Rule to masquerade internal traffic on the VIP, eg.
+      iptables -t nat -A POSTROUTING -s 192.168.1.0/255.255.255.0 -j MASQUERADE\n"\
+      "Many thanks to 'Malcom Turnbull' for this information in a blog comment."
+    else
+      warn "Skipping iptables configuration as the user is not running as root."
+    fi
+
+    log "Configuring forwarding and redirects for /proc/sys/net/ipv4"
+    log 1 to /proc/sys/net/ipv4/conf/all/forwarding
+    log 1 to /proc/sys/net/ipv4/conf/all/send_redirects
+    log 1 to /proc/sys/net/ipv4/conf/eth0/send_redirects
+
+    # Install the haproxy.cfg template file.
+    install_template "haproxy.cfg" to "/etc/haproxy/haproxy.cfg" mode 0644
+    # No need to seed the haproxy.cfg template, currently.
+
+    # TODO: User config...???
+  fi
+}
