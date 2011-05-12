@@ -12,7 +12,7 @@ service_user="nginx"
 # These defaults may be overridden also by the nginx configuration files.
 configure_flags=(
   --prefix="${install_path}"
-  --conf-path="${install_path}/nginx"
+  --conf-path="${install_path}/nginx/nginx.conf"
   --sbin-path="${install_path}/sbin"
   --pid-path="${install_path}/run/nginx.pid"
   --lock-path="${install_path}/run/nginx.lock"
