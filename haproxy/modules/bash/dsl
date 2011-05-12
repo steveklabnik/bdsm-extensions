@@ -93,7 +93,7 @@ haproxy_postinstall()
       "/proc/sys/net/ipv4:"\
       "\necho 1 > /proc/sys/net/ipv4/conf/all/forwarding"\
       "\necho 1 > /proc/sys/net/ipv4/conf/all/send_redirects"\
-      "\necho 1 > /proc/sys/net/ipv4/conf/eth0/send_redirects"\
+      "\necho 1 > /proc/sys/net/ipv4/conf/eth0/send_redirects"
 
     if file_exists "/etc/haproxy/haproxy.cfg"
     then
