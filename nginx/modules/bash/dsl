@@ -24,7 +24,7 @@ configure_nginx()
   templates=( "mime.types" "proxy.conf" )
   for template in "${templates[@]}"
   do
-    install_template "${template}" to "${active_path}/nginx/${template}" \
+    install_template "${template}" to "${active_path}/nginx/conf/${template}" \
       mode 0644 owner "${service_user}"
   done
 
