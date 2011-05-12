@@ -1,13 +1,4 @@
 #!/usr/bin/env bash
 
-log "nginx:"
-
-if (( master_pid > 0 ))
-then
-  log "  status: running"
-  log "  version: $("${service_binary}" -v 2>&1 | sed -e 's#.*/##')"
-  log "  pid: $(cat ${service_pid_file})"
-else
-  log "  status: not running"
-fi
+service_status
 
