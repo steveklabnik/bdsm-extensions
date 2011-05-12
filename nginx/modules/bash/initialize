@@ -60,4 +60,5 @@ then
 fi
 
 service_run_as_root_flag=1
+service_flags=( -c "${service_config_path}/nginx.conf" )
 
