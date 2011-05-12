@@ -12,7 +12,7 @@ configure_nginx()
 
   (
   # Cleanup default nginx install messy directory.
-  enter "${active_path}/nginx"
+  enter "${install_path}/nginx"
   move_files to "${active_path}/nginx/conf/" "${nginx_files[@]}"
   )
 
