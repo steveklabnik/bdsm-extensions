@@ -2,7 +2,8 @@
 
 log "nginx:"
 
-if [[ -s "${nginx_pid_file}" ]] ; then
+if (( master_pid > 0 ))
+then
   log "  status: running"
   log "  version: $("${service_binary}" -v 2>&1 | sed -e 's#.*/##')"
   log "  pid: $(cat ${service_pid_file})"
