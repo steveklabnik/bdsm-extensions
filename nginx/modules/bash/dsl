@@ -6,28 +6,28 @@ configure_nginx()
   enter "${install_path}"
   ensure_paths_exist "${nginx_dirs[@]}"
 
-  enter "${install_path}/nginx"
+  enter "${install_path}/etc/nginx"
   ensure_paths_exist "${config_dirs[@]}"
   )
 
   (
   # Cleanup default nginx install messy directory.
-  enter "${install_path}/nginx"
-  move_files to "${install_path}/nginx/conf/" "${nginx_files[@]}"
+  enter "${install_path}/etc/nginx"
+  move_files to "${install_path}/nginx/conf" "${nginx_files[@]}"
   )
 
   ensure_paths_exist "${active_path}/config" "${active_path}/nginx/servers"
 
-  install_template "nginx.conf" to "${active_path}/nginx/nginx.conf" \
+  install_template "nginx.conf" to "${active_path}/etc/nginx/nginx.conf" \
     mode 0644 owner "${service_user}"
 
-  install_template "nginx" to "${init_scripts_path}/nginx" \
+  install_template "nginx" to "${init_scripts_path}/etc/nginx" \
     mode 0755 owner "${service_user}"
 
   templates=( "mime.types" "proxy.conf" )
   for template in "${templates[@]}"
   do
-    install_template "${template}" to "${active_path}/nginx/conf/${template}" \
+    install_template "${template}" to "${active_path}/etc/nginx/conf/${template}" \
       mode 0644 owner "${service_user}"
   done
 
@@ -42,13 +42,14 @@ configure_nginx()
 
     if ! file_exists "/etc/nginx/nginx.conf"
     then
-      link --force "${active_path}/nginx" "/etc/nginx"
+      link --force "${active_path}/etc/nginx" "/etc/nginx"
     fi
     link --force "${active_path}/sbin/nginx" to "/usr/sbin/nginx"
   fi
 
   (
   enter "${install_path}"
-  chown_paths_recursively "nginx:nginx" "${nginx_dirs[@]}" "${install_path}/nginx"
+  chown_paths_recursively "nginx:nginx" "${nginx_dirs[@]}" "${install_path}/etc/nginx"
+  chown_paths_recursively "nginx:nginx" "${nginx_dirs[@]}" "${active_path}/etc/nginx"
   )
 }
