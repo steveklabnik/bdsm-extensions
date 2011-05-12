@@ -80,7 +80,7 @@ haproxy_postinstall()
       fi
 
       note "If you have an HAProxy pair running with heartbeat then you should"\
-      " have an extenal floating virtual IP (VIP) and an internal floating IP "\
+      " have an extenal floating virtual IP (VIP) and an internal floating IP"\
       "(FIP) for the default gateway. Then for internal servers you may also need"\
       " an additional IPTables Rule to masquerade internal traffic on the VIP, eg.
       iptables -t nat -A POSTROUTING -s 192.168.1.0/255.255.255.0 -j MASQUERADE\n"\
@@ -89,15 +89,33 @@ haproxy_postinstall()
       warn "Skipping iptables configuration as the user is not running as root."
     fi
 
-    note "You might also consider configuring forwarding and redirects in "\
+    note "You might also consider configuring forwarding and redirects in"\
       "/proc/sys/net/ipv4:"\
       "\necho 1 > /proc/sys/net/ipv4/conf/all/forwarding"\
       "\necho 1 > /proc/sys/net/ipv4/conf/all/send_redirects"\
       "\necho 1 > /proc/sys/net/ipv4/conf/eth0/send_redirects"\
 
-    # Install the haproxy.cfg template file.
-    install_template "haproxy.cfg" to "/etc/haproxy/haproxy.cfg" mode 0644
-    # No need to seed the haproxy.cfg template, currently.
+    if file_exists "/etc/haproxy/haproxy.cfg"
+    then
+      note "Skipping installation of haproxy.cfg as /etc/haproxy/haproxy.cfg"\
+        "already exists"
+    else
+      if template_exists "haproxy.cfg"
+      then
+        install_template "haproxy.cfg" to "/etc/haproxy/haproxy.cfg" mode 0644
+      else
+        warn "Not installing the haproxy.cfg template as it does not exist..."\
+          "This indicates something is wrong in the extension."
+      fi
+    fi
+
+    if file_exists"/etc/haproxy/haproxy.cfg"
+    then
+      seed_template "/etc/haproxy/haproxy.cfg" \
+        service_user "${service_user}"
+    else
+      warn "Not seeding temlpate /etc/haproxy/haproxy.cfg as the file is missing"
+    fi
 
     # TODO: User config...???
   fi
