@@ -3,14 +3,17 @@
 configure_nginx()
 {
   (
-  enter "${active_path}"
-  ensure_paths_exist "${config_directories[@]}"
+  enter "${install_path}"
+  ensure_paths_exist "${nginx_dirs[@]}"
+
+  enter "${install_path}/nginx"
+  ensure_paths_exist "${config_dirs[@]}"
   )
 
   (
   # Cleanup default nginx install messy directory.
   enter "${active_path}/nginx"
-  move_files to "${active_path}/config" "${nginx_files[@]}"
+  move_files to "${active_path}/nginx/conf/" "${nginx_files[@]}"
   )
 
   ensure_paths_exist "${active_path}/config" "${active_path}/nginx/servers"
