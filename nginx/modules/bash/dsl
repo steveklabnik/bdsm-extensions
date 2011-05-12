@@ -49,6 +49,6 @@ configure_nginx()
 
   (
   enter "${install_path}"
-  chown_paths_recursively "nginx:nginx" "${config_dirs[@]}"
+  chown_paths_recursively "nginx:nginx" "${nginx_dirs[@]}" "${install_path}/nginx"
   )
 }
