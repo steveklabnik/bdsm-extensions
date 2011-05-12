@@ -17,7 +17,10 @@ nginx_configure()
 
 configure_nginx()
 {
+  (
+  enter "${active_path}"
   ensure_paths_exist "${config_directories[@]}"
+  )
 
   (
   # Cleanup default nginx install messy directory.
