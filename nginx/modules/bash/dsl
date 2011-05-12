@@ -1,20 +1,5 @@
 #!/usr/bin/env bash
 
-nginx_configure()
-{
-  if gcc --version | grep '4.6' > /dev/null 2>&1
-  then
-    if variable_is_nonempty CFLAGS
-    then # Adjust for gcc 4.6 strictness.
-      export CFLAGS="-Wunused-but-set-variable ${CFLAGS}"
-    else
-      export CFLAGS="-Wunused-but-set-variable"
-    fi
-  fi
-
-  package_configure
-}
-
 configure_nginx()
 {
   (
@@ -28,19 +13,19 @@ configure_nginx()
   move_files to "${active_path}/config" "${nginx_files[@]}"
   )
 
-  ensure_paths_exist "${active_path}/config" "${nginx_servers_path}"
+  ensure_paths_exist "${active_path}/config" "${active_path}/nginx/servers"
 
   install_template "nginx.conf" to "${active_path}/nginx/nginx.conf" \
-    mode 0644 owner "${nginx_user}"
+    mode 0644 owner "${service_user}"
 
   install_template "nginx" to "${init_scripts_path}/nginx" \
-    mode 0755 owner "${nginx_user}"
+    mode 0755 owner "${service_user}"
 
   templates=( "mime.types" "proxy.conf" )
   for template in "${templates[@]}"
   do
     install_template "${template}" to "${active_path}/nginx/${template}" \
-      mode 0644 owner "${nginx_user}"
+      mode 0644 owner "${service_user}"
   done
 
   user_create_if_missing "nginx" with group "nginx"
