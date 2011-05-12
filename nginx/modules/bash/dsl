@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-configure_nginx()
+nginx_postinstall()
 {
   (
   enter "${install_path}"
@@ -16,9 +16,9 @@ configure_nginx()
   move_files to "${install_path}/etc/nginx/conf" "${nginx_files[@]}"
   )
 
-  ensure_paths_exist "${active_path}/config" "${active_path}/etc/nginx/servers"
+  ensure_paths_exist "${install_path}/config" "${install_path}/etc/nginx/servers"
 
-  install_template "nginx.conf" to "${active_path}/etc/nginx/nginx.conf" \
+  install_template "nginx.conf" to "${install_path}/etc/nginx/nginx.conf" \
     mode 0644 owner "${service_user}"
 
   install_template "nginx" to "${init_scripts_path}/etc/nginx" \
@@ -27,19 +27,19 @@ configure_nginx()
   templates=( "mime.types" "proxy.conf" )
   for template in "${templates[@]}"
   do
-    install_template "${template}" to "${active_path}/etc/nginx/conf/${template}" \
+    install_template "${template}" to "${install_path}/etc/nginx/conf/${template}" \
       mode 0644 owner "${service_user}"
   done
-
-  user_create_if_missing "nginx" with group "nginx"
-
   (
   enter "${install_path}"
 
   chown_paths_recursively "nginx:nginx" "${nginx_dirs[@]}" \
-    "${install_path}/etc/nginx" "${active_path}/etc/nginx"
+    "${install_path}/etc/nginx" "${install_path}/etc/nginx"
   )
+}
 
+nginx_postactivate()
+{
   if user_is_root
   then
     if (( ${force_flag:-0} == 1 ))

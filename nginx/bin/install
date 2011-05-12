@@ -4,5 +4,3 @@ log "\nNote: This will do a standard Nginx install.\nUse the 'passenger' BDSM ex
 
 package_install
 
-configure_nginx
-
