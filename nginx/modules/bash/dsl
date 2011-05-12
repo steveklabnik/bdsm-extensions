@@ -13,10 +13,10 @@ configure_nginx()
   (
   # Cleanup default nginx install messy directory.
   enter "${install_path}/etc/nginx"
-  move_files to "${install_path}/nginx/conf" "${nginx_files[@]}"
+  move_files to "${install_path}/etc/nginx/conf" "${nginx_files[@]}"
   )
 
-  ensure_paths_exist "${active_path}/config" "${active_path}/nginx/servers"
+  ensure_paths_exist "${active_path}/config" "${active_path}/etc/nginx/servers"
 
   install_template "nginx.conf" to "${active_path}/etc/nginx/nginx.conf" \
     mode 0644 owner "${service_user}"
@@ -49,7 +49,8 @@ configure_nginx()
 
   (
   enter "${install_path}"
-  chown_paths_recursively "nginx:nginx" "${nginx_dirs[@]}" "${install_path}/etc/nginx"
-  chown_paths_recursively "nginx:nginx" "${nginx_dirs[@]}" "${active_path}/etc/nginx"
+
+  chown_paths_recursively "nginx:nginx" "${nginx_dirs[@]}" \
+    "${install_path}/etc/nginx" "${active_path}/etc/nginx"
   )
 }
