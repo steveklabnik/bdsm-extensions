@@ -111,7 +111,7 @@ haproxy_postinstall()
 
     if file_exists"/etc/haproxy/haproxy.cfg"
     then
-      seed_template "/etc/haproxy/haproxy.cfg"\
+      seed_template "/etc/haproxy/haproxy.cfg" \
         service_user "${service_user}"
     else
       warn "Not seeding temlpate /etc/haproxy/haproxy.cfg as the file is missing"
