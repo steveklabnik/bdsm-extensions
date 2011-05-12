@@ -64,20 +64,19 @@ haproxy_postinstall()
       then
         if ! file_contains "/etc/rc.local" '--set-mark 1'
         then
-          log "# HAProxy" append to "/etc/rc.local"
-          log "iptables -t mangle -N DIVERT" append to "/etc/rc.local"
-          log "iptables -t mangle -A PREROUTING -p tcp -m socket -j DIVERT"\
-            append to "/etc/rc.local"
-          log "iptables -t mangle -A DIVERT -j MARK --set-mark 1"\
-            append to "/etc/rc.local"
-          log "iptables -t mangle -A DIVERT -j ACCEPT" append to "/etc/rc.local"
-          log "ip rule add fwmark 1 lookup 100" append to "/etc/rc.local"
-          log "ip route add local 0.0.0.0/0 dev lo table 100"\
-            append to "/etc/rc.local"
-          log "# HAProxy" append to "/etc/rc.local"
+          note "You can append the following iptables config to /etc/rc.local:"\
+          "\n# HAProxy"\
+          "\niptables -t mangle -N DIVERT"\
+          "\niptables -t mangle -A PREROUTING -p tcp -m socket -j DIVERT"\
+          "\niptables -t mangle -A DIVERT -j MARK --set-mark 1"\
+          "\niptables -t mangle -A DIVERT -j ACCEPT"\
+          "\nip rule add fwmark 1 lookup 100"\
+          "\nip route add local 0.0.0.0/0 dev lo table 100"\
+          "\n# HAProxy"\
         fi
       else
-        warn "The iptables command was not found, skipping iptables configuration."
+        true # No warning as we are not actually doing anything.
+        # warn "The iptables command was not found, skipping iptables configuration."
       fi
 
       note "If you have an HAProxy pair running with heartbeat then you should"\
@@ -90,10 +89,11 @@ haproxy_postinstall()
       warn "Skipping iptables configuration as the user is not running as root."
     fi
 
-    log "Configuring forwarding and redirects for /proc/sys/net/ipv4"
-    log 1 to /proc/sys/net/ipv4/conf/all/forwarding
-    log 1 to /proc/sys/net/ipv4/conf/all/send_redirects
-    log 1 to /proc/sys/net/ipv4/conf/eth0/send_redirects
+    note "You might also consider configuring forwarding and redirects in "\
+      "/proc/sys/net/ipv4:"\
+      "\necho 1 > /proc/sys/net/ipv4/conf/all/forwarding"\
+      "\necho 1 > /proc/sys/net/ipv4/conf/all/send_redirects"\
+      "\necho 1 > /proc/sys/net/ipv4/conf/eth0/send_redirects"\
 
     # Install the haproxy.cfg template file.
     install_template "haproxy.cfg" to "/etc/haproxy/haproxy.cfg" mode 0644
