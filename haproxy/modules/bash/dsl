@@ -72,7 +72,7 @@ haproxy_postinstall()
           "\niptables -t mangle -A DIVERT -j ACCEPT"\
           "\nip rule add fwmark 1 lookup 100"\
           "\nip route add local 0.0.0.0/0 dev lo table 100"\
-          "\n# HAProxy"\
+          "\n# HAProxy"
         fi
       else
         true # No warning as we are not actually doing anything.
