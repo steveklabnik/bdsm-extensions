@@ -1,7 +1,0 @@
-#!/usr/bin/env bash
-
-action "install" "Installs ${package_name} ${package_version}."
-action "setup" "Place the config.monit template in $release_path/config/config.monit"
-action "start" "Startup monit."
-action "stop" "Stop monit."
-
