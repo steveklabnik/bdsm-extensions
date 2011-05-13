@@ -2,3 +2,4 @@
 
 modules package service
 
+dependencies=( flex )
