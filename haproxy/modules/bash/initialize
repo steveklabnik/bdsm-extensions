@@ -13,4 +13,5 @@ service_start_flags+=( -p "${service_pid_file}" -D )
 service_restart_flags+=( -p "${service_pid_file}" )
 service_stop_flags+=( )
 
+service_run_as_root_flag=1
 
