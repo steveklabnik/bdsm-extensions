@@ -45,12 +45,33 @@ postgresql_postinstall()
 
 postgresql_postactivate()
 {
-  replace_content "^.*external_pid_file.*" \
-    with "external_pid_file = ${service_pid_file}" \
+  replace_content "^.*data_directory.*" \
+    with "data_directory = '${service_db_path}/active/data'" \
     in "${service_data_path}/postgresql.conf"
 
-  link --force "${service_data_path}/data/postmaster.pid" \
-    to "${service_pid_file}"
+  replace_content "^.*hba_file.*" \
+    with "hba_file = '${service_db_path}'" \
+    in "${service_data_path}/postgresql.conf"
+
+  replace_content "^.*ident_file.*" \
+    with "ident_file = '${service_pid_file}'" \
+    in "${service_data_path}/postgresql.conf"
+
+  replace_content "^.*listen_address.*" \
+    with "listen_address = '*'" \
+    in "${service_data_path}/postgresql.conf"
+
+  replace_content "^.*max_connections.*" \
+    with "max_connections = '50'" \
+    in "${service_data_path}/postgresql.conf"
+
+  replace_content "^.*unix_socket_directory.*" \
+    with "unix_socket_directory = '${service_pid_path}'" \
+    in "${service_data_path}/postgresql.conf"
+
+  replace_content "^.*shared_buffers.*" \
+    with "shared_buffers = '64MB'" \
+    in "${service_data_path}/postgresql.conf"
 }
 
 postgresql_kernel_parameters()
