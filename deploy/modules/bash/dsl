@@ -7,25 +7,29 @@ hook()
   if (( ${hooks_flag:=1} == 1 ))
   then # Only process hooks if the flag is not explicitely set to 0.
     # System
-    if [[ -s "$shared_path/deploy/$hook" ]]
+    if file_is_nonempty "$shared_path/deploy/$hook"
     then
-      ( source "$shared_path/deploy/$hook" )
+      ( source_files "$shared_path/deploy/$hook" )
     fi
 
     # System, Environment specific
-    if [[ -n "${environment:-""}" && -x "$shared_path/deploy/#{$environment}/$hook" ]]
+    if variable_is_nonempty environment &&
+       file_is_executable "$shared_path/deploy/#{$environment}/$hook"
     then
       ( source "$shared_path/deploy/#{$environment}/$hook" )
     fi
 
     # Project
-    if [[ -d "$shared_path/$project" && -x "$shared_path/$project/config/deploy/$hook" ]]
+    if directory_exists "$shared_path/$project" &&
+       file_is_executable "$shared_path/$project/config/deploy/$hook"
     then
       ( source "$shared_path/$project/config/deploy/$hook" )
     fi
 
     # Project, Environment specific
-    if [[ -n "${environment:-""}" && -x "$shared_path/$project/config/deploy/$environment/$hook" ]]
+    if variable_is_nonempty environment &&
+      file_is_executable "$shared_path/$project/config/deploy/$environment/$hook"
+    fi
     then
       ( source "$shared_path/project/config/deploy/$environment/$hook" )
     fi
@@ -36,9 +40,15 @@ update()
 {
   if update_repository
   then
-    replace_current
+    if replace_current
+    then
+      return 0
+    else
+      return 1
+    fi
+  else
+    return 1
   fi
-  return $?
 }
 
 update_repository()
@@ -211,7 +221,7 @@ record()
   (
   enter "$shared_path/$project"
 
-  revision=$(git log --no-color -1 | head -n 1 | cut -c 7-47)
+  revision=$(git log --no-color -1 | awk '/commit/{print $2}')
   branch=$(git branch --no-color | awk '/^* /{print $2}')
 
   echo "$revision" >> "$release_path/revision"
