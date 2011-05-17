@@ -26,7 +26,7 @@ lua_install()
   log "Installing ${package_name} ${package_version}"
   (
   enter "src/"
-  copy_files_to "${install_path}/bin" lua luac mode 0755
+  copy_files to "${install_path}/bin" lua luac mode 0755
   )
 
   # TODO: Do we want any of the library files?

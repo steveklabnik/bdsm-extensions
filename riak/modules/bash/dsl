@@ -6,19 +6,19 @@ riak_install()
   enter rel/riak
 
   directories=($(find . -mindepth 1 -maxdepth 1 -type d))
-  copy_directories_to "${install_path}/" "${directories[@]}"
+  copy_directories to "${install_path}/" "${directories[@]}"
   )
 
   (
   enter rel/files
 
-  copy_files_to "/etc/${package_name}" app.config  vm.args
+  copy_files to "/etc/${package_name}" app.config  vm.args
 
-  copy_files_to "${install_path}/bin" riak riak-admin
+  copy_files to "${install_path}/bin" riak riak-admin
 
   erts_path="$(find "${install_path}/" -mindepth 1 -maxdepth 1 -iname "erts-*" -type d)"
 
-  copy_files_to "${erts_path}/bin" nodetool erl
+  copy_files to "${erts_path}/bin" nodetool erl
   )
 
   # TODO: install man pages from doc/man/man1/*
