@@ -13,7 +13,7 @@
 detect_scm
 
 if ! command_exists rsync
-else
+then
   error "The 'rsync' command was not found, please install rsync before using"\
     "deploy. (Note that there is an rsync bdsm extension, which you can install"\
     "viathe command as root: root# bdsm extend rsync && bdsm rsync install"
