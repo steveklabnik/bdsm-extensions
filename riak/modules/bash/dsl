@@ -80,9 +80,9 @@ riak_configure()
 
   ensure_paths_exist "$data_path" "$log_path" "/etc/${package_name}/"
 
-  chown_paths_recursively "$package_user" "$data_path"
+  chown_paths --recursive "$package_user" "$data_path"
 
-  chmod_paths_recursively 0700 "$data_path"
+  chmod_paths --recursive 0700 "$data_path"
 }
 
 riak_init_script()
@@ -93,7 +93,7 @@ riak_init_script()
 
   ensure_files_are_executable "${init_scripts_path}/${package_name}"
 
-  chmod_paths_recursively 0755 "${init_scripts_path}/${package_name}"
+  chmod_paths --recursive 0755 "${init_scripts_path}/${package_name}"
 }
 
 riak_profile_d()

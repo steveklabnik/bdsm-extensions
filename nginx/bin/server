@@ -12,7 +12,7 @@ file_is_nonempty "$extension_templates_path/server.conf.template" ||
 
 ensure_paths_exist "$nginx_servers_path/"
 
-chmod_paths_recursively 'g+rx' "/home/${project}"
+chmod_paths --recursive 'g+rx' "/home/${project}"
 
 command sed -e "s#{{project}}#${project}#g" \
   "$extension_templates_path/server.conf.template" \

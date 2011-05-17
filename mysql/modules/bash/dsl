@@ -78,9 +78,9 @@ mysql_postinstall()
 
   ensure_paths_exist "$service_data_path" "$log_path" "/etc/mysql/"
 
-  chown_paths_recursively "$package_user" "$service_data_path"
+  chown_paths --recursive "$package_user" "$service_data_path"
 
-  chmod_paths_recursively 0700 "$service_data_path"
+  chmod_paths --recursive 0700 "$service_data_path"
 }
 
 mysql_init_script()
