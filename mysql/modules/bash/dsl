@@ -34,7 +34,7 @@ mysql_initdb()
 
   ensure_paths_exist "${service_data_path%\/*}"
 
-  chown_paths_recursively "$package_user" "${service_data_path%\/*}"
+  chown_paths --recursive "$package_user" "${service_data_path%\/*}"
 
   command="${install_path}/bin/mysql_install_db --user=\"${package_user}\" --basedir=\"${install_path}\" --datadir=${service_data_path} "
   # --srcdir=\"${source_path}/${package_name}-${package_version}\"
@@ -71,7 +71,7 @@ mysql_postinstall()
       ensure_paths_exist "/etc/mysql"
       copy_file --force "${file}" to "/etc/mysql/my.cnf"
     else
-      fail "${file} missing, not setting up /etc/mysql/my.cnf"
+      error "${file} missing, not setting up /etc/mysql/my.cnf"
     fi
   fi
 
