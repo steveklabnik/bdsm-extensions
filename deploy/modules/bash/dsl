@@ -221,7 +221,7 @@ record()
   enter "$shared_path/$project"
 
   revision=$(git log --no-color -1 | awk '/commit/{print $2}')
-  branch=$(git branch --no-color | awk '/^* /{print $2}')
+  branch=$(git branch --no-color | awk '/^\* /{print $2}')
 
   echo "$revision" >> "$release_path/revision"
   echo "$branch"   >> "$release_path/branch"
