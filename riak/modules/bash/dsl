@@ -6,7 +6,7 @@ riak_install()
   enter rel/riak
 
   directories=($(find . -mindepth 1 -maxdepth 1 -type d))
-  copy_directories to "${install_path}/" "${directories[@]}"
+  copy_paths to "${install_path}/" "${directories[@]}"
   )
 
   (

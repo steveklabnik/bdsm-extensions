@@ -27,8 +27,12 @@ mongodb_install()
 
 mongodb_postinstall()
 {
-  path_exists "${install_base_path}" ||
+  if path_exists "${install_base_path}"
+  then
+    return 0
+  else
     activate_package "${package_name}" "${package_version}"
+  fi
 }
 
 mongodb_set_architecture()
