@@ -30,7 +30,7 @@ configure_flags=(
 
 for library in pcre openssl zlib
 do
-  if directory_exists "${prefix_path}/${library}/active"
+  if path_exists "${prefix_path}/${library}/active"
   then
     configure_flags+=( --with-${library}="${prefix_path}/${library}/active/lib" )
   else

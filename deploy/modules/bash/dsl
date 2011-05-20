@@ -20,7 +20,7 @@ hook()
     fi
 
     # Project
-    if directory_exists "$shared_path/$project" &&
+    if path_exists "$shared_path/$project" &&
        file_is_executable "$shared_path/$project/config/deploy/$hook"
     then
       ( source "$shared_path/$project/config/deploy/$hook" )
@@ -149,7 +149,7 @@ stage_current()
 
 replace_current()
 {
-  if directory_exists "$release_path"
+  if path_exists "$release_path"
   then
     log "Moving aside previous release."
     mv "$release_path" "$project_path/previous/$timestamp"
@@ -161,7 +161,7 @@ replace_current()
 
 configure()
 {
-  if ! directory_exists "$shared_path/config"
+  if ! path_exists "$shared_path/config"
   then
     log "No shared config path found, skipping shared configuration."
     return 0
@@ -203,7 +203,7 @@ symlink()
 
 cleanup()
 {
-  if directory_exists "$project_path/previous"
+  if path_exists "$project_path/previous"
   then
     log "Removing old releases: ${old_releases[@]}"
     enter "${project_path}/previous"

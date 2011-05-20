@@ -9,7 +9,7 @@ unrar_configure()
 
 unrar_extract()
 {
-  if directory_exists "unrar"
+  if path_exists "unrar"
   then
     remove_paths "unrar"
   fi

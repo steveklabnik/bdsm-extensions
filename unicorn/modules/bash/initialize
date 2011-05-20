@@ -44,7 +44,7 @@ else
   master_pid=0 # Not found!
 fi
 
-if directory_exists "$release_path"
+if path_exists "$release_path"
 then
   enter "${release_path}"
   # Since enter will not trigger project rvmrc files,

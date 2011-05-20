@@ -111,19 +111,19 @@ fetch_repository()
 { # TODO: Switch this to use the vcs module.
   if [[ "$scm" = "git" ]] || (echo "$repository_url" | awk "/git/" 2>/dev/null)
   then
-    if ! directory_exists "$shared_path/$project/.git"
+    if ! path_exists "$shared_path/$project/.git"
     then
       git clone ${scm_flags[@]} $repository_url $project
     fi
   elif [[ "$scm" = "svn" ]] || (echo "$repository_url" | awk "/svn/" 2>/dev/null)
   then
-    if ! directory_exists "$shared_path/$project/.svn"
+    if ! path_exists "$shared_path/$project/.svn"
     then
       svn checkout  ${scm_flags[@]} $repository_url $project
     fi
   elif [[ "$scm" = "hg" ]] || (echo "$repository_url" | awk "/hg/" 2>/dev/null)
   then
-    if ! directory_exists "$shared_path/$project/.hg"
+    if ! path_exists "$shared_path/$project/.hg"
     then
       hg clone ${scm_flags[@]} $repository_url $project
     fi

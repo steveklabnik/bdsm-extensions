@@ -2,7 +2,7 @@
 
 shocco_download()
 {
-  if ! directory_exists shocco-head
+  if ! path_exists shocco-head
   then
     git clone ${package_base_url} shocco-head
   fi
