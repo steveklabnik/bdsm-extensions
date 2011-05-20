@@ -23,7 +23,7 @@ mongodb_install()
   for file in "${files[@]}"
   do
     name=${file//*\/}
-    ensure_paths_exist "${file%\/*}"
+    ensure_paths_exist "${install_path}/bin"
     copy_file "${file}" to "${install_path}/bin/${name}" mode 0755
   done
 }
