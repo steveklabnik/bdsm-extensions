@@ -2,19 +2,15 @@
 
 nginx_postinstall()
 {
-  (
   enter "${install_path}"
   ensure_paths_exist "${nginx_dirs[@]}"
 
   enter "${install_path}/etc/nginx"
   ensure_paths_exist "${config_dirs[@]}"
-  )
 
-  (
   # Cleanup default nginx install messy directory.
   enter "${install_path}/etc/nginx"
   move_files "${nginx_files[@]}" to "${install_path}/etc/nginx/conf"
-  )
 
   ensure_paths_exist "${install_path}/config" "${install_path}/etc/nginx/servers"
 
@@ -30,12 +26,10 @@ nginx_postinstall()
     install_template "${template}" to "${install_path}/etc/nginx/conf/${template}" \
       mode 0644 owner "${service_user}"
   done
-  (
   enter "${install_path}"
 
   chown_paths_recursively "nginx:nginx" "${nginx_dirs[@]}" \
     "${install_path}/etc/nginx" "${install_path}/etc/nginx"
-  )
 }
 
 nginx_postactivate()
@@ -50,10 +44,8 @@ nginx_postactivate()
     if ! file_exists "/etc/nginx/nginx.conf"
     then
       link --force "${active_path}/etc/nginx" "/etc/nginx"
-      (
       enter "/etc/nginx/"
       remove_files "${nginx_files[@]}"
-      )
     fi
     link --force "${active_path}/sbin/nginx" to "/usr/sbin/nginx"
   fi
