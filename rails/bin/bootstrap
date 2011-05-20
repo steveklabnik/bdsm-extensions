@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-enter "$release_path"
+enter "${release_path}"
 
 file_is_nonempty *.gems && rvm gemset import *.gems
 

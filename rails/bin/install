@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-enter "$release_path"
+enter "${release_path}"
 
 command_exists rails || install_gems rails
 

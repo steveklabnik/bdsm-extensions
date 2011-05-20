@@ -46,7 +46,7 @@ fi
 
 if directory_exists "$release_path"
 then
-  enter "$release_path"
+  enter "${release_path}"
   # Since enter will not trigger project rvmrc files,
   source_files "$release_path/.rvmrc" "$HOME/.rvm/hooks/after_cd"
 fi
