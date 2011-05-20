@@ -13,7 +13,7 @@ nginx_postinstall()
   (
   # Cleanup default nginx install messy directory.
   enter "${install_path}/etc/nginx"
-  move_files to "${install_path}/etc/nginx/conf" "${nginx_files[@]}"
+  move_files "${nginx_files[@]}" to "${install_path}/etc/nginx/conf"
   )
 
   ensure_paths_exist "${install_path}/config" "${install_path}/etc/nginx/servers"
