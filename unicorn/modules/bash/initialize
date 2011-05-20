@@ -46,3 +46,5 @@ directory_exists "$release_path" && enter "$release_path"
 # Since enter will not trigger project rvmrc files,
 source_files "$release_path/.rvmrc" "$HOME/.rvm/hooks/after_cd"
 
+service_log_file="${shared_path}/log/unicorn.log"
+
