@@ -10,7 +10,7 @@ shocco_extract()
 {
   scm_update ${package_base_url}
 
-  copy_paths --force "${repos_path}/${package_base_url//\//_}" \
+  copy_paths --force "${repos_path}/${package_base_url//\//_}/" \
     to "${src_path}/${extension}-head"
 }
 
