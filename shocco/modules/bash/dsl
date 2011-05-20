@@ -2,14 +2,15 @@
 
 shocco_download()
 {
-  if ! path_exists shocco-head
-  then
-    git clone ${package_base_url} shocco-head
-  fi
+  scm_fetch ${package_base_url}
+
 }
 
 shocco_extract()
 {
-  git pull origin master
+  scm_update ${package_base_url}
+
+  copy_paths --force "${repos_path}/${package_base_url//\//_}" \
+    to "${src_path}/${extension}-head"
 }
 
