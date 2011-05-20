@@ -135,7 +135,7 @@ fetch_repository()
 setup_shared_path()
 {
   (
-  enter "$shared_path"
+  enter "${shared_path}"
   ensure_paths_exist config log pids sockets "public/assets" tmp
   )
 }

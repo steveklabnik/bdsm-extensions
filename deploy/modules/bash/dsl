@@ -55,7 +55,7 @@ update_repository()
   log "Updating local repository in $shared_path/$project."
 
   (
-  enter "$shared_path/$project"
+  enter "${shared_path}/${project}"
 
   case "$scm" in
     git)
@@ -171,7 +171,7 @@ configure()
 
   ensure_paths_exist "$stage_path/config"
 
-  enter "$shared_path/config"
+  enter "${shared_path}/config"
 
   log "Setting up persistent config files:"
   for config_item in "$shared_path"/config/*
@@ -206,7 +206,7 @@ cleanup()
   if directory_exists "$project_path/previous"
   then
     log "Removing old releases: ${old_releases[@]}"
-    enter "$project_path/previous"
+    enter "${project_path}/previous"
 
     if array_is_nonempty old_releases
     then
@@ -218,7 +218,7 @@ cleanup()
 record()
 {
   (
-  enter "$shared_path/$project"
+  enter "${shared_path}/$project"
 
   revision=$(git log --no-color -1 | awk '/commit/{print $2}')
   branch=$(git branch --no-color | awk '/^\* /{print $2}')

@@ -2,9 +2,9 @@
 
 extension_license
 
-ensure_paths_exist "$shared_path"
+ensure_paths_exist "${shared_path}"
 
-enter "$shared_path"
+enter "${shared_path}"
 
 setup_shared_path
 
