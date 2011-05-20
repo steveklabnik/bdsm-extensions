@@ -22,7 +22,7 @@ then
     succeed "Unicorn herd master has been launched $project."
   else
     log "Unicorn herd master failed to start, check ${service_log_file}, last 50:"
-    exec tail -n 50 "${service_log_file}"
+    tail -n 50 "${service_log_file}"
     error
   fi
 else
