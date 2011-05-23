@@ -13,6 +13,9 @@ freetds_extract()
 
   if variable_is_nonempty _directory
   then
-    move_directory "${_directory}" to "${package_dir}"
+    if [[ "${_directory}" != "${package_dir}" ]]
+    then
+      move_directory "${_directory}" to "${package_dir}"
+    fi
   fi
 }
