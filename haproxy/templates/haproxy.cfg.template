@@ -50,8 +50,8 @@ listen http_apps 127.0.0.1:80
 
   # Servers block
   server web-1 127.0.0.1:5000 check inter 5000 fastinter 1000 fall 1 weight 1 cookie web-1 minconn 3 maxconn 10
-  server web-2 227.0.0.1:5000 check inter 5000 fastinter 1000 fall 1 weight 2 cookie web-2 minconn 3 maxconn 10
-  server web-3 227.0.0.1:5000 check inter 5000 fastinter 1000 fall 1 weight 3 cookie web-3 minconn 3 maxconn 10
+  server web-2 227.0.0.1:5001 check inter 5000 fastinter 1000 fall 1 weight 2 cookie web-2 minconn 3 maxconn 10
+  server web-3 227.0.0.1:5002 check inter 5000 fastinter 1000 fall 1 weight 3 cookie web-3 minconn 3 maxconn 10
   # NOTE: Adjust the {min,max}conn to whatever backend you are running.
 
   # Fallback server, in case the servers block is not responding.
