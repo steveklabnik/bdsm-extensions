@@ -28,8 +28,7 @@ nginx_postinstall()
   done
   enter "${install_path}"
 
-  chown_paths --recursive "${service_user}" "${nginx_dirs[@]}" \
-    "${install_path}/etc/nginx" "${install_path}/etc/nginx"
+  chown_paths --recursive "${service_user}" "${nginx_dirs[@]}" "etc/nginx"
 }
 
 nginx_postactivate()
