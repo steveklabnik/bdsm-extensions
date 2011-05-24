@@ -2,6 +2,8 @@
 
 project="${extension_args[0]:-$1}"
 
+# TODO: edit option to open server config in editor.
+
 if variable_is_nonempty project
 then
   if template_exists "server.conf"

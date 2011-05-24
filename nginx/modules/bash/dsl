@@ -10,23 +10,27 @@ nginx_postinstall()
 
   # Cleanup default nginx install messy directory.
   enter "${install_path}/etc/nginx"
-  move_files "${nginx_files[@]}" to "${install_path}/etc/nginx/conf"
+  move_files "${nginx_files[@]}" to "${service_config_path}/conf"
 
-  ensure_paths_exist "${install_path}/config" "${install_path}/etc/nginx/servers"
+  ensure_paths_exist "${install_path}/config" "${service_config_path}/servers"
 
-  install_template "nginx.conf" to "${install_path}/etc/nginx/nginx.conf" \
+  install_template "nginx.conf" to "${service_config_path}/nginx.conf" \
     mode 0644 owner "${service_user}"
 
-  install_template "nginx" to "${init_scripts_path}/etc/nginx" \
+  install_template "nginx" to "${service_config_path}" \
     mode 0755 owner "${service_user}"
 
   templates=( "mime.types" "proxy.conf" )
+
   for template in "${templates[@]}"
   do
-    install_template "${template}" to "${install_path}/etc/nginx/conf/${template}" \
+    install_template "${template}" to "${service_config_path}/conf/${template}" \
       mode 0644 owner "${service_user}"
   done
   enter "${install_path}"
+
+  replace_content "^user .*;$" with "# No user line for non-root installs "\
+    in "${service_config_path}/nginx.conf"
 
   chown_paths --recursive "${service_user}" "${nginx_dirs[@]}" "etc/nginx"
 }
