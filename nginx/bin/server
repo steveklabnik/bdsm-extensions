@@ -28,8 +28,16 @@ then
     then
       install_template "server.conf" to "${project_config}"
 
-      seed_template "${project_config}" \
-        project "${project}"
+      seed_template "${install_path}/etc/nginx/nginx.conf" \
+        modules_path "${modules_path}" \
+        service "${service}" \
+        project "${project}" \
+        project_path "${project_path:="/home/${project}"}" \
+        service_user "${service_user}" \
+        service_config_path "${service_config_path}" \
+        service_pid_file "${service_pid_file}" \
+        service_log_path "${service_log_path}"
+
     else
       warn "Not installing template ${project_config}"\
         "as the file already exists"

@@ -1,5 +1,5 @@
 upstream {{project}} {
-  server unix:/home/{{project}}/shared/{{project}}.sock fail_timeout=0;
+  server unix:{{project_path}}/shared/{{project}}.sock fail_timeout=0;
 }
 
 server {
@@ -8,10 +8,10 @@ server {
 
   server_name {{project}}.com *.{{project}}.com;
 
-  root /home/{{project}}/current/public;
+  root {{project_path}}/current/public;
 
-  access_log /home/{{project}}/shared/log/{{project}}.com.access.log;
-  error_log  /home/{{project}}/shared/log/{{project}}.com.error.log  info;
+  access_log {{project_path}}/shared/log/{{project}}.com.access.log;
+  error_log  {{project_path}}/shared/log/{{project}}.com.error.log  info;
 
   # This is a ruby/python/etc... application, deny other types.
   location ~ \.(php|asp|aspx|jsp|cfm|dll)$ {
@@ -27,22 +27,22 @@ server {
     access_log /var/log/nginx/health.log;
     index index.html;
     auth_basic off;
-    root /etc/nginx/nginx.conf.default;
+    root {{service_config_path}}/nginx.conf.default;
     break;
   }
 
   location / {
-    include /etc/nginx/conf/proxy.conf;
+    include {{service_config_path}}/conf/proxy.conf;
     try_files /system/maintenance.html $uri $uri/index.html $uri.html @{{project}};
   }
 
   location @{{project}} {
-    include /etc/nginx/conf/proxy.conf;
+    include {{service_config_path}}/conf/proxy.conf;
     proxy_pass http://{{project}};
   }
 
   error_page   500 502 503 504  /500.html;
   location = /500.html {
-    root   /home/{{project}}/current/public;
+    root   {{project_path}}/current/public;
   }
 }
