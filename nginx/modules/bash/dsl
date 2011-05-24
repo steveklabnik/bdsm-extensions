@@ -9,36 +9,36 @@ nginx_postinstall()
   ensure_paths_exist "${config_dirs[@]}"
 
   # Cleanup default nginx install messy directory.
-  move_files --if-exists "${nginx_files[@]}" to "${service_config_path}/conf" \
-   from "${service_config_path}"
+  move_files --if-exists "${nginx_files[@]}" to "${install_path}/etc/nginx/conf" \
+   from "${install_path}/etc/nginx"
 
-  ensure_paths_exist "${install_path}/config" "${service_config_path}/servers"
+  ensure_paths_exist "${install_path}/config" "${install_path}/etc/nginx/servers"
 
-  install_template "nginx.conf" to "${service_config_path}/nginx.conf" \
+  install_template "nginx.conf" to "${install_path}/etc/nginx/nginx.conf" \
     mode 0644 owner "${service_user}"
 
-  seed_template "${service_config_path}/nginx.conf" \
+  seed_template "${install_path}/etc/nginx/nginx.conf" \
     modules_path "${modules_path}" \
     service "${service}" \
     service_user "${service_user}" \
-    service_config_path "${service_config_path}" \
+    service_config_path "${install_path}/etc/nginx" \
     service_pid_file "${service_pid_file}" \
     service_log_path "${service_log_path}"
 
-  install_template "nginx" to "${service_config_path}" \
+  install_template "nginx" to "${install_path}/etc/nginx" \
     mode 0755 owner "${service_user}"
 
   templates=( "mime.types" "proxy.conf" )
 
   for template in "${templates[@]}"
   do
-    install_template "${template}" to "${service_config_path}/conf/${template}" \
+    install_template "${template}" to "${install_path}/etc/nginx/conf/${template}" \
       mode 0644 owner "${service_user}"
   done
   enter "${install_path}"
 
   replace_content "^user .*;$" with "# No user line for non-root installs "\
-    in "${service_config_path}/nginx.conf"
+    in "${install_path}/etc/nginx/nginx.conf"
 
   chown_paths --recursive "${service_user}" "${nginx_dirs[@]}" "etc/nginx"
 }
