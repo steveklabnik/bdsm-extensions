@@ -49,15 +49,20 @@ nginx_postactivate()
   then
     if (( ${force_flag:-0} == 1 ))
     then
-      remove_paths "/etc/nginx"
+      remove_paths "${service_config_path}"
     fi
 
-    if ! file_exists "/etc/nginx/nginx.conf"
+    if ! file_exists "${service_config_path}/nginx.conf"
     then
-      link --force "${install_base_path}/active/etc/nginx" "/etc/nginx"
-      enter "/etc/nginx/"
+      link --force "${install_base_path}/active/etc/nginx" \
+        "${service_config_path}"
+
+      enter "${service_config_path}"
+
+      # TODO: add from parameter from remove_files
       remove_files "${nginx_files[@]}"
     fi
-    link --force "${active_path}/sbin/nginx" to "/usr/sbin/nginx"
+
+    link --force "${active_path}/sbin/nginx" to "${service_binary}"
   fi
 }
