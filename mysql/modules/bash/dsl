@@ -36,15 +36,26 @@ mysql_initdb()
 
   chown_paths --recursive "$package_user" "${service_data_path%\/*}"
 
-  command="${install_path}/bin/mysql_install_db --user=\"${package_user}\" --basedir=\"${install_path}\" --datadir=${service_data_path} "
   # --srcdir=\"${source_path}/${package_name}-${package_version}\"
   export PATH="${install_path}/bin:$PATH"
 
   if user_is_root
   then
-    user_run_as "${package_user}" "${command}"
+    if user_run_as "${package_user}" \
+      "${install_path}/bin/mysql_install_db --user=\"${package_user}\" --basedir=\"${install_path}\" --datadir=${service_data_path} "
+    then
+      log "Successfully initialized the database at ${service_data_path}"
+    else
+      warn "There was an error ($?) initializing the database at ${service_data_path}"
+    fi
   else
-    "${command}"
+    if ${install_path}/bin/mysql_install_db --user=\"${package_user}\" \
+      --basedir=\"${install_path}\" --datadir=${service_data_path}
+    then
+      log "Successfully initialized the database at ${service_data_path}"
+    else
+      warn "There was an error ($?) initializing the database at ${service_data_path}"
+    fi
   fi
 
   mysql_postinstall
