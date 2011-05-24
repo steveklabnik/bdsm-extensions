@@ -1,0 +1,4 @@
+version=7.3
+base_url=ftp://ftp.vim.org/pub/vim/unix
+archive_format=tar.bz2
+website_url=http://www.vim.org/
