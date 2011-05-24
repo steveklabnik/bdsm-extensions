@@ -6,7 +6,7 @@ if variable_is_nonempty project
 then
   if template_exists "server.conf"
   then
-    ensure_paths_exist "$nginx_servers_path"
+    ensure_paths_exist "${service_config_path}/servers"
 
     chmod_paths --recursive 'g+rx' "/home/${project}"
 
