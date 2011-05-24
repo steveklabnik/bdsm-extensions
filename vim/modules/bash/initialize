@@ -3,5 +3,5 @@
 modules package
 
 package_definition \
-  dir "vim73"
+  dir "vim${package_version//.}"
 
