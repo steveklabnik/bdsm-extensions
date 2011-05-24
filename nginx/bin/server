@@ -2,18 +2,36 @@
 
 project="${extension_args[0]:-$1}"
 
-[[ -n "$project" ]] || fail "project must be specified for 'nginx server'"
+if variable_is_nonempty project
+then
+  if template_exists "server.conf"
+  then
+    ensure_paths_exist "$nginx_servers_path"
 
-# TODO: Account for user name being different from project name.
-nginx_config_path="${nginx_config_path:-"/etc/nginx/conf"}"
+    chmod_paths --recursive 'g+rx' "/home/${project}"
 
-file_is_nonempty "$extension_templates_path/server.conf.template" ||
-  fail "ERROR: $extension_templates_path/server.conf template is missing."
+    if (( force_flag == 1 ))
+    then
+      if file_exists "${nginx_servers_path}/${project}.conf"
+      then
+        remove_file "${nginx_servers_path}/${project}.conf"
+      fi
+    fi
 
-ensure_paths_exist "$nginx_servers_path/"
+    if file_is_missing "${nginx_servers_path}/${project}.conf"
+    then
+      install_template "server.conf" to "${nginx_servers_path}/${project}.conf"
 
-chmod_paths --recursive 'g+rx' "/home/${project}"
+      seed_template "${nginx_servers_path}/${project}.conf" \
+        project "${project}"
+    else
+      warn "Not installing template ${nginx_servers_path}/${project}.conf"\
+        "as the file already exists"
+    fi
+  else
+    fail "ERROR: $extension_templates_path/server.conf template is missing."
+  fi
+else
+  fail "project must be specified for 'nginx server'"
+fi
 
-command sed -e "s#{{project}}#${project}#g" \
-  "$extension_templates_path/server.conf.template" \
-  > "$nginx_servers_path/$project.conf"
