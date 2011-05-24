@@ -17,6 +17,14 @@ nginx_postinstall()
   install_template "nginx.conf" to "${service_config_path}/nginx.conf" \
     mode 0644 owner "${service_user}"
 
+  seed_template "${service_config_path}/nginx.conf" \
+    modules_path "${modules_path}" \
+    service "${service}" \
+    service_user "${service_user}" \
+    service_config_path "${service_config_path}" \
+    service_pid_file "${service_pid_file}" \
+    service_log_path "${service_log_path}"
+
   install_template "nginx" to "${service_config_path}" \
     mode 0755 owner "${service_user}"
 
