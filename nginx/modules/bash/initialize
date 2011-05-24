@@ -57,6 +57,5 @@ then
   master_pid="$(ps auxww | awk '/[n]ginx: master/{print $2}' | head -1)"
 fi
 
-service_run_as_root_flag=1
 service_flags=( -c "${service_config_path}/nginx.conf" )
 
