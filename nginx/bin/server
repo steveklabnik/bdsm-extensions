@@ -28,7 +28,7 @@ then
     then
       install_template "server.conf" to "${project_config}"
 
-      seed_template "${install_path}/etc/nginx/nginx.conf" \
+      seed_template "${active_path}/etc/nginx/nginx.conf" \
         modules_path "${modules_path}" \
         service "${service}" \
         project "${project}" \
