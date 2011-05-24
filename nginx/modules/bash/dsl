@@ -9,8 +9,8 @@ nginx_postinstall()
   ensure_paths_exist "${config_dirs[@]}"
 
   # Cleanup default nginx install messy directory.
-  enter "${install_path}/etc/nginx"
-  move_files "${nginx_files[@]}" to "${service_config_path}/conf"
+  move_files "${nginx_files[@]}" to "${service_config_path}/conf" \
+    from "${service_config_path}/servers"
 
   ensure_paths_exist "${install_path}/config" "${service_config_path}/servers"
 
