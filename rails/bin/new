@@ -1,9 +1,17 @@
 #!/usr/bin/env bash
 
-if file_is_nonempty "script/${action}" ; then
-  ruby script/${action}
-elif file_is_nonempty "script/rails" ; then
-  ruby script/rails ${action}
-elif command_exists rails
-  rails ${action}
+if command_exists "ruby"
+then
+  if file_is_nonempty "script/${action}"
+  then
+    ruby script/${action}
+  elif file_is_nonempty "script/rails"
+  then
+    ruby script/rails ${action}
+  elif command_exists rails
+    rails ${action}
+  fi
+else
+  error "'ruby' does not exist in the path, cannot run ${action}"
 fi
+

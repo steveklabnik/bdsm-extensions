@@ -2,6 +2,9 @@
 
 enter "${release_path}"
 
-command_exists rake || install_gems rake
+if ! command_exists rake
+then
+  install_gems rake
+fi
 
 rake db:migrate --trace

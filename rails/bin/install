@@ -2,5 +2,8 @@
 
 enter "${release_path}"
 
-command_exists rails || install_gems rails
+if ! command_exists rails
+then
+  install_gems rails
+fi
 
