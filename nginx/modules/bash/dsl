@@ -43,7 +43,7 @@ nginx_postactivate()
 
     if ! file_exists "/etc/nginx/nginx.conf"
     then
-      link --force "${active_path}/etc/nginx" "/etc/nginx"
+      link --force "${install_base_path}/active/etc/nginx" "/etc/nginx"
       enter "/etc/nginx/"
       remove_files "${nginx_files[@]}"
     fi
