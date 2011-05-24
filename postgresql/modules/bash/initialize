@@ -32,4 +32,3 @@ fi
 
 service_pid_file="${service_data_path}/data/postmaster.pid"
 
-service_user="$package_user"
