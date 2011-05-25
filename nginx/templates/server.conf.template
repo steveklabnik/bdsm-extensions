@@ -24,10 +24,12 @@ server {
   }
 
   location /nginx/health {
-    access_log /var/log/nginx/health.log;
+    # access_log /var/log/nginx/health.log;
+    access_log off;
     index index.html;
     auth_basic off;
-    root {{service_config_path}}/nginx.conf.default;
+    root /etc/nginx/health;
+    return 200;
     break;
   }
 
