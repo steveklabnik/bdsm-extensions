@@ -29,8 +29,8 @@ server {
     index index.html;
     auth_basic off;
     root /etc/nginx/health;
+    rewrite  ^/nginx/health$ /index.html break;
     return 200;
-    break;
   }
 
   location / {
