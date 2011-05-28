@@ -6,8 +6,8 @@ node_configure()
   then
     if python=$(command -v python2)
     then
-      replace_content "\#!/usr/bin/env python" \
-        with "\#!${python}" in "tools/waf-light"
+      replace_content "#!/usr/bin/env python" \
+        with "#!${python}" in "tools/waf-light"
 
       replace_content "python " with "${python} " in "Makefile"
     fi
