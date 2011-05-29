@@ -70,6 +70,8 @@ nginx_postactivate()
       remove_files "${nginx_files[@]}"
     fi
 
-    link --force "${install_path}/sbin/nginx" to "${service_binary}"
+    link --force "${install_base_path}/active/sbin/nginx" \
+      "${service_binary}"
+
   fi
 }
