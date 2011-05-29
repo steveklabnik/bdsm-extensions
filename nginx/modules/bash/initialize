@@ -59,3 +59,8 @@ fi
 
 service_flags=( -c "${service_config_path}/nginx.conf" )
 
+if user_is_root
+then
+  service_run_as_root_flag=1
+fi
+
