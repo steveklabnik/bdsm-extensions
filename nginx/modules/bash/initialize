@@ -58,6 +58,7 @@ then
 fi
 
 service_flags=( -c "${service_config_path}/nginx.conf" )
+service_binary="${active_path}/sbin/nginx"
 
 if user_is_root
 then

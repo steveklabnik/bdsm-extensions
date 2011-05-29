@@ -72,6 +72,5 @@ nginx_postactivate()
 
     link --force "${install_base_path}/active/sbin/nginx" \
       "${service_binary}"
-
   fi
 }
