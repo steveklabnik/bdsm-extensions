@@ -58,7 +58,6 @@ redis_status()
 {
   service_status
 
-  log "  port: $(awk '/^port/{print $2}' "${service_config_file}" 2>/dev/null || printf "6379")"
   log "  pidfile: $(awk '/^pidfile/{print $2}' ${service_config_file})"
   log "  logfile: $(awk '/^logfile/{print $2}' ${service_config_file})"
   log "  dbfile: $(awk '/^dbfilename/{print $2}' ${service_config_file})"
