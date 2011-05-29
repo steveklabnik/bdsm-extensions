@@ -1,6 +1,0 @@
-#!/usr/bin/env bash
-
-[[ -s "$extension_templates_path/nginx.conf.template" ]] ||
-  fail "$extension_templates_path/nginx.conf.template is missing."
-
-configure_nginx
