@@ -2,7 +2,7 @@
 
 modules package service
 
-dependencies=( zlib pcre openssl)
+dependencies=( zlib pcre openssl )
 
 init_scripts_path=$(init_scripts_path)
 

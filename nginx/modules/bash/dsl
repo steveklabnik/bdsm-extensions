@@ -23,13 +23,14 @@ nginx_postinstall()
     modules_path "${modules_path}" \
     service "${service}" \
     service_user "${service_user}" \
-    service_config_path "${install_path}/etc/nginx" \
+    service_config_path "${service_config_path}" \
     service_pid_file "${service_pid_file}" \
     service_log_path "${service_log_path}"
 
   ensure_paths_exist "${install_path}/etc/nginx/health/"
 
-  install_template "nginx.health" to "${install_path}/etc/nginx/health/nginx.conf" \
+  install_template "nginx.health" \
+    to "${install_path}/etc/nginx/health/nginx.conf" \
     mode 0644 owner "${service_user}"
 
   install_template "nginx" to "${install_path}/etc/nginx" \
