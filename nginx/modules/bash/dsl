@@ -14,6 +14,8 @@ nginx_postinstall()
 
   ensure_paths_exist "${install_path}/config" "${install_path}/etc/nginx/servers"
 
+  user_create_if_missing "${service_user}" with group "${service_user}"
+
   install_template "nginx.conf" to "${install_path}/etc/nginx/nginx.conf" \
     mode 0644 owner "${service_user}"
 
