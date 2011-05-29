@@ -1,0 +1,5 @@
+#/Users/wayneeseguin/.rvm/rubies/rbx-head/bin/ruby
+
+require "debugger"
+Rubinius::Debugger.start
+

@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+echo "Example: array_is_nonempty()"
+echo "Setting the array to: (1 2 3 4 5)"
+the_array=(1 2 3 4 5)
+echo "Running: array_is_nonempty the_array"
+array_is_nonempty the_array
+echo "Exit status: $?"
+
+echo "Emptying the array: ()"
+the_array=()
+echo "Running: array_is_nonempty the_array"
+echo "Exit status: $?"
+

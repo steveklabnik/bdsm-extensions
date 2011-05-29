@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
 
-package_uninstall
+service_start
 

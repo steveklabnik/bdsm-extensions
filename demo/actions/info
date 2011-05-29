@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+# 1. 'info'        - uname & hostname script (uname -a : hostname)
+greeting
+hostname
+uname -a
+
