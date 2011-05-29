@@ -56,16 +56,7 @@ redis_install()
 
 redis_status()
 {
-  log "redis-server:"
-
-  if (( service_pid > 0 ))
-  then
-    log "  status: running"
-    log "  version: $("${init_scripts_path}/redis" info |  awk -F: '/_version/{print $2}')"
-    log "  pid: $(cat ${service_pid_file})"
-  else
-    log "  status: not running"
-  fi
+  service_status
 
   log "  port: $(awk '/^port/{print $2}' "${service_config_file}" 2>/dev/null || printf "6379")"
   log "  pidfile: $(awk '/^pidfile/{print $2}' ${service_config_file})"

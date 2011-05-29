@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
 
-service_status
+redis_status
 
