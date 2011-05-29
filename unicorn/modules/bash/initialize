@@ -23,5 +23,6 @@ then
   source_files "$release_path/.rvmrc" "$HOME/.rvm/hooks/after_cd"
 fi
 
+service_binary="${active_path}/sbin/nginx"
 service_log_file="${shared_path}/log/unicorn.log"
 
