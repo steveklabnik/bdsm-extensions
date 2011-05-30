@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-description "Extension for managing Nginx (http://wiki.nginx.org/Main)."
+description "Extension for managing Nginx (${website_url})."
 
 action "start" "Startup ${extension}."
 action "stop" "Stop ${extension}."
