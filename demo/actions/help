@@ -1,9 +1,0 @@
-#!/usr/bin/env bash
-
-description "${extension} BDSM extension."
-
-action "cpus" "Display the number of usable logical cpus."
-action "archcapable" "Display the maximum architecture type we can compile to."
-action "info" "Display system hostname and uname information."
-
-show_help usage

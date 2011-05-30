@@ -1,6 +1,0 @@
-#!/usr/bin/env bash
-# 2. 'cpus'        - count of the number of CPU cores
-greeting
-os_cpu_count
-echo
-

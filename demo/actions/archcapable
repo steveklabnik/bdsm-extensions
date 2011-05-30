@@ -1,6 +1,0 @@
-#!/usr/bin/env bash
-# 3. 'archcapable' - Maximum architecture type we can compile for.
-greeting
-os_arch_capable
-echo
-
