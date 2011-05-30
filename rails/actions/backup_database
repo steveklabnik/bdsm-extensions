@@ -82,7 +82,7 @@ FileUtils.mkdir_p(@target_path) unless File.exist?(@target_path)
 # Perform the backup
 #
 case @adapter
-when "mysql"
+when "mysql","mysql2"
   @dump = %x{which mysqldump}.strip
 
   fail "mysqldump command not found" if @dump.empty?
