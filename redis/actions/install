@@ -1,6 +1,0 @@
-#!/usr/bin/env bash
-
-package_install
-
-configure_redis
-

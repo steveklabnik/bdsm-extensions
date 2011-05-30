@@ -1,6 +1,4 @@
 #!/usr/bin/env bash
 
-service_setup
-
 configure_redis
 

@@ -2,13 +2,10 @@
 
 description "Extension for managing redis (http://wiki.redis.org/Main)."
 
-action "install" "Installs ${package_name} ${package_version}."
-action "setup" "Setup redis configuration."
-action "start" "Startup redis."
-action "stop" "Stop redis."
-action "restart" "Restart redis."
-action "info" "Display redis server INFO"
-action "help" "Display this help text."
+action "service [action]" "Control ${extension}Nginx service."
+action "server [action]" "Work with ${extension}Nginx server configurations."
+action "package [action]" "Use ${extension} package."
+action "[namespace] help" "Display help for namespaces ${extension} {service,server,package,conf}."
 
 show_help usage
 
