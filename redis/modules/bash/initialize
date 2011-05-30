@@ -16,3 +16,5 @@ then
   service_flags+=( "${service_config_file}" )
 fi
 
+read_default website_url prefix package
+
