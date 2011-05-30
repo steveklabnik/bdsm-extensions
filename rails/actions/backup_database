@@ -89,7 +89,7 @@ when "mysql","mysql2"
 
   @flags    = "--add-drop-table --complete-insert --default-character-set=utf8 --quote-names --extended-insert"
   @filename = "#{@database}%#{@timestamp}.mysql"
-  @command  = "#{@dump} #{@flags} --user=#{@username} -p#{@password} --quick #{@database} | bzip2 -c > #{@target_path}/#{@filename}.bz2"
+  @command  = %Q(#{@dump} #{@flags} --user=#{@username} -p"#{@password}" --quick #{@database} | bzip2 -c > #{@target_path}/#{@filename}.bz2)
 when "postgresql"
 
   @dump = %x{which pg_dump}.strip
