@@ -1,6 +1,0 @@
-#!/usr/bin/env bash
-
-log "\nNote: This will do a standard Nginx install.\nUse the 'passenger' BDSM extension for installing Nginx with Passenger.\n"
-
-package_install
-

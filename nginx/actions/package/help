@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+description "Extension for managing Nginx (http://wiki.nginx.org/Main)."
+
+action "install" "Installs ${package_name} ${package_version}."
+action "uninstall" "Uninstalls ${package_name} ${package_version}."
+
+show_help usage

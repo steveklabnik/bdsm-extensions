@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+if command_exists vim
+then
+  export ${EDITOR:=vim}
+else
+  export ${EDITOR:=vi}
+fi
+
+action=${extension_args[0]}
+if [[ "${action}" = "" ]]
+then
+  os_open "${service_config_path}/servers/*.conf"
+else
+  os_open "${service_config_path}/nginx.conf"
+fi

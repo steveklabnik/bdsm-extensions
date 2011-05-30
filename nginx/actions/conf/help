@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+description "Extension for managing Nginx (http://wiki.nginx.org/Main)."
+
+action "edit" "Opens nginx.conf for ${package_name} ${package_version}"\
+  "in defined EDITOR or vi if undefined.."
+
+show_help usage
