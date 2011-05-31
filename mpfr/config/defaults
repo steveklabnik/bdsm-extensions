@@ -1,0 +1,3 @@
+version=3.0.1
+base_url=http://mirror.rit.edu/gnu/mpfr
+archive_format=tar.bz2

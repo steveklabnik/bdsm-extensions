@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+description "Extension for managing gnu-mpfr ${website_url:-}."
+
+action "install" "Installs gnu-mpfr."
+action "uninstall" "Uninstalls gnu-mpfr."
+
+show_help usage
+
