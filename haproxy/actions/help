@@ -1,12 +1,11 @@
 #!/usr/bin/env bash
 
-description "${extension} BDSM extension."
+description "Extension for managing ${extension} (${website_url})."
 
-actions "install" "Install $extension ."
-action "setup" "Setup and Configure $extension."
-action "start" "Start ${extensoin}."
-action "stop" "Stop ${extension}."
-action "restart" "Restart ${extension}."
-action "status" "Display ${extension} status."
+action "package [action]" "Use ${extension} package."
+action "conf [action]" "Work with ${extension} configuration."
+action "service [action]" "Control ${extension} service."
+action "[namespace] help" "Display help for namespaces ${extension} {package,conf,service}."
 
 show_help usage
+
