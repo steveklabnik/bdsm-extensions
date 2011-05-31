@@ -1,32 +1,9 @@
 #!/usr/bin/env bash
 
-display_install_message()
-{
-  log "
-
-Message:
-
-I am wayneeseguin in #rvm on irc.freenode.net and I am happy to discuss
-improving this script, or field questions.
-
-This script will now:
-
-* Install ${package_name}-${package_version} to $install_path
-* Put init script in place
-* Add postgresql to ldconfig (Linux)
-* Create and initialize data directory
-* Setup profile.d script adding postgresql binaries to the path
-* Add conf.d file allowing for server customization
-* Adjust sysctl kernel parameters for postgresql (Linux)
-
-"
-}
-
 postgresql_postinstall()
 {
   user_create_if_missing "$package_user"
 
-  postgresql_initdb
   postgresql_init_script
   postgresql_conf_d
   postgresql_kernel_parameters
@@ -43,7 +20,7 @@ postgresql_postinstall()
   "
 }
 
-postgresql_postactivate()
+postgresql_conf_update()
 {
   replace_content "^.*data_directory.*" \
     with "data_directory = '${service_db_path}/active/data'" \
@@ -79,7 +56,7 @@ postgresql_kernel_parameters()
   true # TODO: Cross the finish line!!!
 }
 
-postgresql_initdb()
+postgresql_database_setup()
 {
   log "Initializing postgresql data directory in $service_data_path"
   ensure_paths_exist "${service_data_path}"
@@ -96,11 +73,9 @@ postgresql_initdb()
 
   chown_paths --recursive "$package_user:$package_user" "${service_data_path}"
   chmod_paths --recursive 0700 "${service_data_path}"
-
-  postgresql_conf
 }
 
-postgresql_conf()
+postgresql_service_setup()
 {
   local file _entries
   log "Configuring postgresql server."
@@ -109,11 +84,9 @@ postgresql_conf()
 
   link --force "${service_data_path}" to "${data_base_path}/active"
 
+  log "service_data_path: ${service_data_path}"
   for file in postgresql pg_hba pg_ident recovery
   do
-
-   log "service_data_path: ${service_data_path}"
-
     if file_is_empty_or_missing "${service_data_path}/${file}.conf"
     then
       if file_is_missing "$service_data_path/${file}.conf.sample"
@@ -133,6 +106,8 @@ postgresql_conf()
       fi
     fi
   done
+
+  postgresql_conf_update
 
   chown_paths --recursive "$package_user" "$data_base_path"
 
