@@ -2,8 +2,6 @@
 
 nginx_service_setup()
 {
-  user_create_if_missing "${service_user}" with group "${service_user}"
-
   install_template "nginx.conf" to "${install_path}/etc/nginx/nginx.conf" \
     mode 0644 owner "${service_user}"
 
@@ -32,6 +30,7 @@ nginx_service_setup()
       to "${install_path}/etc/nginx/conf/${template}" \
       mode 0644 owner "${service_user}"
   done
+
   enter "${install_path}"
 
   replace_content "^user .*;$" with "# No user line for non-root installs "\
