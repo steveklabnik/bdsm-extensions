@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-description "Extension for managing redis (${website_url})."
+description "Extension for managing ${extension} (${website_url})."
 
 action "edit" "Opens ${extension}.conf for ${package_name} ${package_version}"\
   "in defined EDITOR or vi if undefined.."

@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-description "Extension for managing redis (http://wiki.redis.org/Main)."
+description "Extension for managing ${extension} (${website_url})."
 
-action "service [action]" "Control ${extension}Nginx service."
-action "server [action]" "Work with ${extension}Nginx server configurations."
+action "service [action]" "Control ${extension} service."
+action "server [action]" "Work with ${extension} server configurations."
 action "package [action]" "Use ${extension} package."
 action "[namespace] help" "Display help for namespaces ${extension} {service,server,package,conf}."
 

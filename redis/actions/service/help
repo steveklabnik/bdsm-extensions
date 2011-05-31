@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-description "Extension for managing redis (${website_url})."
+description "Extension for managing ${extension} (${website_url})."
 
 action "start" "Startup ${extension}."
 action "stop" "Stop ${extension}."
