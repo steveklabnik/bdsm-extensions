@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+description "Extension for managing gcc ${website_url:-}."
+
+action "install" "Installs gcc."
+action "uninstall" "Uninstalls gcc."
+
+show_help usage
+
