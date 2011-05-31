@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+description "Extension for managing mpc ${website_url:-}."
+
+action "install" "Installs mpc."
+action "uninstall" "Uninstalls mpc."
+
+show_help usage
+
