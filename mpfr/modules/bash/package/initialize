@@ -4,7 +4,7 @@ package_name="mpfr"
 
 for library in gmp
 do
-  if path_exists "${prefix_path}/${library}/active"
+  if path_exists "${packages_path}/${library}/active"
   then
     configure_flags+=( --with-${library}="${active_path}" )
   else
