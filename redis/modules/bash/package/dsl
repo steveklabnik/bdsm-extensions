@@ -23,7 +23,7 @@ redis_postinstall()
   return 0
 }
 
-redis_install()
+redis_make_install()
 {
   local _source="src/" _major _minor _patch
 
