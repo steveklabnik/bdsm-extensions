@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+redis_status()
+{
+  service_status
+
+  log "  pidfile: $(awk '/^pidfile/{print $2}' ${service_config_file})"
+  log "  logfile: $(awk '/^logfile/{print $2}' ${service_config_file})"
+  log "  dbfile: $(awk '/^dbfilename/{print $2}' ${service_config_file})"
+}
+

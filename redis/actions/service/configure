@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
 
-configure_redis
+redis_postinstall
 
