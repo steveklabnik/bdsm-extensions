@@ -12,6 +12,14 @@ patch_package()
   done
 }
 
+bash_postinstall()
+{
+  if user_is_root
+  then
+    upgrade_bash
+  fi
+}
+
 upgrade_bash()
 {
   original_binary="${prefix_path}/bin/bash"

@@ -3,6 +3,7 @@
 description "${extension} BDSM extension."
 
 action "install" "Installs ${package_name} ${package_version}."
+action "uninstall" "Uninstall $extension ${package_version}"
 action "setup" "Sets up both the ~/.gitconfig and ~/.gitignore files."
 
 show_help usage

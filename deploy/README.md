@@ -8,7 +8,7 @@ This extension is used to deploy
 
 ## Usage
 
-  bdsm deploy <action> [arguments]
+  bdsm deploy <action> \[arguments\]
 
 ## Actions
 
