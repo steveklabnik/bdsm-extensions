@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+action "install" "Installs ${package_name} ${package_version}."
+action "configure" "Ensure that postgresql.conf is in place"
+action "initialize" "initdb for the postgresql data directory"
+action "start" "Start postgresql server"
+action "stop" "Stop postgresql server"
+action "restart" "Restart postgresql server"
+
+show_help usage
+

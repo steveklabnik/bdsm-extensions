@@ -2,33 +2,38 @@
 
 modules package service
 
-package_definition \
-  base_url "http://ftp9.us.postgresql.org/pub/mirrors/postgresql/source/v${package_version}"
-
-: \
-  ${service_port:=5432} \
-  ${service_bind_interface:="127.0.0.1"}
-
-service_binary="${service_bin_path}/pg_ctl"
-service_cli_binary="${service_bin_path}/psql"
-service_flags+=( -D "$service_data_path/data" -s )
-service_start_flags+=( start )
-service_restart_flags+=( restart )
-service_stop_flags+=( stop -m fast -w )
-
-export PGDATA="${service_data_path}/data"
-
-if user_is_root
+if [[ "${namespace}" == "package" ]]
 then
-  read_default user prefix package
-  if [[ "${package_user}" = "postgresql" || -z ${package_user} ]]
+  package_definition \
+    base_url "http://ftp9.us.postgresql.org/pub/mirrors/postgresql/source/v${package_version}"
+
+  if user_is_root
   then
-    package_user="postgres"
+    read_default user prefix package
+    if [[ "${package_user}" = "postgresql" || -z ${package_user} ]]
+    then
+      package_user="postgres"
+    fi
+  else
+    package_user="$USER"
+    prefix_path="$HOME/.bdsm"
   fi
-else
-  package_user="$USER"
-  prefix_path="$HOME/.bdsm"
 fi
 
-service_pid_file="${service_data_path}/data/postmaster.pid"
+if [[ "${namespace}" == "service" ]]
+then
+  : \
+    ${service_port:=5432} \
+    ${service_bind_interface:="127.0.0.1"}
 
+  service_binary="${service_bin_path}/pg_ctl"
+  service_cli_binary="${service_bin_path}/psql"
+  service_flags+=( -D "$service_data_path/data" -s )
+  service_start_flags+=( start )
+  service_restart_flags+=( restart )
+  service_stop_flags+=( stop -m fast -w )
+
+  export PGDATA="${service_data_path}/data"
+
+  service_pid_file="${service_data_path}/data/postmaster.pid"
+fi

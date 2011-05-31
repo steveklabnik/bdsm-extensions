@@ -1,6 +1,0 @@
-#!/usr/bin/env bash
-
-configure_postgresql
-
-configure_postgresql_for_users
-
