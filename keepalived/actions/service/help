@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+description "${extension} BDSM extension."
+
+action "start" "Start ${extensoin}."
+action "stop" "Stop ${extension}."
+action "restart" "Restart ${extension}."
+action "status" "Display ${extension} status."
+
+show_help usage
