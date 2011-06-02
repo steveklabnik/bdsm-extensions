@@ -19,41 +19,37 @@ then
     "viathe command as root: root# bdsm extend rsync && bdsm rsync install"
 fi
 
-log "Deploying..."
-(
-  hook "before_update_repository"
-  update_repository
-  hook "after_update_repository"
+hook "before_update_repository"
+update_repository
+hook "after_update_repository"
 
-  hook "before_deploy"
+hook "before_deploy"
 
-  hook "before_stage"
-  stage_current
-  hook "after_stage"
+hook "before_stage"
+stage_current
+hook "after_stage"
 
-  hook "before_configure"
-  configure
-  hook "after_configure"
+hook "before_configure"
+configure
+hook "after_configure"
 
-  hook "before_symlink"
-  symlink
-  hook "after_symlink"
+hook "before_symlink"
+symlink
+hook "after_symlink"
 
-  hook "before_replace_current"
-  replace_current
-  hook "after_replace_current"
+hook "before_replace_current"
+replace_current
+hook "after_replace_current"
 
-  hook "before_cleanup"
-  cleanup
-  hook "after_cleanup"
+hook "before_cleanup"
+cleanup
+hook "after_cleanup"
 
-  hook "before_record"
-  record
-  hook "after_record"
+hook "before_record"
+record
+hook "after_record"
 
-  hook "after_deploy"
-)
-result=$?
+hook "after_deploy"
 
 log "Deploy started at $timestamp and completed at $(date +%m.%d.%Y-%H:%M:%S)"
 
