@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+description "${extension} BDSM extension."
+
+action "help" "Display help for ${extension}."
+action "package [action]" "Perform the action {install, uninstall}"
+
+show_help usage
