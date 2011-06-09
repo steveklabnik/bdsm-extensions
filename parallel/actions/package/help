@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+description "Extension for managing parallel ${website_url:-}."
+
+action "install" "Installs parallel."
+action "uninstall" "Uninstalls parallel."
+
+show_help usage
+
