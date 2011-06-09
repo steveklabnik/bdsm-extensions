@@ -1,0 +1,5 @@
+version=0.34
+base_url=http://gource.googlecode.com/files
+archive_format=tar.gz
+website_url=http://code.google.com/p/gource/
+docs_url=http://code.google.com/p/gource/w/list
