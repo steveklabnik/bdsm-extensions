@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+description "Extension for managing vsftpd ${website_url:-}."
+
+action "install" "Installs vsftpd."
+action "uninstall" "Uninstalls vsftpd."
+
+show_help usage
+
