@@ -1,9 +1,0 @@
-#!/usr/bin/env bash
-
-if os_is_linux
-then
-  package_install
-else
-  error "htop may only be installed on Linux at this time."
-fi
-

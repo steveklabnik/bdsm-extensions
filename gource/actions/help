@@ -2,7 +2,9 @@
 
 description "${extension} BDSM extension."
 
-action "package [action]" "Call package action {install,uninstall}"
+action "package install" "Installs ${package_name} ${package_version}."
+action "package uninstall" "Installs ${package_name} ${package_version}."
+
 action "help" "Display help for ${extension}."
 
 show_help usage

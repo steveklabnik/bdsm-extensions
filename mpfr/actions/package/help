@@ -2,8 +2,8 @@
 
 description "Extension for managing gnu-mpfr ${website_url:-}."
 
-action "install" "Installs gnu-mpfr."
-action "uninstall" "Uninstalls gnu-mpfr."
+action "package install" "Installs ${package_name} ${package_version}."
+action "package uninstall" "Installs ${package_name} ${package_version}."
 
 show_help usage
 

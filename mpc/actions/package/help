@@ -2,8 +2,8 @@
 
 description "Extension for managing mpc ${website_url:-}."
 
-action "install" "Installs mpc."
-action "uninstall" "Uninstalls mpc."
+action "package install" "Installs ${package_name} ${package_version}."
+action "package uninstall" "Installs ${package_name} ${package_version}."
 
 show_help usage
 

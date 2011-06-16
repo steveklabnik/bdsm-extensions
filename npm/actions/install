@@ -1,6 +1,0 @@
-#!/usr/bin/env bash
-
-package_must_be_active "node"
-
-package_install
-

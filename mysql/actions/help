@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 
-action "install" "Installs ${package_name} ${package_version}."
+action "package install" "Installs ${package_name} ${package_version}."
+action "package uninstall" "Installs ${package_name} ${package_version}."
+
 action "configure" "Ensure that mysql.conf is in place"
 action "initialize" "initdb for the mysql data directory"
 action "start" "Start mysql server"

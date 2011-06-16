@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 
-action "install" "Installs ${package_name} ${package_version}."
-action "install" "Install the passenger gem."
+action "package install" "Installs ${package_name} ${package_version}."
+action "package uninstall" "Installs ${package_name} ${package_version}."
+
 action "start" "Start passenger."
 action "stop" "Stop  passenger."
 action "restart" "Restart passenger."

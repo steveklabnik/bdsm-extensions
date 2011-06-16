@@ -5,3 +5,8 @@ modules package
 package_definition \
   base_url "http://downloads.sourceforge.net/project/htop/htop/${package_version}"
 
+if ! os_is_linux
+then
+  error "htop may only be installed on Linux at this time."
+fi
+

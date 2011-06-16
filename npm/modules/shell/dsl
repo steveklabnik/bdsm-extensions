@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
 
+npm_preconfigure()
+{
+  package_must_be_active "node"
+}
+
 npm_extract()
 {
   package_extract

@@ -1,5 +1,13 @@
 #!/usr/bin/env bash
 
+zsh_postinstall()
+{
+  if user_is_root
+  then
+    upgrade_binary
+  fi
+}
+
 upgrade_binary()
 {
   original_binary="${prefix_path}/bin/${extension}"

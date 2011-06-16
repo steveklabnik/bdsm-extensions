@@ -1,9 +1,0 @@
-#!/usr/bin/env bash
-
-description "Extension for managing gnu-gmp ${website_url:-}."
-
-action "install" "Installs gnu-gmp."
-action "uninstall" "Uninstalls gnu-gmp."
-
-show_help usage
-

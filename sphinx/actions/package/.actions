@@ -1,0 +1,2 @@
+install=package_install()
+uninstall=package_uninstall()

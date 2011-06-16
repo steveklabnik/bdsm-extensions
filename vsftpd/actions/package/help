@@ -2,8 +2,8 @@
 
 description "Extension for managing vsftpd ${website_url:-}."
 
-action "install" "Installs vsftpd."
-action "uninstall" "Uninstalls vsftpd."
+action "package install" "Installs ${package_name} ${package_version}."
+action "package uninstall" "Installs ${package_name} ${package_version}."
 
 show_help usage
 

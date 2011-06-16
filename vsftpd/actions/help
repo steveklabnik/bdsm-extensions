@@ -2,7 +2,9 @@
 
 description "${extension} BDSM extension."
 
-action "package [action]" "Take Package action {install,uninstall}"
+action "package install" "Installs ${package_name} ${package_version}."
+action "package uninstall" "Installs ${package_name} ${package_version}."
+
 action "service [action]" "NIY"
 action "help" "Display help for ${extension}."
 

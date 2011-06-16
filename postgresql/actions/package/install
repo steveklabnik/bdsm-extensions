@@ -1,6 +1,0 @@
-#!/usr/bin/env bash
-
-display_install_message
-
-package_install
-

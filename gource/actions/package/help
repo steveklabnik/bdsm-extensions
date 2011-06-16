@@ -1,9 +1,0 @@
-#!/usr/bin/env bash
-
-description "Extension for managing gource ${website_url:-}."
-
-action "install" "Installs gource."
-action "uninstall" "Uninstalls gource."
-
-show_help usage
-

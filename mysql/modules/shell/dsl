@@ -95,6 +95,9 @@ mysql_postinstall()
   chown_paths --recursive "$package_user" "$service_data_path"
 
   chmod_paths --recursive 0700 "$service_data_path"
+
+  mysql_initialize
+
 }
 
 mysql_init_script()

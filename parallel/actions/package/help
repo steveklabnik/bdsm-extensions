@@ -2,8 +2,8 @@
 
 description "Extension for managing parallel ${website_url:-}."
 
-action "install" "Installs parallel."
-action "uninstall" "Uninstalls parallel."
+action "package install" "Installs ${package_name} ${package_version}."
+action "package uninstall" "Installs ${package_name} ${package_version}."
 
 show_help usage
 

@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+description "Extension for managing gcc-fortran ${website_url:-}."
+
+action "install" "Installs gcc-fortran."
+action "uninstall" "Uninstalls gcc-fortran."
+
+show_help usage
+
