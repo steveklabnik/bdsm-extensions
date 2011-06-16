@@ -4,6 +4,8 @@ postgresql_postinstall()
 {
   user_create_if_missing "$package_user"
 
+  postgresql_database_setup
+
   postgresql_init_script
   postgresql_conf_d
   postgresql_kernel_parameters

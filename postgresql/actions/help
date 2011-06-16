@@ -3,7 +3,10 @@
 action "package install" "Installs ${package_name} ${package_version}."
 action "package uninstall" "Installs ${package_name} ${package_version}."
 
-action "service [action]" "Control ${extension} service."
+action "service start" "Starts ${extension} service."
+action "service stop" "Stops ${extension} service."
+action "service restart" "Restart ${extension} service."
+action "service status" "Status of the ${extension} service."
 
 action "backup [action]" "configurations."
 action "conf [action]" "Work with ${extension} server configuration file."
