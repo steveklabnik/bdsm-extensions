@@ -1,0 +1,3 @@
+default=deploy()
+deploy=deploy()
+rollback=rollbacck()
