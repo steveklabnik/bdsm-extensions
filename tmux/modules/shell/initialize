@@ -2,7 +2,7 @@
 
 modules package
 
-dependencies=( libevent )
+package_dependencies=( libevent )
 
 package_definition \
   base_url "http://downloads.sourceforge.net/project/tmux/tmux/tmux-${package_version}"

@@ -8,5 +8,5 @@ package_definition \
 #then
 #  repository_url="git@github.com:neo4j/community.git"
 #  # neo4j_build: mvn clean install -Dmaven.test.skip=true
-#  dependencies=(maven docbook asciidoc w3m fop)
+#  package_dependencies=(maven docbook asciidoc w3m fop)
 #fi

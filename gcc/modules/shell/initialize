@@ -2,5 +2,5 @@
 
 modules package
 
-dependencies=(gmp mpfr mpc iconv)
+package_dependencies=(gmp mpfr mpc iconv)
 

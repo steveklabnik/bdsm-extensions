@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 
-dependencies=(gettext pkg-config)
-
 modules package
 
+package_dependencies=(gettext pkg-config)

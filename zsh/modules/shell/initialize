@@ -2,7 +2,7 @@
 
 modules package
 
-dependencies=( iconv )
+package_dependencies=( iconv )
 
 package_definition \
   base_url "http://cdnetworks-us-1.dl.sourceforge.net/project/zsh/zsh-dev/${package_version}"

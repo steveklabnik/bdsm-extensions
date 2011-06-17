@@ -2,5 +2,5 @@
 
 modules package
 
-dependencies=(gmp mpfr)
+package_dependencies=(gmp mpfr)
 

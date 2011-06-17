@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-dependencies=( pcre )
+package_dependencies=( pcre )
 
 modules package service
 

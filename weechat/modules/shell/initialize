@@ -2,6 +2,6 @@
 
 modules package
 
-dependencies=(cmake gnutls ncursesw)
+package_dependencies=(cmake gnutls ncursesw)
 
 NIY
