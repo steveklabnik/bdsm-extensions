@@ -4,8 +4,6 @@ postgresql_postinstall()
 {
   user_create_if_missing "$package_user"
 
-  postgresql_database_setup
-
   postgresql_init_script
   postgresql_conf_d
   postgresql_kernel_parameters
@@ -83,6 +81,8 @@ postgresql_service_setup()
   log "Configuring postgresql server."
 
   ensure_paths_exist "${service_data_path}" "$log_path"
+
+  postgresql_database_setup
 
   link --force "${service_data_path}" to "${data_base_path}/active"
 
