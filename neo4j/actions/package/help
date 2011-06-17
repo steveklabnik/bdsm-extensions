@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+description "Extension for managing neo4j ${website_url:-}."
+
+action "package install" "Installs neo4j package."
+action "package uninstall" "Uninstalls neo4j package."
+
+show_help usage
+

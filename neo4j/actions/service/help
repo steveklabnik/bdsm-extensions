@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+description "Extension for managing neo4j ()."
+
+action "service start" "Starts neo4j service."
+action "service stop" "Stop neo4j service."
+action "service restart" "Restarts neo4j service."
+action "service status" "Display neo4j status."
+action "service list" "List neo4j master and worker processes."
+
+show_help usage
+
