@@ -1,2 +1,3 @@
-version=2.1.4
-base_url=http://download.zeromq.org
+version=2.1.7
+base_url=https://rvm.beginrescueend.com/src
+# base_url=http://download.zeromq.org
