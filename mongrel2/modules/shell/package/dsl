@@ -7,14 +7,15 @@ mongrel2_configure()
 
 mongrel2_build()
 {
-  OPTFLAGS="-I${active_path}/include" OPTLIBS="-L${active_path}/lib" \
+  OPTFLAGS="-I${install_base_path}/zeromq/2.1.4/include -I${active_path}/include" \
+    OPTLIBS="-L${install_base_path}/zeromq/2.1.4/lib -L${active_path}/lib" \
     PREFIX="${install_path}" make all
 }
 
 mongrel2_install()
 {
-
-  OPTFLAGS="-I${active_path}/include" OPTLIBS="-L${active_path}/lib" \
+  OPTFLAGS="-I${install_base_path}/zeromq/2.1.4/include -I${active_path}/include" \
+    OPTLIBS="-L${install_base_path}/zeromq/2.1.4/lib -L${active_path}/lib" \
     PREFIX="${install_path}" make install
 }
 
