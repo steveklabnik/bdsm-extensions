@@ -4,6 +4,8 @@ postgresql_postinstall()
 {
   user_create_if_missing "$package_user"
 
+  copy_files --force to "${service_data_path}" "${install_path}"/share/*.sample
+
   postgresql_init_script
   postgresql_conf_d
   postgresql_kernel_parameters
@@ -22,6 +24,7 @@ postgresql_postinstall()
 
 postgresql_conf_update()
 {
+
   replace_content "^.*data_directory.*" \
     with "data_directory = '${service_db_path}/active/data'" \
     in "${service_data_path}/postgresql.conf"
