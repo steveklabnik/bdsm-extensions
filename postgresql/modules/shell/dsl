@@ -4,8 +4,6 @@ postgresql_postinstall()
 {
   user_create_if_missing "$package_user"
 
-  copy_files --force to "${service_data_path}" "${install_path}"/share/*.sample
-
   postgresql_init_script
   postgresql_conf_d
   postgresql_kernel_parameters
@@ -66,6 +64,8 @@ postgresql_database_setup()
   chown_paths --recursive "$package_user:$package_user" "${service_data_path}"
 
   command="'$install_path/bin/initdb' --pgdata='${service_data_path}/data' --encoding=utf8 --username=$package_user"
+
+  copy_files --force to "${service_data_path}" "${install_path}"/share/*.sample
 
   if user_is_root
   then
