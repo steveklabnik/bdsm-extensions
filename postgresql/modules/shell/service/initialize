@@ -8,7 +8,8 @@ service_binary="${service_bin_path}/pg_ctl"
 service_cli_binary="${service_bin_path}/psql"
 if array_is_empty service_flags
 then
-  service_flags+=(${action} -D "$service_data_path/data" -s )
+  _action="${action//\(*}"
+  service_flags+=(${_action//*_} -D "$service_data_path/data" -s )
   service_stop_flags+=( -m fast -w )
 fi
 
