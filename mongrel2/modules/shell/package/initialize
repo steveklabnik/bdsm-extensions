@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
 
-package_dependencies=(zeromq-2.1.4 sqlite3)
+package_dependencies=(zeromq sqlite3)
 
