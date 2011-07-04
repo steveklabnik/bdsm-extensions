@@ -17,7 +17,7 @@ else
   configure_flags[${#configure_flags[@]}]="--without-pgsql"
 fi
 
-if command_exist mysql_config ; then
+if command_exists mysql_config ; then
   configure_flags[${#configure_flags[@]}]="--with-mysql"
   mysql_flag=1
 else
