@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+description "Extension for managing getopt ${website_url:-}."
+
+action "package install" "Installs getopt package."
+action "package uninstall" "Uninstalls getopt package."
+
+show_help usage
+
