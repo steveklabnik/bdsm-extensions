@@ -1,4 +1,4 @@
 version=head
-base_url=git://github.com/rtomayko/shocco.git
+base_url=rtomayko/shocco
 website_url=http://rtomayko.github.com/shocco/
 documentation_url=http://rtomayko.github.com/shocco/
