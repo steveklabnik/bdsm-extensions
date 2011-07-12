@@ -3,5 +3,5 @@
 modules defaults package
 
 package_definition \
-  base_url="https://github.com/petdance/ack/tarball/${package_version}"
+  base_url "https://github.com/petdance/ack/tarball/${package_version}"
 
