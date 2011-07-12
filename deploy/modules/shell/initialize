@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-modules rvm project
+modules project
 
 true \
   "${discard_path:="${shared_path}/discard"}" \
