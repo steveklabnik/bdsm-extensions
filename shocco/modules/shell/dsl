@@ -2,15 +2,12 @@
 
 shocco_download()
 {
-  scm_fetch ${package_base_url}
-
+  local shocco_src_path="${src_path}/$(scm_identifier "${package_base_url}")/"
+  scm_get ${package_base_url} ${shocco_src_path}
 }
 
 shocco_extract()
 {
-  scm_update ${package_base_url}
-
-  copy_paths --force "${repos_path}/${package_base_url//\//_}/" \
-    to "${src_path}/${extension}-head"
+  local shocco_src_path="${src_path}/$(scm_identifier "${package_base_url}")/"
+  ln -s ${shocco_src_path} "${src_path}/${extension}-head"
 }
-
