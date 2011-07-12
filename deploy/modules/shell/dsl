@@ -30,7 +30,7 @@ hook()
     if variable_is_nonempty environment &&
       file_is_executable "$shared_path/$project/config/deploy/$environment/$hook"
     then
-      ( source "$shared_path/project/config/deploy/$environment/$hook" )
+      ( source "$shared_path/$project/config/deploy/$environment/$hook" )
     fi
   fi
 }
