@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-package_dependencies=( zlib pcre openssl )
+package_dependencies=( zlib pcre ) # openssl )
 
 # TODO: Allow overriding of these parameters via cli
 # These defaults may be overridden also by the nginx configuration files.
