@@ -3,5 +3,5 @@
 package_definition \
   base_url "http://www.python.org/ftp/python/${package_version}" \
   file "Python-${package_version}.tar.bz2" \
-  dir "Python-${package_version}.tar.bz2"
+  dir "Python-${package_version}"
 
