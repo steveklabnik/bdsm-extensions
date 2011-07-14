@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
 
 package_definition \
-  file "${package_name}-${package_version}-src.${archive_extension}"
+  file "${package_name}-${package_version}-src.tar.bz2"
 
