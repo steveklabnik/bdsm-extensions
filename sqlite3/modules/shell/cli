@@ -1,4 +1,2 @@
-#!/usr/local/bin bash
-
-package_cli
+#!/usr/bin/env bash
 
