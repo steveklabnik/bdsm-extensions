@@ -1,6 +1,20 @@
 #!/usr/bin/env bash
 
+#dependencies=(
+#dependencies+=(pkg-config) # to locate libffi files
+#dependencies+=(zlib)    # optional zlib module)
+#dependencies+=(bz2)     # optional bz2 module)
+#dependencies+=(ncurses) # optional _minimal_curses module)
+#dependencies+=(expat1)  # optional pyexpat module)
+#dependencies+=(openssl) # optional _ssl module)
+#dependencies+=(gc-dev)  # for the Boehm garbage collector: only needed when translating with –opt=0, 1 or size)
+#dependencies+=(python-sphinx)  # >= 1.0.7, for optional documentation build
+#dependencies+=(python-greenlet) # optional stackless support in interpreted mode/testing)
+#)
+
+set_package_type
+
 package_definition \
-  file "${package_name}-${package_version}-src.tar.bz2" \
-  dir "${package_name}-${package_version}-src"
+  file "${package_name}-${package_version}-${package_type}.tar.bz2" \
+  dir "${package_name}-${package_version}-${package_type}"
 
