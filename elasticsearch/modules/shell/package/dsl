@@ -1,1 +1,11 @@
 #!/usr/bin/env bash
+
+package_configure()
+{
+  : # Beautifully, nothing to do here :)
+}
+
+package_build()
+{
+  : # Nothing to do here, either!
+}
