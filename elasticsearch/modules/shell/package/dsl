@@ -12,5 +12,6 @@ elasticsearch_build()
 
 elasticsearch_install()
 {
+  ensure_paths_exist "${package_dir}"
   copy_paths --force to "${install_path}/" "${package_dir}"
 }
