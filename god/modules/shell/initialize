@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-modules project
+modules core/project
 
 fail "BDSM Extension '${extension}' has not been implemented yet."
 

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-modules project rvm
+modules core/project core/rvm
 
 if [[ "$action" != "help" ]]
 then # Sanity check

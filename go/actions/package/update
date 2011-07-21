@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+go_download
+go_build
+go_install
+
+package_activate "go" "head"
+
