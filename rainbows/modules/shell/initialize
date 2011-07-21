@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-modules variables project rvm templates
+modules core/variables core/project core/rvm core/templates
 
 variables_must_be_nonempty environment RAILS_ENV project
 

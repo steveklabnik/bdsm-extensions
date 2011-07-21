@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-modules package service
+modules core/package core/service
 
 # Default service_flags for memcached.
 service_flags=(

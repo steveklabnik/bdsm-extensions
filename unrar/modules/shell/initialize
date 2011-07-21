@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-modules package
+modules core/package
 
 package_definition \
   file "unrarsrc-${package_version}.${archive_format}" \

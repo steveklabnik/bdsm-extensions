@@ -2,7 +2,7 @@
 
 fail "BDSM Extension '${extension}' has not been implemented yet."
 
-modules package
+modules core/package
 
 openpkg_url="http://openpkg.org/go/download/openpkg.src.sh"
 

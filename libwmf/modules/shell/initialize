@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-modules package
+modules core/package
 
 package_definition \
   base_url="http://voxel.dl.sourceforge.net/project/wvware/${package_name}/${package_version}"
