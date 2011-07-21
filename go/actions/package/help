@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+description "Extension for managing go ${website_url:-}."
+
+action "package install" "Installs go package."
+action "package uninstall" "Uninstalls go package."
+action "package update" "Updates go package."
+
+show_help usage
+

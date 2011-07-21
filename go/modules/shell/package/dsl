@@ -1,0 +1,49 @@
+#!/usr/bin/env bash
+
+go_download()
+{
+  if command_exists hg
+  then
+    ensure_path_exists "${install_path}"
+    hg clone -u release https://go.googlecode.com/hg/ "${install_path}"
+  else
+    error "go requires mercurial, please install the mercurial bdsm package first."
+  fi
+}
+
+go_extract()
+{
+  :
+}
+
+go_configure()
+{
+  :
+}
+
+go_build()
+{
+  enter "${install_path}/src"
+  ./all.bash
+}
+
+go_install()
+{
+  local _path _paths _file _files
+
+  for dir in pkg lib include bin misc
+  do
+    _paths=($( find "${source_path}/${package_dir}/${dir}" -type d ))
+    for _path in "${_paths[@]}"
+    do
+      ensure_paths_exist "${install_path}${_path##${source_path}/${package_dir}}"
+    done
+
+    _files=($( find "${source_path}/${package_dir}/${dir}" -type f ))
+    for _file in "${_files[@]}"
+    do
+      cp -f "${_file}" "${install_path}${_file##${source_path}/${package_dir}}"
+    done
+  done
+}
+
