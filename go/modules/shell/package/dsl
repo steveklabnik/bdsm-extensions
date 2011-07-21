@@ -2,34 +2,29 @@
 
 go_download()
 {
+  enter "${source_path}"
   if command_exists hg
   then
     ensure_path_exists "${install_path}"
-    hg clone -u release https://go.googlecode.com/hg/ "${install_path}"
+    remove_paths "${source_path}/${package_dir}"
+    # TODO: use scm_get here.
+    hg clone -u release https://go.googlecode.com/hg/ "${source_path}/${package_dir}"
   else
     error "go requires mercurial, please install the mercurial bdsm package first."
   fi
 }
 
-go_extract()
-{
-  :
-}
-
-go_configure()
-{
-  :
-}
-
 go_build()
 {
-  enter "${install_path}/src"
+  enter "${source_path}/${package_dir}/src"
   ./all.bash
 }
 
 go_install()
 {
   local _path _paths _file _files
+
+  enter "${source_path}/${package_dir}"
 
   for dir in pkg lib include bin misc
   do
