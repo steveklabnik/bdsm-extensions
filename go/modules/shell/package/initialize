@@ -2,3 +2,5 @@
 
 dependencies=(mercurial)
 
+package_dir="go-head"
+

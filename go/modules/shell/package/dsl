@@ -8,6 +8,7 @@ go_download()
     remove_paths "${source_path}/${package_dir}"
     ensure_paths_exist "${source_path}"
     # TODO: use scm_get here.
+    enter "${source_path}"
     hg clone -u release https://go.googlecode.com/hg/ "${source_path}/${package_dir}"
   else
     error "go requires mercurial, please install the mercurial bdsm package first."
