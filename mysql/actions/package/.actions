@@ -1,1 +1,2 @@
 install=package_install()
+update=package_update()
