@@ -5,8 +5,8 @@ go_download()
   enter "${source_path}"
   if command_exists hg
   then
-    ensure_path_exists "${install_path}"
     remove_paths "${source_path}/${package_dir}"
+    ensure_paths_exists "${source_path}"
     # TODO: use scm_get here.
     hg clone -u release https://go.googlecode.com/hg/ "${source_path}/${package_dir}"
   else
