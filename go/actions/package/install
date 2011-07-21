@@ -3,4 +3,4 @@
 go_download
 go_build
 go_install
-
+package_activate
