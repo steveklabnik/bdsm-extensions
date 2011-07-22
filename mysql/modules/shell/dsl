@@ -103,13 +103,13 @@ mysql_postinstall()
 mysql_init_script()
 {
   log "Installing mysql init script"
-  install_template "mysql" to "${init_scripts_path}/mysql" mode 0755
+  install_template "mysql/mysql" to "${init_scripts_path}/mysql" mode 0755
 }
 
 mysql_conf_d()
 {
   log "Installing mysql conf.d script"
-  install_template "mysql.conf.d" to "${confd_path}/mysql.conf" mode 0644
+  install_template "mysql/mysql.conf.d" to "${confd_path}/mysql.conf" mode 0644
 }
 
 mysql_upgrade()
