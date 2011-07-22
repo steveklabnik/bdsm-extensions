@@ -151,7 +151,7 @@ riak_configure()
 riak_init_script()
 {
   log "Installing ${package_name} init script"
-  install_template "${package_name}" \
+  install_template "riak/riak" \
     to "${init_scripts_path}/${package_name}"
 
   ensure_files_are_executable "${init_scripts_path}/${package_name}"
@@ -165,7 +165,7 @@ riak_profile_d()
   then
     log "Installing ${package_name} profile.d script"
 
-    install_template "${package_name}.sh" \
+    install_template "riak/riak.sh" \
       to "/etc/profile.d/${package_name}.sh" \
       mode 0755
   fi
@@ -177,7 +177,7 @@ riak_conf_d()
   then
     log "Installing ${package_name} conf.d script"
 
-    install_template "${package_name}.conf.d" \
+    install_template "riak/riak.conf.d" \
       to "/etc/conf.d/${package_name}.conf" \
       mode 0644
   fi

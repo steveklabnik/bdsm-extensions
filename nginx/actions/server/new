@@ -26,7 +26,7 @@ then
 
     if file_is_missing "${project_config}"
     then
-      install_template "server.conf" to "${project_config}"
+      install_template "nginx/server.conf" to "${project_config}"
 
       seed_template "${active_path}/etc/nginx/nginx.conf" \
         modules_path "${modules_path}" \

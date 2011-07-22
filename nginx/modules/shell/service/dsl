@@ -2,7 +2,7 @@
 
 nginx_service_setup()
 {
-  install_template "nginx.conf" to "${install_path}/etc/nginx/nginx.conf" \
+  install_template "nginx/nginx.conf" to "${install_path}/etc/nginx/nginx.conf" \
     mode 0644 owner "${service_user}"
 
   seed_template "${install_path}/etc/nginx/nginx.conf" \
@@ -15,18 +15,18 @@ nginx_service_setup()
 
   ensure_paths_exist "${install_path}/etc/nginx/health/"
 
-  install_template "nginx.health" \
+  install_template "nginx/nginx.health" \
     to "${install_path}/etc/nginx/health/nginx.conf" \
     mode 0644 owner "${service_user}"
 
-  install_template "nginx" to "${install_path}/etc/nginx" \
+  install_template "nginx/nginx" to "${install_path}/etc/nginx" \
     mode 0755 owner "${service_user}"
 
   templates=( "mime.types" "proxy.conf" )
 
   for template in "${templates[@]}"
   do
-    install_template "${template}" \
+    install_template "nginx/${template}" \
       to "${install_path}/etc/nginx/conf/${template}" \
       mode 0644 owner "${service_user}"
   done
