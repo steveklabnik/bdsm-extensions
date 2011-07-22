@@ -189,20 +189,27 @@ setup_application_server()
   case "${server:-}" in
     unicorn)
       # TODO: Extension check
-      extension_action unicorn setup
+      modules unicorn
+      unicorn_setup
       ;;
     mongrel2)
-      extension_action mongrel2 setup
+      NIY "mongrel2 is not implemented yet for the rails extension."
+      modules mongrel2
+      mongrel2_setup
       ;;
     thin)
-      extension_action thin setup
+      modules thin
+      setup
       ;;
     passenger) # Standalone
-      extension_action passenger setup
+      NIY "passenger is not implemented yet for the rails extension."
+      modules passenger
+      passenger_setup
       ;;
     *)
       # Default to Unicorn
-      extension_action unicorn setup
+      modules unicorn
+      unicorn_setup
       ;;
   esac
 }
