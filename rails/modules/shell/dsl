@@ -147,7 +147,10 @@ configure_rvm()
 {
   if file_is_empty_or_missing "${HOME}/.rvm/scripts/rvm"
   then
-    if ! file_contains "$HOME/.rvmrc" 'rvm_path='
+    if file_is_empty_or_missing "${HOME}/.rvmrc"
+    then
+      log 'export rvm_path="${HOME}/.rvm"' to "${HOME}/.rvmrc"
+    else if ! file_contains "$HOME/.rvmrc" 'rvm_path='
     then
       log 'export rvm_path="$HOME/.rvm"' to "$HOME/.rvmrc"
     fi
