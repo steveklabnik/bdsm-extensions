@@ -18,7 +18,8 @@ fetch_repository
 
 configure_rvm
 
-extension_action "deploy" "deploy"
+modules deploy
+deploy
 
 bootstrap_gems
 
