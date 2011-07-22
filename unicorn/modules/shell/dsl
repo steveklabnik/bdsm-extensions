@@ -39,7 +39,7 @@ fi
 
 unicorn_setup()
 {
-  if template_exists "unicorn.rb"
+  if template_exists "unicorn.rb" "unicorn"
   then
     ensure_paths_exist "$shared_path/config"
 
@@ -47,9 +47,8 @@ unicorn_setup()
 
     succeed "Setup complete."
   else
-  fail "Template file $extensions_path/unicorn/templates/unicorn.rb.template is missing."
-fi
-
+    fail "Template file $extensions_path/unicorn/templates/unicorn.rb.template is missing."
+  fi
 }
 
 unicorn_start()
