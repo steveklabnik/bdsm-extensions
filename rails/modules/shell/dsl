@@ -11,7 +11,7 @@ configure_database_yml()
     if [[ "$database" == "mysql" ]]
     then
       log "  socket: ${socket:-/tmp/mysql.sock}\n  encoding: utf8\n" \
-        to "$shared_path/config/database.yml"
+        append to "$shared_path/config/database.yml"
     fi
   fi
 
@@ -81,29 +81,29 @@ configure_bdsmrc()
 
   if ! file_contains "${_config}" 'project='
   then
-    log "\nexport project=\"${project:-$user}\"" to ${_config}
+    log "\nexport project=\"${project:-$user}\"" append to ${_config}
   fi
 
   variables_must_be_nonempty environment
 
   if ! file_contains "${_config}" 'environment='
   then
-    log "\nexport environment=\"$environment\"" to ${_config}
+    log "\nexport environment=\"$environment\"" append to ${_config}
   fi
 
   if ! file_contains "${_config}" 'RAILS_ENV='
   then
-    log "\nexport RAILS_ENV=\"$environment\"" to ${_config}
+    log "\nexport RAILS_ENV=\"$environment\"" append to ${_config}
   fi
 
   if variable_is_nonempty repository_url && ! file_contains "${_config}" "repository_url="
   then
-    log "\nexport repository_url=\"$repository_url\"" to "${_config}"
+    log "\nexport repository_url=\"$repository_url\"" append to "${_config}"
   fi
 
   if variable_is_nonempty database && ! file_contains "${_config}" 'database='
   then
-    log "export database=\"${database}\"" to "${_config}"
+    log "export database=\"${database}\"" append  to "${_config}"
   fi
 }
 
@@ -150,17 +150,17 @@ configure_rvm()
     if file_is_empty_or_missing "${HOME}/.rvmrc" ||
       ! file_contains "$HOME/.rvmrc" 'rvm_path='
     then
-      log 'export rvm_path="${HOME}/.rvm"' to "${HOME}/.rvmrc"
+      log 'export rvm_path="${HOME}/.rvm"' append to "${HOME}/.rvmrc"
     fi
 
     if ! file_contains "$HOME/.rvmrc" 'rvm_install_on_use_flag'
     then
-      log 'export rvm_install_on_use_flag=1' to "$HOME/.rvmrc"
+      log 'export rvm_install_on_use_flag=1' append to "$HOME/.rvmrc"
     fi
 
     if ! file_contains "$HOME/.rvmrc" 'rvm_gems_path'
     then
-      log 'export rvm_gems_path="$HOME/.rvm/gems"' to "$HOME/.rvmrc"
+      log 'export rvm_gems_path="$HOME/.rvm/gems"' append to "$HOME/.rvmrc"
     fi
 
     source_files "$HOME/.rvmrc"
@@ -189,7 +189,7 @@ configure_rvm()
   if ! file_contains "$HOME/.bash_profile" "scripts/rvm"
   then
     log "[[ -s \"${rvm_path:-"$HOME/.rvm"}/scripts/rvm\" ]] && . \"${rvm_path:-"$HOME/.rvm"}/scripts/rvm\"  # Load RVM into a shell session *as a function*" \
-    to "${HOME}/.bash_profile"
+    append to "${HOME}/.bash_profile"
   fi
 }
 
