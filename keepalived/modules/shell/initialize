@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-modules package service
+modules core/package core/service
 
 service_run_as_root_flag=1
 

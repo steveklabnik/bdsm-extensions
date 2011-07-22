@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-modules project
+modules core/project
 
 true \
   "${discard_path:="${shared_path}/discard"}" \

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
 
-modules package
+modules core/package
 
 NIY

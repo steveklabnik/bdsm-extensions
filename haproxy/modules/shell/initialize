@@ -2,7 +2,7 @@
 
 package_dependencies=( pcre )
 
-modules package service
+modules core/package core/service
 
 package_definition \
   base_url "http://haproxy.1wt.eu/download/${package_version%.*}/src/" \

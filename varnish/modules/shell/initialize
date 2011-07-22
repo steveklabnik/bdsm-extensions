@@ -2,5 +2,5 @@
 
 package_dependencies=( pcre )
 
-modules package service
+modules core/package core/service
 

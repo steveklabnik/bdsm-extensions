@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-modules package service
+modules core/package core/service
 
 init_scripts_path=$(init_scripts_path)
 
