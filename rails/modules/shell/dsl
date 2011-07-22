@@ -175,6 +175,14 @@ configure_rvm()
       source_files \
         "$HOME/.rvm/scripts/rvm" "$HOME/.rvmrc" "$shared_path/$project/.rvmrc"
     )
+  else # Default to 1.9.2 for now
+    (
+      source_files \
+        "$HOME/.rvm/scripts/rvm" "$HOME/.rvmrc" "$shared_path/$project/.rvmrc"
+      rvm install 1.9.2
+      rvm 1.9.2 --default
+    )
+
   fi
 
   if ! file_contains "$HOME/.bash_profile" "scripts/rvm"
@@ -234,3 +242,194 @@ bootstrap_gems()
   )
 }
 
+rails_setup()
+{
+  extension_license
+
+  ensure_paths_exist "${shared_path}"
+
+  enter "${shared_path}"
+
+  setup_shared_path
+
+  configure_database_yml
+
+  configure_profiles
+
+  configure_bdsmrc
+
+  fetch_repository
+
+  configure_rvm
+
+  ( modules deploy ; deploy )
+
+  bootstrap_gems
+
+  setup_application_server
+}
+
+rails_server()
+{
+  enter "${release_path}"
+
+  if command_exists "ruby"
+  then
+    if file_is_nonempty "script/${action}"
+    then
+      $ruby script/${action}
+
+    elif file_is_nonempty "script/rails"
+    then
+      $ruby script/rails ${action}
+    fi
+  else
+    error "A default ruby does not seem to be set, cannot run ${action}"
+  fi
+}
+
+rails_dbconsole()
+{
+  enter "${release_path}"
+
+  if command_exists "ruby"
+  then
+    if file_is_nonempty "script/${action}"
+    then
+      ruby script/${action}
+    elif file_is_nonempty "script/rails"
+    then
+      ruby script/rails ${action}
+    elif command_exists rails
+    then
+      rails ${action}
+    else
+      true # TODO: raw psql/mysql/etc... based on database.yml
+    fi
+  else
+    error "'ruby' does not exist in the path, cannot run ${action}"
+  fi
+}
+
+rails_console()
+{
+  enter "${release_path}"
+
+  if command_exists ruby
+  then
+    if file_is_nonempty "script/${action}"
+    then
+      ruby script/${action}
+    elif file_is_nonempty "script/rails"
+    then
+      ruby script/rails ${action}
+    elif command_exists rails
+    then
+      rails ${action}
+    fi
+  else
+    error "'ruby' does not exist in the path, cannot run ${action}"
+  fi
+}
+
+rails_logtail()
+{
+  exec tail -f "${shared_path}/log/*.log"
+}
+
+rails_migrate()
+{
+  enter "${release_path}"
+
+  if ! command_exists rake
+  then
+    install_gems rake
+  fi
+
+  rake db:migrate --trace
+}
+
+rails_new()
+{
+  if command_exists "ruby"
+  then
+    if file_is_nonempty "script/${action}"
+    then
+      ruby script/${action}
+    elif file_is_nonempty "script/rails"
+    then
+      ruby script/rails ${action}
+    elif command_exists rails
+      rails ${action}
+    fi
+  else
+    error "'ruby' does not exist in the path, cannot run ${action}"
+  fi
+}
+
+rails_generate()
+{
+  enter "${release_path}"
+
+  if command_exists "ruby"
+  then
+    if file_is_nonempty "script/${action}"
+    then
+      ruby script/${action}
+    elif file_is_nonempty "script/rails"
+    then
+      ruby script/rails ${action}
+    elif command_exists rails
+    then
+      rails ${action}
+    fi
+  else
+    error "'ruby' does not exist in the path, cannot run ${action}"
+  fi
+}
+
+rails_bootstrap()
+{
+  enter "${release_path}"
+
+  if file_is_nonempty *.gems && command_exists "rvm"
+  then
+    rvm gemset import *.gems
+  fi
+
+  if file_is_nonempty "Gemfile"
+  then
+    if ! command_exists bundle
+    then
+      install_gems bundler
+    fi
+  elif file_contains "config/environment.rb" "config.gem"
+  then
+    rake gems:install
+  else
+    log "No Gemfile or config.gem entries detected, skipping gems."
+  fi
+
+  if ! command_exists rake
+  then
+    install_gems rake 0.8.7
+  fi
+
+  if command_exists rake
+  then
+    rake db:create
+    rake db:migrate
+  else
+    warn "'rake' command is missing, skipping db:create and db:migrate tasks."
+  fi
+}
+
+rails_install()
+{
+  enter "${release_path}"
+
+  if ! command_exists rails
+  then
+    install_gems rails
+  fi
+}
