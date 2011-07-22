@@ -3,7 +3,8 @@
 source "${extension_modules_path}/cli"
 
 #  First do an install
-extension_action "riak" "install"
+modules "riak"
+install
 
 # Then do the upgrade parts
 # TODO: Upgrade code
