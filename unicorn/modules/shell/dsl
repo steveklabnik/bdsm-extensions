@@ -39,7 +39,7 @@ fi
 
 unicorn_setup()
 {
-  if template_exists "unicorn.rb" "unicorn"
+  if template_exists "unicorn/unicorn.rb"
   then
     ensure_paths_exist "$shared_path/config"
 
