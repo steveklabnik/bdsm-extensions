@@ -43,7 +43,7 @@ unicorn_setup()
   then
     ensure_paths_exist "$shared_path/config"
 
-    install_template "unicorn/unicorn.rb" "${shared_path}/config/"
+    install_template "unicorn.rb" "${shared_path}/config/"
 
     succeed "Setup complete."
   else
