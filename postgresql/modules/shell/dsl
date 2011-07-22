@@ -123,7 +123,7 @@ postgresql_service_setup()
 postgresql_init_script()
 {
   log "Installing Postgresql init script"
-  install_template "postgresql" to "${init_scripts_path}/postgresql" mode 0755
+  install_template "postgresql/postgresql" to "${init_scripts_path}/postgresql" mode 0755
 }
 
 postgresql_conf_d()
@@ -132,7 +132,7 @@ postgresql_conf_d()
 
   ensure_paths_exist "${confd_path}"
 
-  install_template "postgresql.conf.d" \
+  install_template "postgresql/postgresql.conf.d" \
     to "${confd_path}/postgresql.conf" \
     mode 0644
 
