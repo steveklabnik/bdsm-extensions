@@ -1,7 +1,0 @@
-#!/usr/bin/env bash
-
-[[ ${master_pid} -gt 0 ]] || \
-  fail "unicorn is not running for $project."
-
-kill -TTOU ${master_pid}
-

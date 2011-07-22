@@ -1,6 +1,0 @@
-#!/usr/bin/env bash
-
-[[ ${master_pid} -gt 0 ]] || \
-  succeed "unicorn is not running for $project yet."
-
-kill -USR1 ${master_pid}

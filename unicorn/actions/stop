@@ -1,8 +1,0 @@
-#!/usr/bin/env bash
-
-[[ ${master_pid} -gt 0 ]] || \
-  succeed "Unicorn herd is not running for $project yet."
-
-log "Signaling unicorn master to quit for $project."
-
-kill -QUIT ${master_pid}
