@@ -27,7 +27,7 @@ go_install()
 
   enter "${source_path}/${package_dir}"
 
-  for dir in pkg lib include bin misc
+  for dir in pkg lib include bin misc src
   do
     _paths=($( find "${source_path}/${package_dir}/${dir}" -type d ))
     for _path in "${_paths[@]}"
