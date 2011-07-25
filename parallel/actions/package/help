@@ -4,6 +4,7 @@ description "Extension for managing parallel ${website_url:-}."
 
 action "package install" "Installs ${package_name} ${package_version}."
 action "package uninstall" "Installs ${package_name} ${package_version}."
+action "package update" "Updates ${package_name} ${package_version} to the latest known version."
 
 show_help usage
 
