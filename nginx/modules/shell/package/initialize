@@ -22,11 +22,11 @@ configure_flags=(
 # --with-imap
 # --with-imap_ssl_module
 
-for library in pcre openssl zlib
+for library in zlib openssl pcre
 do
-  if path_exists "${prefix_path}/${library}/active"
+  if path_exists "${packages_path}/${library}/active/src"
   then
-    configure_flags+=( --with-${library}="${prefix_path}/${library}/active/lib" )
+    configure_flags+=( --with-${library}="${packages_path}/${library}/active/src" )
   else
     if [[ "$library" == pcre ]]
     then
