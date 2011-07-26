@@ -2,3 +2,4 @@
 
 modules core/package
 
+configure_flags=( --prefix=${install_path} --enable-utf8 --enable-unicode-properties )
