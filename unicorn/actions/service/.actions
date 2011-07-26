@@ -1,6 +1,6 @@
 start=unicorn_start()
 stop=unicorn_stop()
-restart=unicorn_unicorn_restart()
+restart=unicorn_restart()
 pause=unicorn_pause()
 unpause=unicorn_unpause()
 increase=unicorn_increase()
