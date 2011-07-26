@@ -211,3 +211,10 @@ unicorn_list()
     succeed "There are no unicorns running for $project."
   fi
 }
+
+unicorn_install()
+{
+  install_gems unicorn
+  # gem install unicorn --no-rdoc --no-ri -q
+}
+

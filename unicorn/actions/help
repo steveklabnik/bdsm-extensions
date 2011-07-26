@@ -3,18 +3,8 @@
 description "Extension for managing Unicorn (http://unicorn.bogomips.org/)."
 
 action "install" "Installs ${package_name} gem."
-action "setup" "Setup the unicorn config file with a template in $release_path/config/"
-action "start" "Start."
-action "stop" "Stop."
-action "restart" "Restart."
-action "reload" "Reload unicorn configuration file."
-action "logs" "Reopen log files."
-action "increase" "Increase the number of unicorn worker processes."
-action "decrease" "Decrease the number of unicorn worker processes."
-action "terminate" "Force kill unicorn master."
-action "list" "List all running unicorns for $project $environment."
-action "pause" "Pause all unicorn workers."
-action "unpause" "Unpause all unicorn workers."
+action "config {action}" "Where actions is one of {setup}"
+action "service {action}" "Where action is in {start,stop,restart,reload,logs,increase,decrease,terminate,list,pause,unpause}."
 action "help" "Display this help text."
 
 show_help usage
