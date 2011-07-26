@@ -1,4 +1,0 @@
-#!/usr/bin/env bash
-
-exec tail -f "${shared_path}/log/*.log"
-

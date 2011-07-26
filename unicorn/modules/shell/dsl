@@ -37,3 +37,177 @@ fi
 
 }
 
+unicorn_setup()
+{
+  if template_exists "unicorn/unicorn.rb"
+  then
+    ensure_paths_exist "$shared_path/config"
+
+    install_template "unicorn/unicorn.rb" "${shared_path}/config/"
+
+    succeed "Setup complete."
+  else
+    fail "Template file $extensions_path/unicorn/templates/unicorn.rb.template is missing."
+  fi
+}
+
+unicorn_start()
+{
+  if (( master_pid > 0 ))
+  then
+    succeed "Unicorn herd master is already running for $project."
+  fi
+
+  log "Starting unicorn herd master for $project."
+
+  if file_is_nonempty "$release_path/config/unicorn.rb"
+  then
+    if file_is_nonempty "$release_path/config.ru"
+    then
+      binary="unicorn"
+    else
+      binary="unicorn_rails"
+    fi
+
+    echo ${binary:-unicorn} -c "$release_path/config/unicorn.rb" -E "$environment" -D
+    if ${binary:-unicorn} -c "$release_path/config/unicorn.rb" -E "$environment" -D
+    then
+      succeed "Unicorn herd master has been launched $project."
+    else
+      log "Unicorn herd master failed to start, check ${service_log_file}, last 50:"
+      tail -n 50 "${service_log_file}"
+      error
+    fi
+  else
+    fail "config/unicorn.rb not found, aborting start."
+  fi
+
+}
+
+unicorn_stop()
+{
+  if (( master_pid > 0 ))
+  then
+    succeed "Unicorn herd is not running for $project yet."
+  else
+    log "Signaling unicorn master to quit for $project."
+
+    kill -QUIT ${master_pid}
+  fi
+}
+
+unicorn_restart()
+{
+  if (( master_pid <= 0 ))
+  then
+    log "Unicorn herd master not found running for $project $environment, starting."
+
+    if file_is_nonempty "$release_path/config/unicorn.rb"
+    then
+      if file_is_nonempty "$release_path/config.ru"
+      then
+        ${binary:-unicorn} \
+          -c "$release_path/config/unicorn.rb" \
+          -E "$environment" \
+          -D
+      else
+        binary="unicorn_rails"
+      fi
+    else
+      fail "config/unicorn.rb not found, aborting start."
+    fi
+  else
+    log "Master pid '$master_pid' found."
+
+    log "Signaling herd master '$master_pid' for $project $environment to re-execute the running binary."
+
+    kill -USR2 ${master_pid}
+
+    log "Signaled unicorn master '$master_pid' for $project $environment, it should restart within a few seconds. As requests finish processing workers will be replaced."
+  fi
+}
+
+unicorn_terminate()
+{
+  if (( master_pid > 0 ))
+  then
+    kill -TERM ${master_pid}
+  else
+    succeed "unicorn is not running for $project."
+  fi
+}
+
+unicorn_increase()
+{
+  if (( master_pid > 0 ))
+  then
+    kill -TTIN  "$master_pid"
+  else
+    fail "unicorn is not running for $project yet."
+  fi
+}
+
+unicorn_decrease()
+{
+  if (( master_pid > 0 ))
+  then
+    kill -TTOU ${master_pid}
+  else
+    fail "unicorn is not running for $project."
+  fi
+}
+
+unicorn_pause()
+{
+  if (( master_pid > 0 ))
+  then
+    enter "${release_path}"
+    kill -WINCH "$master_pid"
+  else
+    succeed "Unicorn is not running for $project yet."
+  fi
+}
+
+unicorn_unpause()
+{
+  unicorn_pause
+}
+
+unicorn_reopen_logs()
+{
+  if (( master_pid > 0 ))
+  then
+    kill -USR1 ${master_pid}
+  else
+    succeed "unicorn is not running for $project yet."
+  fi
+}
+
+unicorn_status()
+{
+  NIY "Unicorn reload has not yet been implemented."
+  if (( master_pid > 0 ))
+  then
+    :
+  else
+    :
+  fi
+}
+
+unicorn_list()
+{
+  if (( master_pid > 0 ))
+  then
+    # TODO: Use service_list
+    if variable_is_nonempty project
+    then
+      ps auxww | awk "/[u]nicorn/ && /master/ && /\/${project}\//"
+      ps auxww | awk "/[u]nicorn/ && /worker/ && /\/${project}\//"
+    else
+      ps auxww | awk "/[u]nicorn/ && /master/ && /\/${USER}\//"
+      ps auxww | awk "/[u]nicorn/ && /worker/ && /\/${USER}\//"
+    fi
+  else
+    succeed "There are no unicorns running for $project."
+  fi
+}

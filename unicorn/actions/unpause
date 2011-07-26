@@ -1,6 +1,0 @@
-#!/usr/bin/env bash
-
-[[ ${master_pid} -gt 0 ]] || \
-  log "Unicorn is not running for $project."
-
-kill -WINCH ${master_pid}

@@ -105,9 +105,9 @@ haproxy_postinstall()
       note "Skipping installation of haproxy.cfg as /etc/haproxy/haproxy.cfg"\
         "already exists"
     else
-      if template_exists "haproxy.cfg"
+      if template_exists "haproxy/haproxy.cfg"
       then
-        install_template "haproxy.cfg" to "/etc/haproxy/haproxy.cfg" mode 0644
+        install_template "haproxy/haproxy.cfg" to "/etc/haproxy/haproxy.cfg" mode 0644
       else
         warn "Not installing the haproxy.cfg template as it does not exist..."\
           "This indicates something is wrong in the extension."

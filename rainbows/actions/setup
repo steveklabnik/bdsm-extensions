@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 
-template_exists "rainbows.rb" || \
+template_exists "rainbows/rainbows.rb" || \
   fail "Template file $extensions_path/rainbows/templates/rainbows.rb.template is missing."
 
 ensure_paths_exist "$shared_path/config"
 
-install_template "rainbows.rb" "${shared_path}/config/rainbows.rb"
+install_template "rainbows/rainbows.rb" "${shared_path}/config/rainbows.rb"
 
 succeed "Setup complete."

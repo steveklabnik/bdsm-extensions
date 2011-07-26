@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
 
-install_template ".tmux.conf" to "${HOME}"
+install_template "tmux/.tmux.conf" to "${HOME}"
 

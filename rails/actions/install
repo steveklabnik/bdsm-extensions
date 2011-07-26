@@ -1,9 +1,0 @@
-#!/usr/bin/env bash
-
-enter "${release_path}"
-
-if ! command_exists rails
-then
-  install_gems rails
-fi
-

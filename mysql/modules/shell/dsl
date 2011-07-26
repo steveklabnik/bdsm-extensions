@@ -103,12 +103,57 @@ mysql_postinstall()
 mysql_init_script()
 {
   log "Installing mysql init script"
-  install_template "mysql" to "${init_scripts_path}/mysql" mode 0755
+  install_template "mysql/mysql" to "${init_scripts_path}/mysql" mode 0755
 }
 
 mysql_conf_d()
 {
   log "Installing mysql conf.d script"
-  install_template "mysql.conf.d" to "${confd_path}/mysql.conf" mode 0644
+  install_template "mysql/mysql.conf.d" to "${confd_path}/mysql.conf" mode 0644
 }
 
+mysql_upgrade()
+{
+  #  First do an install
+  mysql_install
+
+  # Then do the upgrade parts
+  # TODO: Upgrade code
+  # move and symlink to preserve the old mysql.conf, pg_hba.conf files
+  # upgrade / move databases from old system.
+}
+
+mysql_uninstall()
+{
+  remove_paths \
+    "${prefix_path}/${package_name}" \
+    "${prefix_path}/${package_name}-${package_version}"
+
+  remove_files \
+    /etc/profile.d/mysql.sh \
+    /etc/ld.so.conf.d/mysql.conf \
+    "${init_scripts_path}/mysql"
+
+  user_delete "${package_user}"
+
+  if os_is_darwin ; then
+    remove_files \
+      "/usr/local/mysql"
+
+    paths=(
+    /usr/local/mysql* \
+      /Library/StartupItems/MySQLCOM \
+      /Library/PreferencePanes/My* \
+      /Library/Reciepts/mysql* \
+      /Library/Reciepts/MySQL* \
+      /var/db/receipts/com.mysql.mysql* \
+      /usr/local/mysql*
+    )
+
+    remove_paths ${paths[@]}
+
+    sed -i -e 's#^MYSQLCOM.*$##' /etc/hostconfig
+  fi
+
+  log "Removal of ${package_name} complete."
+}
