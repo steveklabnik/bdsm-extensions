@@ -1,4 +1,0 @@
-#!/usr/bin/env bash
-
-install_gems unicorn
-# gem install unicorn --no-rdoc --no-ri -q

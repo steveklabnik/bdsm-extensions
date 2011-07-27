@@ -2,9 +2,24 @@
 
 modules std/package
 
-package_dependencies=(python-2)
+#package_dependencies=(python-2.*)
+if ! (command_exists python2 || command_exists python2.7 || command_exists python2.5)
+then
+  error "node package depends on python 2 in order to build, install python package version 2"
+fi
+
+# Node folks changed the download url scheme, way to fail guys :)
+case ${package_version} in
+  0.4.*)
+    package_base_url="http://nodejs.org/dist"
+    ;;
+
+  0.5.*|*)
+    package_base_url="http://nodejs.org/dist/v${package_version}"
+    ;;
+esac
 
 package_definition \
-  file "${package_name}-v${package_version}.${archive_format}"\
-  dir "${package_name}-v${package_version}"\
+  file "${package_name}-v${package_version}.${archive_format}" \
+  dir "${package_name}-v${package_version}"
 
