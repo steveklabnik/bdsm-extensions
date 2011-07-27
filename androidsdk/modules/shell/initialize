@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-modules core/package core/system
+modules std/package core/system
 
 if os_is_darwin
 then

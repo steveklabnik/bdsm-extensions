@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
 
-modules core/package core/service core/database
+modules std/package std/service std/database
 

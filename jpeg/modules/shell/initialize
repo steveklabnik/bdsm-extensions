@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-modules core/defaults core/package
+modules std/defaults std/package
 
 package_definition \
   dir="jpeg-8b" \

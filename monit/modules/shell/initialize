@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
 
-modules core/package core/service
+modules std/package std/service
 
 package_dependencies=( flex )

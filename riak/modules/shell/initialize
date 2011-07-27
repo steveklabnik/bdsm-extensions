@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-modules core/defaults core/package
+modules std/defaults std/package
 
 package_definition \
   url "http://downloads.basho.com/riak/riak-${package_version%.*}/${package_name}-${package_version}.${archive_format}" \

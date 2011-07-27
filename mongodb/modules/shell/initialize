@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-modules core/package core/service
+modules std/package std/service
 
 # The binary downloads are customized based on OS and Arch.
 mongodb_set_architecture
