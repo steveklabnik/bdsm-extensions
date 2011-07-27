@@ -9,6 +9,7 @@ then
 fi
 
 package_definition \
-  file "${package_name}-v${package_version}.${archive_format}"\
-  dir "${package_name}-v${package_version}"\
+  base_url "http://nodejs.org/dist/v${package_version}" \
+  file "${package_name}-v${package_version}.${archive_format}" \
+  dir "${package_name}-v${package_version}"
 
