@@ -2,7 +2,11 @@
 
 modules core/package
 
-package_dependencies=(python-2)
+#package_dependencies=(python-2.*)
+if ! (command_exists python2 || command_exists python2.7 || command_exists python2.5)
+then
+  error "node package depends on python 2 in order to build, install python package version 2"
+fi
 
 package_definition \
   file "${package_name}-v${package_version}.${archive_format}"\
