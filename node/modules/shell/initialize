@@ -11,11 +11,11 @@ fi
 # Node folks changed the download url scheme, way to fail guys :)
 case ${package_version} in
   0.4.*)
-    package_base_url "http://nodejs.org/dist"
+    package_base_url="http://nodejs.org/dist"
     ;;
 
   0.5.*|*)
-    package_base_url "http://nodejs.org/dist/v${package_version}"
+    package_base_url="http://nodejs.org/dist/v${package_version}"
     ;;
 esac
 
