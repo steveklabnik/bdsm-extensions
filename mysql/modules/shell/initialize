@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-modules std/package std/service
-
 # TODO: if package_version >= 5.5, dependencies+=(cmake)
 
 package_definition \
