@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-modules std/project
-
 true \
   "${discard_path:="${shared_path}/discard"}" \
   "${previous_path:=${project_path}/previous}" \
