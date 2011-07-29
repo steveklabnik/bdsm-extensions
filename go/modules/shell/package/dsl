@@ -17,6 +17,7 @@ go_download()
 
 go_build()
 {
+  export GOROOT="${source_path}/${package_dir}"
   enter "${source_path}/${package_dir}/src"
   ./all.bash
 }
