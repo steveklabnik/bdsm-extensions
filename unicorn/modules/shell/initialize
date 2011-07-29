@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-modules core/variables core/project core/templates core/service
+modules bdsm/variables std/project std/templates std/service
 
 variables_must_be_nonempty environment RAILS_ENV project
 

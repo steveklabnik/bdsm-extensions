@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
 
-modules core/package
+modules std/package
 
+configure_flags=( --prefix=${install_path} --enable-utf8 --enable-unicode-properties )

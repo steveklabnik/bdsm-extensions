@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-modules core/package core/service
+modules std/package std/service
 
 postgreql_flag=0 ; mysql_flag=0
 

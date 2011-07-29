@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-modules core/package
+modules std/package
 
 package_definition \
   url "${package_base_url}/${package_version}/p7zip_${package_version}_src_all.${archive_format}" \

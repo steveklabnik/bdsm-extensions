@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
 
-modules core/package core/vcs
+modules std/package std/vcs
 

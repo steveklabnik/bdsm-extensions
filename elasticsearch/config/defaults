@@ -1,4 +1,4 @@
-version=0.17.0
+version=0.17.1
 base_url=https://github.com/downloads/elasticsearch/elasticsearch
 archive_format=tar.gz
 website_url=http://www.elasticsearch.org/

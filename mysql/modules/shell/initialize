@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-modules core/package core/service
-
 # TODO: if package_version >= 5.5, dependencies+=(cmake)
 
 package_definition \
