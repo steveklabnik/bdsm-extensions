@@ -35,6 +35,15 @@ hook()
   fi
 }
 
+with_hooks()
+{
+  local name="$1"
+  shift
+  hook "before_${name}" "$@"
+  "${name}"  "$@"
+  hook "after_${name}" "$@"
+}
+
 update()
 {
   if update_repository
@@ -264,40 +273,21 @@ deploy()
   then
     error "The 'rsync' command was not found, please install rsync before using"\
       "deploy. (Note that there is an rsync bdsm extension, which you can install"\
-      "viathe command as root: root# bdsm extend rsync && bdsm rsync install"
+      "viathe command as root: root# bdsm rsync package install"
   fi
 
   # TODO: Call Rollback on errors when appropriate.
 
-  hook "before_update_repository"
-  update_repository
-  hook "after_update_repository"
+  with_hooks update_repository
 
   hook "before_deploy"
 
-  hook "before_stage"
-  stage_current
-  hook "after_stage"
-
-  hook "before_configure"
-  configure
-  hook "after_configure"
-
-  hook "before_symlink"
-  symlink
-  hook "after_symlink"
-
-  hook "before_replace_current"
-  replace_current
-  hook "after_replace_current"
-
-  hook "before_cleanup"
-  cleanup
-  hook "after_cleanup"
-
-  hook "before_record"
-  record
-  hook "after_record"
+  with_hooks stage_current
+  with_hooks configure
+  with_hooks symlink
+  with_hooks replace_current
+  with_hooks cleanup
+  with_hooks record
 
   hook "after_deploy"
 
