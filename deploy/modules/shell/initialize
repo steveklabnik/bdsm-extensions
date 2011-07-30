@@ -19,3 +19,6 @@ old_releases=($(
   find "${previous_path}/" -mindepth 1 -maxdepth 1 -type d | sort -r |
   awk "NR > ${keep_releases:-3} { print \$0 }"
 ))
+
+timestamp="$(date +%m.%d.%YT%H:%M:%S)"
+
