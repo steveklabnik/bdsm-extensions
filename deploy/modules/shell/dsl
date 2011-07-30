@@ -301,7 +301,7 @@ deploy()
 
   hook "after_deploy"
 
-  log "Deploy started at $timestamp and completed at $(date +%m.%d.%Y-%H:%M:%S)"
+  log "Deploy started at $timestamp and completed at $(date +%m.%d.%YT%H:%M:%S)"
 }
 
 rollback()
