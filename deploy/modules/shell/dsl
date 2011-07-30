@@ -3,6 +3,7 @@
 hook()
 {
   hook="$1"
+  started_stages=( "${hook}" "${started_stages[@]}" )
 
   if (( ${hooks_flag:=1} == 1 ))
   then # Only process hooks if the flag is not explicitely set to 0.
@@ -40,6 +41,7 @@ with_hooks()
   local name="$1"
   shift
   hook "before_${name}" "$@"
+  started_stages+=( "${name}" "${started_stages[@]}" )
   "${name}"  "$@"
   hook "after_${name}" "$@"
 }
@@ -61,7 +63,10 @@ update()
 
 update_repository()
 {
-  log "Updating local repository in $shared_path/$project."
+  #log "Updating local repository in $shared_path/$project."
+
+  scm_get $repository_url $shared_path/$project
+  return $?
 
   (
   enter "${shared_path}/${project}"
@@ -238,34 +243,16 @@ record()
   )
 }
 
-detect_scm()
-{
-  if [[ -z "${scm:-}" ]]
-  then
-    if [[ -d "$shared_path/$project/.git" ]]
-    then
-      scm="git"
-    elif [[ -d "$shared_path/$project/.svn" ]]
-    then
-      scm="svn"
-    elif [[ -d "$shared_path/$project/.hg" ]]
-    then
-      scm="hg"
-    fi
-  fi
-}
-
 deploy()
 {
   # Logging (http://nakedape.cc/wiki/ShellHacks 1.6.1, 1.7, 1.11)
-  log_path=$PWD
-  exec > >(tee -a $log_path/deploy.$timestamp.log)
-  exec 2> >(tee -a $log_path/deploy.$timestamp.log | tee -a $log_path/deploy.$timestamp.err)
+  exec > >(tee -a $initial_pwd/deploy.$timestamp.log)
+  exec 2> >(tee -a $initial_pwd/deploy.$timestamp.log | tee -a $initial_pwd/deploy.$timestamp.err)
 
   # Error handling
   set -o errexit
   set -o errtrace
-  trap rollback_on_error ERR
+  trap 'rollback_on_error; exit 1' ERR
 
   # TODO:
   #
@@ -277,7 +264,6 @@ deploy()
   # This means that users may disable hooks by changing their
   # execute bit.
   #
-  detect_scm
 
   if ! command_exists rsync
   then
@@ -306,15 +292,24 @@ deploy()
 
 rollback_on_error()
 {
-  backtrace > backtrace.$timestamp.log
-  log "An error occured rooling back ..."
-  rollback
-  cat backtrace.$timestamp.log
+  backtrace 2>$initial_pwd/backtrace.$timestamp.log
+  exec 9>&1
+  exec 1>&2
+  log "An error occured rooling back ... check for details backtrace.$timestamp.log"
+  for stage in "${started_stages[@]}"
+  do
+    if command_exists "fail_${name}"
+    then
+      "fail_${name}"
+    fi
+    hook "after_fail_${name}" "$@"
+  done
+  exec 1>&9
 }
 
 rollback()
 {
-  if directory_exists "$previous"
+  if path_exists "$previous"
   then
     log "Discarding current release to $discard_path/$timestamp ..."
     mv "$release_path" "$discard_path/$timestamp"

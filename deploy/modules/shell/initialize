@@ -22,3 +22,4 @@ old_releases=($(
 
 timestamp="$(date +%m.%d.%YT%H:%M:%S)"
 
+started_stages=()
