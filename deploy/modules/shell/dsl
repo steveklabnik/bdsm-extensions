@@ -319,8 +319,8 @@ rollback_process()
 rollback_on_error()
 {
   local status=$?
-  backtrace "" no_exit 2>> $initial_pwd/deploy.$timestamp.log
-  log "An error occured rooling back ...\n  for details check deploy.$timestamp.log" >&2
+  backtrace "A command has returned an not handled error code (${status})." no_exit 2>> $initial_pwd/deploy.$timestamp.log
+  log "\nAn error occured, rooling back ...\n  for details check deploy.$timestamp.log\n" >&2
   debug deploy "rollback_on_error: ${started_stages[*]}" >&2
   rollback_process "${started_stages[@]}" >&2
   kill -s USR2 $APP_PID #to exit application not current subshell
@@ -332,3 +332,4 @@ rollback()
   rollback_process after_deploy record cleanup replace_current configure \
     symlink stage_current update_repository before_deploy
 }
+
