@@ -213,7 +213,10 @@ cleanup()
 
     if array_is_nonempty old_releases
     then
-      remove_paths "${old_releases[@]}"
+      if ! remove_paths "${old_releases[@]}"
+      then
+        log "There was an error removing the old releases."
+      fi
     fi
   fi
 }
