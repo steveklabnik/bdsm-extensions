@@ -35,13 +35,17 @@ hook()
   fi
 }
 
-with_hooks()
+before_step()
 {
   local name="$1"
   shift
-  hook "before_${name}" "$@"
-  started_stages=( "${name}" "${started_stages[@]}" )
-  "${name}"  "$@"
+  hook "after_${name}" "$@"
+}
+
+after_step()
+{
+  local name="$1"
+  shift
   hook "after_${name}" "$@"
 }
 
@@ -261,7 +265,7 @@ record()
   )
 }
 
-deploy()
+run_deploy()
 {
   trap trace_filter RETURN
   trace_filter deploy
@@ -285,35 +289,14 @@ deploy()
       "viathe command as root: root# bdsm rsync package install"
   fi
 
-  started_stages=( "before_deploy" "${started_stages[@]}" )
-  hook "before_deploy"
-
-  with_hooks update_repository
-  with_hooks stage_current
-  with_hooks configure
-  with_hooks symlink
-  with_hooks replace_current
-  with_hooks cleanup
-  with_hooks record
-
-  started_stages=( "after_deploy" "${started_stages[@]}" )
-  hook "after_deploy"
+  step deploy
 
   log "Deploy started at $timestamp and completed at $(date +%m.%d.%YT%H:%M:%S)"
 }
 
-rollback_process()
+deploy()
 {
-  trap trace_filter RETURN
-  trace_filter deploy_rollback_process
-  for stage in $@
-  do
-    if command_exists "fail_${stage}"
-    then
-      "fail_${stage}"
-    fi
-    hook "after_fail_${stage}"
-  done
+  steps "${deploy_steps[@]}"
 }
 
 rollback_on_error()
@@ -321,15 +304,13 @@ rollback_on_error()
   local status=$?
   backtrace "A command has returned an not handled error code (${status})." no_exit 2>> $initial_pwd/deploy.$timestamp.log
   log "\nAn error occured, rooling back ...\n  for details check deploy.$timestamp.log\n" >&2
-  debug deploy "rollback_on_error: ${started_stages[*]}" >&2
-  rollback_process "${started_stages[@]}" >&2
+  retreat >&2
   kill -s USR2 $APP_PID #to exit application not current subshell
 }
 
 rollback()
 {
   log "Rollback ..."
-  rollback_process after_deploy record cleanup replace_current configure \
-    symlink stage_current update_repository before_deploy
+  retreat "deploy" "${deploy_steps[@]}"
 }
 
