@@ -3,7 +3,6 @@
 hook()
 {
   hook="$1"
-  started_stages=( "${hook}" "${started_stages[@]}" )
 
   if (( ${hooks_flag:=1} == 1 ))
   then # Only process hooks if the flag is not explicitely set to 0.
@@ -41,7 +40,7 @@ with_hooks()
   local name="$1"
   shift
   hook "before_${name}" "$@"
-  started_stages+=( "${name}" "${started_stages[@]}" )
+  started_stages=( "${name}" "${started_stages[@]}" )
   "${name}"  "$@"
   hook "after_${name}" "$@"
 }
@@ -65,10 +64,9 @@ update_repository()
 {
   #log "Updating local repository in $shared_path/$project."
 
-  scm_get $repository_url $shared_path/$project
+  scm_get "$repository_url" "$shared_path/$project"
   return $?
 
-  (
   enter "${shared_path}/${project}"
 
   case "$scm" in
@@ -143,12 +141,7 @@ update_repository()
       fi
       ;;
 
-    *)
-      fail "No scm specified found (git,hg,svn)"
-      ;;
-
   esac
-  )
 }
 
 stage_current()
@@ -161,6 +154,12 @@ stage_current()
   ensure_paths_exist "$stage_path/public"
 }
 
+fail_stage_current()
+{
+  log "Removing release from $stage_path"
+  rm -rf "$stage_path" || true
+}
+
 replace_current()
 {
   if path_exists "$release_path"
@@ -171,6 +170,21 @@ replace_current()
 
   log "Replacing $release_path from $stage_path"
   mv "$stage_path" "$release_path"
+}
+fail_replace_current()
+{
+  if path_exists "$previous"
+  then
+    log "Discarding current release to $discard_path/$timestamp ..."
+    mv "$release_path" "$discard_path/$timestamp"
+
+    log "Rolling back to previous release $previous ..."
+    mv "$previous" "${release_path%/}"
+
+    log "Rollback complete."
+  else
+    log "No previous releases to rollback to."
+  fi
 }
 
 configure()
@@ -207,6 +221,10 @@ symlink()
     link --force "${shared_path}/${dir}" to "${stage_path}/${dir}"
   done
 
+  if ! path_exists "$shared_path/public/"
+  then
+    error "\nPlease first run:\n\n  bdsm rails setup \n\nand repeat:\n\n  bdsm deploy\n"
+  fi
   for dir in $(ls -A "$shared_path/public/")
   do
     log "  - public/$dir"
@@ -245,19 +263,14 @@ record()
 
 deploy()
 {
+  trap trace_filter RETURN
+  trace_filter deploy
+
   # Logging (http://nakedape.cc/wiki/ShellHacks 1.6.1, 1.7, 1.11)
-  exec > >(tee -a $initial_pwd/deploy.$timestamp.log)
-  exec 2> >(tee -a $initial_pwd/deploy.$timestamp.log | tee -a $initial_pwd/deploy.$timestamp.err)
-
+  exec &> >(tee -a $initial_pwd/deploy.$timestamp.log)
   # Error handling
-  set -o errexit
-  set -o errtrace
-  trap 'rollback_on_error; exit 1' ERR
+  trap rollback_on_error ERR
 
-  # TODO:
-  #
-  #   * Crank up the verbosity on errors
-  #
   # This will run any deploy hooks that are called
   #   (by hook file name)
   # Hooks are sourced into a subshell IF they are executable.
@@ -272,12 +285,10 @@ deploy()
       "viathe command as root: root# bdsm rsync package install"
   fi
 
-  # TODO: Call Rollback on errors when appropriate.
-
-  with_hooks update_repository
-
+  started_stages=( "before_deploy" "${started_stages[@]}" )
   hook "before_deploy"
 
+  with_hooks update_repository
   with_hooks stage_current
   with_hooks configure
   with_hooks symlink
@@ -285,40 +296,41 @@ deploy()
   with_hooks cleanup
   with_hooks record
 
+  false
+
+  started_stages=( "after_deploy" "${started_stages[@]}" )
   hook "after_deploy"
 
   log "Deploy started at $timestamp and completed at $(date +%m.%d.%YT%H:%M:%S)"
 }
 
+rollback_process()
+{
+  trap trace_filter RETURN
+  trace_filter deploy_rollback_process
+  for stage in $@
+  do
+    if command_exists "fail_${stage}"
+    then
+      "fail_${stage}"
+    fi
+    hook "after_fail_${stage}"
+  done
+}
+
 rollback_on_error()
 {
-  backtrace 2>$initial_pwd/backtrace.$timestamp.log
-  exec 9>&1
-  exec 1>&2
-  log "An error occured rooling back ... check for details backtrace.$timestamp.log"
-  for stage in "${started_stages[@]}"
-  do
-    if command_exists "fail_${name}"
-    then
-      "fail_${name}"
-    fi
-    hook "after_fail_${name}" "$@"
-  done
-  exec 1>&9
+  local status=$?
+  backtrace "" no_exit 2>> $initial_pwd/deploy.$timestamp.log
+  log "An error occured rooling back ...\n  for details check deploy.$timestamp.log" >&2
+  debug deploy "rollback_on_error: ${started_stages[*]}" >&2
+  rollback_process "${started_stages[@]}" >&2
+  kill -s USR2 $APP_PID #to exit application not current subshell
 }
 
 rollback()
 {
-  if path_exists "$previous"
-  then
-    log "Discarding current release to $discard_path/$timestamp ..."
-    mv "$release_path" "$discard_path/$timestamp"
-
-    log "Rolling back to previous release $previous ..."
-    mv "$previous" "${release_path%/}"
-
-    log "Rollback complete."
-  else
-    log "No previous releases to rollback to."
-  fi
+  log "Rollback ..."
+  rollback_process after_deploy record cleanup replace_current configure \
+    symlink stage_current update_repository before_deploy
 }
