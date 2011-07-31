@@ -238,7 +238,7 @@ run_deploy()
   trace_filter deploy
 
   # Logging (http://nakedape.cc/wiki/ShellHacks 1.6.1, 1.7, 1.11)
-  export log_file=$initial_pwd/deploy.$timestamp.log
+  export log_file="$shared_path/log/deploy-$timestamp.log"
   exec 3>>$log_file
   exec &> >(tee -a $log_file)
   # Error handling
