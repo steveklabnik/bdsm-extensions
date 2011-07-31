@@ -152,9 +152,9 @@ fail_replace_current()
     log "Rolling back to previous release $previous ..."
     mv "$previous" "${release_path%/}"
 
-    log "Rollback complete."
+    log "revert complete."
   else
-    log "No previous releases to rollback to."
+    log "No previous releases to revert to."
   fi
 }
 
@@ -239,10 +239,10 @@ run_deploy()
 
   # Logging (http://nakedape.cc/wiki/ShellHacks 1.6.1, 1.7, 1.11)
   export log_file="$shared_path/log/deploy-$timestamp.log"
-  exec 3>>$log_file
-  exec &> >(tee -a $log_file)
+  exec 3>>"$log_file"
+  exec &> >(tee -a "$log_file")
   # Error handling
-  trap rollback_on_error ERR
+  trap revert_on_error ERR
 
   # This will run any deploy hooks that are called
   #   (by hook file name)
@@ -270,18 +270,18 @@ deploy()
   steps "${deploy_steps[@]}"
 }
 
-rollback_on_error()
+revert_on_error()
 {
   local status=$?
   backtrace "A command has returned an not handled error code (${status})." no_exit 2>&3
-  log "\nAn error occured, rooling back ...\n  for details check deploy.$timestamp.log\n" >&2
+  log "\nAn error occured, reverting...\n  for details check deploy.$timestamp.log\n" >&2
   retreat >&2
   kill -s USR2 $APP_PID #to exit application not current subshell
 }
 
-rollback()
+revert()
 {
-  log "Rollback ..."
+  log "revert ..."
   retreat "deploy" "${deploy_steps[@]}"
 }
 
