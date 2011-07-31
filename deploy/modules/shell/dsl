@@ -69,41 +69,13 @@ update_repository()
   #log "Updating local repository in $shared_path/$project."
 
   scm_get "$repository_url" "$shared_path/$project"
-  return $?
 
   enter "${shared_path}/${project}"
 
-  case "$scm" in
-    git)
-      git checkout master -f -q
+  log_todo "move revision handling to scm_get"
 
-      # There should be *no* changes to the pristine repo.
-      git reset --hard HEAD 2>/dev/null
-
-      #current_branch=$(git branch | awk '/\* /{print $2}')
-      log "Pulling updates from $remote"
-      git fetch $remote
-
-      log "Switching to branch $branch"
-
-      current_branch=$(git symbolic-ref -q HEAD 2>/dev/null)
-
-      if [[ "$current_branch" = "$branch" ]]
-      then
-        log "Already on branch '$branch'."
-
-      elif ! git branch | awk "/$branch$/" >/dev/null 2>&1
-      then
-        git checkout -b $branch --track $remote/$branch 2>/dev/null
-
-      elif ! git checkout $branch 2>/dev/null
-      then
-        error "Branch $remote/$branch not found. Skipping remainder of update."
-        return 1
-      fi
-
-      git pull
-
+  case "${scm_type}" in
+    git|github)
       if file_exists ".gitmodules"
       then
         log "Updating submodules."
@@ -120,9 +92,6 @@ update_repository()
       ;;
 
     hg)
-      log "Pulling from remote"
-      hg pull
-
       if [[ -n "$revision" ]]
       then
         # TODO: Find out if this is how it's done for hg ;)
@@ -135,9 +104,6 @@ update_repository()
       ;;
 
     svn)
-      # TODO: specific revision / branch handling
-      log "Updating repository"
-      svn update
       if [[ "$revision" -gt 0 ]]
       then
         log "Checking out revision $revision"
@@ -177,6 +143,7 @@ replace_current()
 }
 fail_replace_current()
 {
+  log_todo "should \$previous == \$timestamp ?"
   if path_exists "$previous"
   then
     log "Discarding current release to $discard_path/$timestamp ..."
