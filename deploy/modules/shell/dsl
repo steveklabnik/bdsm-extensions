@@ -238,7 +238,9 @@ run_deploy()
   trace_filter deploy
 
   # Logging (http://nakedape.cc/wiki/ShellHacks 1.6.1, 1.7, 1.11)
-  exec &> >(tee -a $initial_pwd/deploy.$timestamp.log)
+  export log_file=$initial_pwd/deploy.$timestamp.log
+  exec 3>>$log_file
+  exec &> >(tee -a $log_file)
   # Error handling
   trap rollback_on_error ERR
 
@@ -258,6 +260,8 @@ run_deploy()
 
   step deploy
 
+  false
+
   log "Deploy started at $timestamp and completed at $(date +%m.%d.%YT%H:%M:%S)"
 }
 
@@ -269,7 +273,7 @@ deploy()
 rollback_on_error()
 {
   local status=$?
-  backtrace "A command has returned an not handled error code (${status})." no_exit 2>> $initial_pwd/deploy.$timestamp.log
+  backtrace "A command has returned an not handled error code (${status})." no_exit 2>&3
   log "\nAn error occured, rooling back ...\n  for details check deploy.$timestamp.log\n" >&2
   retreat >&2
   kill -s USR2 $APP_PID #to exit application not current subshell
