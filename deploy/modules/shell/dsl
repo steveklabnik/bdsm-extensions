@@ -258,7 +258,7 @@ run_deploy()
   then
     error "The 'rsync' command was not found, please install rsync before using"\
       "deploy. (Note that there is an rsync bdsm extension, which you can install"\
-      "viathe command as root: root# bdsm rsync package install"
+      "root# bdsm rsync package install"
   fi
 
   step deploy

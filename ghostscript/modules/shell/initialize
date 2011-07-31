@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-modules std/package
-
 # package_definition \
 #   name=ghostscript-fonts-std
 #   version=8.11

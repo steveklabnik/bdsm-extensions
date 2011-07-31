@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-modules std/defaults std/package
-
 package_definition \
   dir="jpeg-8b" \
   file="${package_name}.${package_version}.$archive_format" \

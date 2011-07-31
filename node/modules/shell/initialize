@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-modules std/package
-
 #package_dependencies=(python-2.*)
 if ! (command_exists python2 || command_exists python2.7 || command_exists python2.5)
 then

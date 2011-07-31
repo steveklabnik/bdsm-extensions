@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-modules std/package
-
 package_definition \
   file "libiconv-${package_version}.${archive_format}" \
   dir "libiconv-${package_version}"

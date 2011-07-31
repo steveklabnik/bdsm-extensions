@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-modules std/package std/service
-
 init_scripts_path=$(init_scripts_path)
 
 read_default website_url prefix package

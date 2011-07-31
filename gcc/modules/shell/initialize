@@ -1,6 +1,4 @@
 #!/usr/bin/env bash
 
-modules std/package
-
 package_dependencies=(gmp mpfr mpc iconv)
 

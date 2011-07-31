@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-modules std/project std/rvm
-
 if [[ "$action" != "help" ]]
 then # Sanity check
   user_must_not_be_root

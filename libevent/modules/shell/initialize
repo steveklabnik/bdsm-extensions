@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-modules std/package
-
 package_definition \
   file "${package_name}-${package_version}-stable.${archive_format}" \
   dir "${package_name}-${package_version}-stable"

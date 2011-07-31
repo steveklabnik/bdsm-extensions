@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-modules std/package std/service
-
 # Default service_flags for memcached.
 service_flags=(
   -d

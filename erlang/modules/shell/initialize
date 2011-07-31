@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-modules std/package
-
 package_definition \
   file "otp_src_${package_version}.${archive_format}" \
   dir "otp_src_${package_version}"

@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-modules std/package
-
 package_definition \
   patches_url "ftp://ftp.gnu.org/gnu/bash/bash-${package_version}-patches"
 

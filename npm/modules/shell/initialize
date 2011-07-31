@@ -1,4 +1,1 @@
 #!/usr/bin/env bash
-
-modules std/package
-

@@ -2,8 +2,6 @@
 
 fail "BDSM Extension '${extension}' has not been implemented yet."
 
-modules std/package
-
 openpkg_url="http://openpkg.org/go/download/openpkg.src.sh"
 
 if [[ $UID -eq 0 ]] ; then

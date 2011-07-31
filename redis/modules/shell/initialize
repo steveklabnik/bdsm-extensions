@@ -1,6 +1,4 @@
 #!/usr/bin/env bash
 
-modules std/package std/service std/database
-
 read_default website_url prefix package
 

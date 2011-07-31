@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-modules std/package bdsm/system
-
 if os_is_darwin
 then
   os_type="mac"

@@ -2,8 +2,6 @@
 
 package_dependencies=( pcre )
 
-modules std/package std/service
-
 package_definition \
   base_url "http://haproxy.1wt.eu/download/${package_version%.*}/src/" \
   docs_url "http://haproxy.1wt.eu/download/${package_version%.*}/doc/configuration.txt"

@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-modules std/package
-
 package_definition \
   base_url "http://ftp.ruby-lang.org/pub/ruby/${package_version%.*}"
 

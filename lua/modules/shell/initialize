@@ -1,6 +1,4 @@
 #!/usr/bin/env bash
 
-modules std/package
-
 true "${package_dir:="${package_name}-${package_version}"}"
 

@@ -2,5 +2,3 @@
 
 package_dependencies=( pcre )
 
-modules std/package std/service
-
