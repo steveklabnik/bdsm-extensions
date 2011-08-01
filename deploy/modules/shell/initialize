@@ -27,7 +27,7 @@ deploy_steps=(
   replace_current cleanup record
 )
 
-if ! variable_is_set repository_url
+if [[ -z "${repository_url}" ]]
 then
   error "The project's repository_url must be set in configuration files (eg: ~/.bdsmrc)"
 fi
