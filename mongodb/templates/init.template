@@ -30,7 +30,7 @@ export extension="{{extension}}"
 #
 # Load the service module.
 #
-modules std/service
+modules ext/service
 
 service_init_d
 

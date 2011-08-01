@@ -1,5 +1,5 @@
-std/project
-std/time
-std/vcs
+ext/project
+ext/time
+ext/vcs
 bdsm/filesystem
-std/steps
+ext/steps

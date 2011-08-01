@@ -1,4 +1,4 @@
 bdsm/variables
-std/project
-std/templates
-std/service
+ext/project
+ext/templates
+ext/service
