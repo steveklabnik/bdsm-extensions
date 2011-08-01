@@ -68,11 +68,11 @@ update_repository()
 {
   #log "Updating local repository in $shared_path/$project."
 
-  scm_get "$repository_url" "$shared_path/$project"
+  fetch_uri "$repository_url" "$shared_path/$project"
 
   enter "${shared_path}/${project}"
 
-  log_todo "move revision handling to scm_get"
+  log_todo "move revision handling to fetch_uri"
 
   case "${scm_type}" in
     git|github)
