@@ -1,6 +1,0 @@
-#!/usr/bin/env bash
-
-install_template "zsh/.zshenv" to "${HOME}/.zshenv" mode 0644
-
-install_template "zsh/.zshrc" to "${HOME}/.zshrc" mode 0644
-

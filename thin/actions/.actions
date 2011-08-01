@@ -1,4 +1,0 @@
-install=thin_install()
-start=thin_start()
-stop=thin_stop()
-restart=thin_restart()

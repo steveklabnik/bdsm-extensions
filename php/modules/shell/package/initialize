@@ -1,4 +1,0 @@
-#!/usr/bin/env bash
-
-package_definition \
-  file "php${package_version}.tar.bz2"

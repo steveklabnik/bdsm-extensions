@@ -21,3 +21,15 @@ upgrade_binary()
   fi
 }
 
+zsh_setup()
+{
+  local file
+
+  for file in .zshenv .zshrc
+  do
+    if file_does_not_exist "${HOME}/${file}"
+    then
+      install_template "zsh/${file}" to "${HOME}/${file}" mode 0644
+    fi
+  done
+}

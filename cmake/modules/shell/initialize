@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-modules std/package
-
 package_definition \
   base_url "http://www.cmake.org/files/v${package_version%.*}"
 

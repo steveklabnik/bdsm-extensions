@@ -1,8 +1,0 @@
-#!/usr/bin/env bash
-description "Extension for managing mongrel2 ${website_url:-}."
-
-action "package install" "Installs mongrel2 package."
-action "package uninstall" "Uninstalls mongrel2 package."
-
-show_help usage
-

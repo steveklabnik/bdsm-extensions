@@ -1,8 +1,0 @@
-#!/usr/bin/env bash
-description "Extension for managing python ${website_url:-}."
-
-action "package install" "Installs python package."
-action "package uninstall" "Uninstalls python package."
-
-show_help usage
-

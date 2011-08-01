@@ -1,5 +1,0 @@
-#!/usr/bin/env bash
-
-package_install
-# TODO: package_upgrade
-

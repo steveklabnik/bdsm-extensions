@@ -1,8 +1,5 @@
 #!/usr/bin/env bash
 
-# Load the package module as this is a package extension.
-modules std/package
-
 # Use package_definition() to define the package_base_url as it is on
 # sourceforge and must be set based on the package_version.
 package_definition \

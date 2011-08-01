@@ -1,6 +1,0 @@
-#!/usr/bin/env bash
-
-#package_dependencies=(mercurial)
-
-package_dir="go-head"
-

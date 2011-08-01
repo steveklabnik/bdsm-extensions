@@ -1,9 +1,0 @@
-#!/usr/bin/env bash
-
-description "Extension for managing yodl ${website_url:-}."
-
-action "install" "Installs yodl."
-action "uninstall" "Uninstalls yodl."
-
-show_help usage
-

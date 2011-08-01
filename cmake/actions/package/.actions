@@ -1,4 +1,0 @@
-install=package_install()
-uninstall=package_uninstall()
-update=package_update()
-info=package_info()

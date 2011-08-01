@@ -1,4 +1,9 @@
 #!/usr/bin/env bash
 
-modules std/package
+set_package_type
+
+package_definition \
+  file "${package_name}-${package_version}-${package_type}.tar.bz2" \
+  dir "${package_name}-${package_version}-${package_type}"
+
 

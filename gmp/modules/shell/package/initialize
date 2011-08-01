@@ -1,7 +1,0 @@
-#!/usr/bin/env bash
-
-package_name="gmp"
-
-package_definition \
-  base_url "ftp://ftp.gmplib.org/pub/gmp-${package_version}"
-

@@ -1,2 +1,18 @@
 #!/usr/bin/env bash
 
+if [[ ! "${configure_flags[*]}" =~ *--prefix* ]]
+then
+  configure_flags+=(--prefix "${install_path}")
+fi
+
+for library in gmp
+do
+  if path_exists "${packages_path}/${library}/active"
+  then
+    configure_flags+=( --with-${library}="${active_path}" )
+  else
+    error "${library} was not found installed via bdsm,"\
+      " install it and then retry."
+  fi
+done
+

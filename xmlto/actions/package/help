@@ -1,8 +1,0 @@
-#!/usr/bin/env bash
-description "Extension for managing xmlto ${website_url:-}."
-
-action "package install" "Installs xmlto package."
-action "package uninstall" "Uninstalls xmlto package."
-
-show_help usage
-

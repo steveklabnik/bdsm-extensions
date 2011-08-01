@@ -1,9 +1,0 @@
-#!/usr/bin/env bash
-
-description "Extension for managing texi2html ${website_url:-}."
-
-action "package install" "Installs texi2html."
-action "package uninstall" "Uninstalls texi2html."
-
-show_help usage
-

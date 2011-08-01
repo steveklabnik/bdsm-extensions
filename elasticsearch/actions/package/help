@@ -1,8 +1,0 @@
-#!/usr/bin/env bash
-description "Extension for managing elasticsearch ${website_url:-}."
-
-action "package install" "Installs elasticsearch package."
-action "package uninstall" "Uninstalls elasticsearch package."
-
-show_help usage
-

@@ -1,9 +1,0 @@
-#!/usr/bin/env bash
-
-description "Extension for managing redis (${website_url})."
-
-action "install" "Installs ${package_name} ${package_version}."
-action "uninstall" "Uninstalls ${package_name} ${package_version}."
-
-show_help usage
-

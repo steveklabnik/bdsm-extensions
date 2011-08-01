@@ -1,9 +1,0 @@
-#!/usr/bin/env bash
-
-description "Extension for managing php ${website_url:-}."
-
-action "package install" "Installs ${package_name} ${package_version}."
-action "package uninstall" "Installs ${package_name} ${package_version}."
-
-show_help usage
-
