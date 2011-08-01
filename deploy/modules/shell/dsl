@@ -68,6 +68,7 @@ update_repository()
 {
   #log "Updating local repository in $shared_path/$project."
 
+  scm_path="$shared_path/scm"
   fetch_uri "$repository_url" "$shared_path/$project"
 
   enter "${shared_path}/${project}"
