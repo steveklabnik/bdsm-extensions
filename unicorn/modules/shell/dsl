@@ -93,11 +93,11 @@ unicorn_stop()
 {
   if (( master_pid > 0 ))
   then
-    succeed "Unicorn herd is not running for $project yet."
-  else
     log "Signaling unicorn master to quit for $project."
 
     kill -QUIT ${master_pid}
+  else
+    succeed "Unicorn herd is not running for $project yet."
   fi
 }
 
