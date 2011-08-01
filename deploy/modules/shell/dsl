@@ -39,7 +39,7 @@ before_step()
 {
   local name="$1"
   shift
-  hook "after_${name}" "$@"
+  hook "before_${name}" "$@"
 }
 
 after_step()
@@ -142,6 +142,7 @@ replace_current()
   log "Replacing $release_path from $stage_path"
   mv "$stage_path" "$release_path"
 }
+
 fail_replace_current()
 {
   log_todo "should \$previous == \$timestamp ?"
