@@ -29,5 +29,5 @@ deploy_steps=(
 
 if ! variable_is_set repository_url
 then
-  fail "The project's repository_url must be set in configuration files (eg: ~/.bdsmrc)"
+  error "The project's repository_url must be set in configuration files (eg: ~/.bdsmrc)"
 fi
