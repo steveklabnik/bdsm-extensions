@@ -26,3 +26,8 @@ deploy_steps=(
   update_repository stage_current configure symlink
   replace_current cleanup record
 )
+
+if ! variable_is_set repository_url
+then
+  fail "The project's repository_url must be set in configuration files (eg: ~/.bdsmrc)"
+fi
