@@ -5,10 +5,8 @@ npm_preconfigure()
   package_must_be_active "node"
 }
 
-npm_extract()
+npm_postfetch()
 {
-  package_extract
-
   remove_paths "${package_dir}"
   if path_exists "package"
   then

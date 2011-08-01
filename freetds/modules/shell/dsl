@@ -1,12 +1,8 @@
 #!/usr/bin/env bash
 
-# freetds_extract()
+# freetds_postfetch()
 # {
-#   local _directory
-#
-#   package_extract
-#
-#   _directory=$(
+#   local _directory=$(
 #     cd "${source_path}"
 #     find . -mindepth 1 -maxdepth 1 -iname "${package_name}-${package_version}*" -type d
 #   )

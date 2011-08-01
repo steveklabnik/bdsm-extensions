@@ -28,11 +28,8 @@ package_install()
 
   enter "${source_path}"
 
-  log "Downloading ${package_name} ${package_version}"
+  log "Fetching ${package_name} ${package_version}"
   package_fetch
-
-  log "Extracting ${package_name} ${package_version}"
-  package_extract
 
   enter "${package_dir}"
 

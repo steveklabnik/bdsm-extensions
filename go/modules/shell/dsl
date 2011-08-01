@@ -1,23 +1,18 @@
 #!/usr/bin/env bash
 
-go_download()
+go_fetch()
 {
   enter "${source_path}"
   if command_exists hg
   then
     remove_paths "${source_path}/${package_dir}"
     ensure_paths_exist "${source_path}"
-    # TODO: use scm_get here.
     enter "${source_path}"
+    #TODO: use fetch_uri !!!
     hg clone -u release https://go.googlecode.com/hg/ "${source_path}/${package_dir}"
   else
     error "go requires mercurial, please install the mercurial bdsm package first."
   fi
-}
-
-go_extract()
-{
-  :
 }
 
 go_build()

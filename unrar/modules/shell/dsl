@@ -7,16 +7,10 @@ unrar_configure()
     in "makefile.unix"
 }
 
-unrar_extract()
+unrar_postfetch()
 {
-  if path_exists "unrar"
-  then
-    remove_paths "unrar"
-  fi
-
-  tar zxf ${package_file}
-
-  move_directory "unrar" to "${package_dir}"
+  mv unrar/* .
+  rm -rf unrar
 }
 
 unrar_build()
