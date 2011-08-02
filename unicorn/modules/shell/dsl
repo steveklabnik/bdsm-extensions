@@ -32,7 +32,12 @@ elif (( pid_file_pid > 0 )) && [[ -d "/proc/${pid_file_pid}" ]]
 then
   master_pid=${pid_file_pid} # Running and matches pid_file.
 else
-  master_pid=0 # Not found!
+  if [[ -n "${pid_file_pid}" ]]
+  then
+    master_pid="${pid_file_pid}"
+  else
+    master_pid=0 # Not found!
+  fi
 fi
 
 }
@@ -88,11 +93,11 @@ unicorn_stop()
 {
   if (( master_pid > 0 ))
   then
-    succeed "Unicorn herd is not running for $project yet."
-  else
     log "Signaling unicorn master to quit for $project."
 
     kill -QUIT ${master_pid}
+  else
+    succeed "Unicorn herd is not running for $project yet."
   fi
 }
 

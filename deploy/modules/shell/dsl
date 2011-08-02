@@ -39,7 +39,7 @@ before_step()
 {
   local name="$1"
   shift
-  hook "after_${name}" "$@"
+  hook "before_${name}" "$@"
 }
 
 after_step()
@@ -68,11 +68,13 @@ update_repository()
 {
   #log "Updating local repository in $shared_path/$project."
 
+  : ${scm_path:="$shared_path/scm"}
   fetch_uri "$repository_url" "$shared_path/$project"
 
   enter "${shared_path}/${project}"
 
   log_todo "move revision handling to fetch_uri"
+
   case "${scm_type}" in
     git|github)
       if file_exists ".gitmodules"
@@ -140,6 +142,7 @@ replace_current()
   log "Replacing $release_path from $stage_path"
   mv "$stage_path" "$release_path"
 }
+
 fail_replace_current()
 {
   log_todo "should \$previous == \$timestamp ?"
@@ -240,7 +243,7 @@ run_deploy()
   trace_filter deploy
 
   # Logging (http://nakedape.cc/wiki/ShellHacks 1.6.1, 1.7, 1.11)
-  export log_file="$shared_path/log/deploy-$timestamp.log"
+  export log_file="$deploy_log_path/$timestamp.log"
   exec 3>>"$log_file"
   exec &> >(tee -a "$log_file")
   # Error handling
