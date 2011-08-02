@@ -9,8 +9,11 @@ unrar_configure()
 
 unrar_postfetch()
 {
-  mv unrar/* .
-  rm -rf unrar
+  if [[ -d unrar ]]
+  then
+    mv unrar/* .
+    rm -rf unrar
+  fi
 }
 
 unrar_build()
