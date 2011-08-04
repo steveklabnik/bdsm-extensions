@@ -3,7 +3,7 @@
 # TODO: move this to service_signal
 unicorn_signal()
 {
-  kill -${1} ${master_pid} || true
+  kill -${1} ${master_pid} 2>/dev/null || true
 }
 
 set_master_pid()
