@@ -14,7 +14,7 @@ fi
 
 set_master_pid
 
-load_rvm
+load_ruby_environment
 
 if path_exists "$release_path"
 then

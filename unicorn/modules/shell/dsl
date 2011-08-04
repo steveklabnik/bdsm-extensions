@@ -226,14 +226,15 @@ unicorn_install()
   # gem install unicorn --no-rdoc --no-ri -q
 }
 
-load_rvm()
+load_ruby_environment()
 {
-  if file_exists "$HOME/.rvm/scripts/rvm"
+  if file_exists "$HOME/.rvm/environments/default"
   then
-    source_files "$HOME/.rvm/scripts/rvm"
-  elif file_exists "/usr/local/rvm/scripts/rvm"
+    source_files "$HOME/.rvm/environments/default"
+
+  elif file_exists "/usr/local/rvm/environments/default"
   then
-    source_files "/usr/local/rvm/scripts/rvm"
+    source_files "/usr/local/rvm/environments/default"
   fi
 }
 
