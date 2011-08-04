@@ -14,6 +14,8 @@ fi
 
 set_master_pid
 
+load_rvm
+
 if path_exists "$release_path"
 then
   enter "${release_path}"

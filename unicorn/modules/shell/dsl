@@ -226,3 +226,14 @@ unicorn_install()
   # gem install unicorn --no-rdoc --no-ri -q
 }
 
+load_rvm()
+{
+  if file_exists "$HOME/.rvm/scripts/rvm"
+  then
+    source_files "$HOME/.rvm/scripts/rvm"
+  elif file_exists "/usr/local/rvm/scripts/rvm"
+  then
+    source_files "/usr/local/rvm/scripts/rvm"
+  fi
+}
+
