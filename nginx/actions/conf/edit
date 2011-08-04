@@ -6,5 +6,6 @@ then
 else
   ${EDITOR:=vi}
 fi
+export EDITOR
 
 ${EDITOR} "${service_config_path}/nginx.conf"
